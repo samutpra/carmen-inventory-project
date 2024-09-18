@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/lib/i18n";
 import * as m from "@/paraglide/messages.js";
 
 export default function HomePage() {
@@ -7,10 +7,16 @@ export default function HomePage() {
       <h1 className="text-4xl font-bold mb-4">{m.home_title()}</h1>
       <p className="text-xl mb-8">{m.home_subtitle()}</p>
       <div className="space-x-4">
-        <Link href="/login" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <Link
+          href="/login"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
           Sign In
         </Link>
-        <Link href="/dashboard" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        <Link
+          href="/dashboard"
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        >
           Go to Menu
         </Link>
       </div>

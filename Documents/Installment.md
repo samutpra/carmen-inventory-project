@@ -50,7 +50,7 @@ npm install lucide-react
 ```bash
 npm install cookies-next
 ```
-
+<!-- 
 ### install fontAwesome
 
 ```bash
@@ -59,7 +59,7 @@ npm i --save @fortawesome/free-solid-svg-icons
 npm i --save @fortawesome/free-regular-svg-icons
 npm i --save @fortawesome/free-brands-svg-icons
 npm i --save @fortawesome/react-fontawesome@latest
-```
+``` -->
 
 ### install jose
 
@@ -77,4 +77,10 @@ npm i --save zod
 
 ```bash
 npm i swr
+```
+### install react-beautiful-dnd
+
+```bash
+npm install react-beautiful-dnd --save
+npm i --save-dev @types/react-beautiful-dnd
 ```

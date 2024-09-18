@@ -18,5 +18,12 @@
         "i18n",
         "paraglide/messages"
     ],
-    "i18n-ally.fullReloadOnChanged": true
+    "i18n-ally.fullReloadOnChanged": true,
+    "prettier.bracketSameLine": true,
+    "prettier.jsxSingleQuote": true,
+    "prettier.useTabs": true,
+    "prettier.vueIndentScriptAndStyle": true,
+    "prettier.singleQuote": true,
+    "prettier.singleAttributePerLine": true,
+    "sherlock.inlineAnnotations.enabled": true
 }
