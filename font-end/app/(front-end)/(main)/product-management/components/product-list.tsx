@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Product } from '@/types/interfaces/Product';
+import { IProduct } from '@/types/interfaces/Product';
 import { mock_productList } from '@/app/mocks/productlist';
 
 interface ProductListProps {
@@ -16,7 +16,7 @@ interface ProductListProps {
 export default function ProductList({ onBack }: ProductListProps): JSX.Element {
 
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');

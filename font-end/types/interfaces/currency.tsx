@@ -1,10 +1,10 @@
-export interface Currency {
+export interface ICurrency {
   code: string;
   description: string;
   active: boolean;
 }
 
-export interface CurrencyList {
+export interface ICurrencyList {
   total: number;
-  currencies: Currency[];
+  data: ICurrency[];
 }

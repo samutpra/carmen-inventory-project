@@ -1,6 +1,6 @@
-import { ProductList } from "@/types/interfaces/Product";
+import { IProductList } from "@/types/interfaces/Product";
 
-export const mock_productList: ProductList = {
+export const mock_productList: IProductList = {
   total: 4,
   products: [
     {

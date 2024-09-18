@@ -28,24 +28,24 @@ export class CurrencyController {
     return HttpStatus.CREATED;
   }
 
-  @Get('/api/currencies/:uuid')
-  getCurrency(@Req() req: Request, @Param('uuid') uuid: string) {
-    return this.currencyService.get(uuid, req['tenantId']);
+  @Get('/api/currencies/:id')
+  getCurrency(@Req() req: Request, @Param('id') id: string) {
+    return this.currencyService.get(id, req['tenantId']);
   }
 
-  @Put('/api/currencies/:uuid')
+  @Put('/api/currencies/:id')
   updateCurrency(
     @Req() req: Request,
-    @Param('uuid') uuid: string,
+    @Param('id') id: string,
     @Body() data: UpdateCurrencyDto,
   ) {
-    this.currencyService.update(uuid, data, req['tenantId']);
+    this.currencyService.update(id, data, req['tenantId']);
     return HttpStatus.NO_CONTENT;
   }
 
-  @Delete('/api/currencies/:uuid')
-  deleteCurrency(@Req() req: Request, @Param('uuid') uuid: string) {
-    this.currencyService.delete(uuid, req['tenantId']);
+  @Delete('/api/currencies/:id')
+  deleteCurrency(@Req() req: Request, @Param('id') id: string) {
+    this.currencyService.delete(id, req['tenantId']);
     return HttpStatus.ACCEPTED;
   }
 }

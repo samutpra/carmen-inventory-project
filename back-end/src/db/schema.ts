@@ -2,16 +2,16 @@ import { pgTable, uuid, varchar, numeric, timestamp, index } from 'drizzle-orm/p
 
 const schemaPrefix = (tableName: string) => `${process.env.DRIZZLE_SCHEMA || 'public'}.${tableName}`;
 
-export const tenant = pgTable('tenant', {
+export const tenantTable = pgTable('tenant', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name').notNull(),
   description: varchar('description'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
 
-export type SelectTenant = typeof tenant.$inferSelect;
-export type InsertTenant = typeof tenant.$inferInsert;
+export type SelectTenant = typeof tenantTable.$inferSelect;
+export type InsertTenant = typeof tenantTable.$inferInsert;
 
 // export const currency = pgTable(schemaPrefix('currency'), {
 //   id: uuid('id').primaryKey().defaultRandom(),

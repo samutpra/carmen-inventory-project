@@ -1,41 +1,100 @@
 import { randomUUID } from 'crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IService } from '../../app.interface';
+import { IAsyncService } from '../../app.interface';
 import { TenantModel } from '../models/TenantModel';
 import { CreateTenantDto } from '../dtos/CreateTenantDto';
 import { UpdateTenantDto } from '../dtos/UpdateTenantDto';
+import { base_db } from 'src/db/db';
+import { SelectTenant, tenantTable } from 'src/db/schema';
+import { asc, between, count, eq, getTableColumns, sql } from 'drizzle-orm';
 
 @Injectable()
 export class TenantService
-  implements IService<TenantModel, CreateTenantDto, UpdateTenantDto>
+  implements IAsyncService<TenantModel, CreateTenantDto, UpdateTenantDto>
 {
-  private readonly tenants: TenantModel[] = []; // Temp local database.. 
+  // private readonly tenants: TenantModel[] = []; // Temp local database..
 
-  create(data: CreateTenantDto): void {
-    const uuid = randomUUID();
-    this.tenants.push(new TenantModel(uuid, data.name, data.description));
+  create(data: CreateTenantDto): string {
+    const obj = {
+      name: data.name,
+      description: data.description || '',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const result = async () =>
+      await base_db.insert(tenantTable).values(obj).execute();
+
+    console.log(result);
+    return 'Tenant created successfully';
   }
 
-  delete(uuid: string): void {
-    const index = this.tenants.findIndex((tenant) => tenant.id === uuid);
-    if (index === -1) throw new NotFoundException('Tenant not found');
-    this.tenants.splice(index, 1);
+  delete(id: string): string {
+    try {
+      const findTenant = async () =>
+        await base_db.select().from(tenantTable).where(eq(tenantTable.id, id));
+
+      console.log(findTenant);
+      if (!findTenant) throw new NotFoundException('Tenant not found');
+
+      const result = async () =>
+        await base_db
+          .delete(tenantTable)
+          .where(eq(tenantTable.id, id))
+          .execute();
+
+      console.log(result);
+      return 'Tenant deleted successfully';
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  get(uuid: string): TenantModel {
-    const todo = this.tenants.find((tenant) => tenant.id === uuid);
-    if (!todo) throw new NotFoundException('Tenant not found');
-    return todo;
+  async get(id: string): Promise<SelectTenant> {
+    const findTenant = await base_db
+      .select()
+      .from(tenantTable)
+      .where(eq(tenantTable.id, id))
+      .limit(1);
+
+    console.log(findTenant);
+
+    if (!findTenant) throw new NotFoundException('Tenant not found');
+
+    const result = findTenant[0];
+
+    console.log(result);
+
+    return result;
   }
 
-  update(uuid: string, data: UpdateTenantDto): void {
-    const tenant = this.tenants.find((tenant) => tenant.id === uuid);
-    if (!tenant) throw new NotFoundException('Tenant not found');
-    tenant.name = data.name;
-    tenant.description = data.description; 
+  async update(id: string, data: UpdateTenantDto): Promise<SelectTenant> {
+    const obj = {
+      name: data.name,
+      description: data.description || '',
+      updatedAt: new Date(),
+    };
+
+    const updateResult =
+      await base_db.update(tenantTable).set(obj).where(eq(tenantTable.id, id));
+
+    console.log(updateResult);
+
+    const result = await base_db.select().from(tenantTable).where(eq(tenantTable.id, id)).limit(1);
+
+    console.log(result);
+
+    return result[0]
+    
   }
 
-  getAll(): TenantModel[] {
-    return this.tenants;
+  async getAll(): Promise<SelectTenant[]> {
+    const result = await base_db
+      .select()
+      .from(tenantTable)
+      .orderBy(asc(tenantTable.name));
+
+    console.log(result);
+    return result;
   }
 }

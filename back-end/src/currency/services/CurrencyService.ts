@@ -11,7 +11,7 @@ export class CurrencyService
 {
   private readonly currencies: CurrencyModel[] = []; // temp local databse to store all our currency items
 
-  create(data: CreateCurrencyDto, tenantId?: string): void {
+  create(data: CreateCurrencyDto, tenantId?: string): string {
     const uuid = randomUUID();
     const newCurrency = new CurrencyModel(
       uuid,
@@ -21,9 +21,11 @@ export class CurrencyService
     );
     if (tenantId) newCurrency.setTenantId(tenantId);
     this.currencies.push(newCurrency);
+
+    return uuid;
   }
 
-  delete(uuid: string, tenantId?: string) {
+  delete(uuid: string, tenantId?: string): string {
     const index = this.currencies.findIndex(
       (currency) => currency.uuid === uuid,
     );
@@ -31,6 +33,8 @@ export class CurrencyService
     if (tenantId && this.currencies[index].tenantId !== tenantId)
       throw new NotFoundException('Currency not found');
     this.currencies.splice(index, 1);
+
+    return uuid;
   }
 
   get(uuid: string, tenantId?: string): CurrencyModel {

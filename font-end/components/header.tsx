@@ -22,7 +22,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Bell, User, Settings, LogOut, Globe } from "lucide-react";
-import  LanguageSwitcher  from "@/components/languageSwitcher";
+import LanguageSwitcher from "@/components/languageSwitcher";
+import { TenantList } from "@/components/tenantList";
 
 export interface HeaderProps {
   onSidebarToggle: () => void;
@@ -33,7 +34,6 @@ export default function Header({
   onSidebarToggle,
   isSidebarOpen,
 }: HeaderProps) {
-  const [businessUnit, setBusinessUnit] = useState("BU1");
   const router = useRouter();
 
   const toggleSidebar = () => {
@@ -73,15 +73,7 @@ export default function Header({
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <Select value={businessUnit} onValueChange={setBusinessUnit}>
-              <SelectTrigger className="w-[140px] sm:w-[180px]">
-                <SelectValue placeholder="Business Unit" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="BU1">Business Unit 1</SelectItem>
-                <SelectItem value="BU2">Business Unit 2</SelectItem>
-              </SelectContent>
-            </Select>
+            <TenantList />
 
             <Button
               variant="ghost"
@@ -137,4 +129,3 @@ export default function Header({
     </header>
   );
 }
-

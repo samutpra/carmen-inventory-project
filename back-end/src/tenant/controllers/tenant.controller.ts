@@ -18,8 +18,8 @@ export class TenantController {
   constructor(private readonly tenantService: TenantService) {}
 
   @Get('/api/tenants')
-  getAll() {
-    return this.tenantService.getAll();
+  async getAll() {
+    return await this.tenantService.getAll();
   }
 
   @Post('/api/tenants')
@@ -28,24 +28,24 @@ export class TenantController {
     return HttpStatus.CREATED;
   }
 
-  @Get('/api/tenants/:uuid')
-  getTenant(@Req() req: Request, @Param('uuid') uuid: string) {
-    return this.tenantService.get(uuid);
+  @Get('/api/tenants/:id')
+  async getTenant(@Req() req: Request, @Param('id') id: string) {
+    return await this.tenantService.get(id);
   }
 
-  @Put('/api/tenants/:uuid')
+  @Put('/api/tenants/:id')
   updateTenant(
     @Req() req: Request,
-    @Param('uuid') uuid: string,
+    @Param('id') id: string,
     @Body() data: UpdateTenantDto,
   ) {
-    this.tenantService.update(uuid, data);
+    this.tenantService.update(id, data);
     return HttpStatus.NO_CONTENT;
   }
 
-  @Delete('/api/tenants/:uuid')
-  deleteTodo(@Req() req: Request, @Param('uuid') uuid: string) {
-    this.tenantService.delete(uuid);
+  @Delete('/api/tenants/:id')
+  deleteTodo(@Req() req: Request, @Param('id') id: string) {
+    this.tenantService.delete(id);
     return HttpStatus.ACCEPTED;
   }
 }

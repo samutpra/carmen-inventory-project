@@ -1,11 +1,11 @@
 {
-  "id": "2c524d65-b32a-4b76-9cc8-9130aed67a65",
+  "id": "2a25a9fe-25e9-47d5-a537-6488748c3182",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.public.currency": {
-      "name": "public.currency",
+    "public.tenant": {
+      "name": "tenant",
       "schema": "",
       "columns": {
         "id": {
@@ -15,29 +15,17 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "code": {
-          "name": "code",
-          "type": "varchar(3)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "name": {
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "symbol": {
-          "name": "symbol",
+        "description": {
+          "name": "description",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": true
-        },
-        "exchange_rate": {
-          "name": "exchange_rate",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -50,22 +38,14 @@
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "public.currency_code_unique": {
-          "name": "public.currency_code_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "code"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     }
   },
   "enums": {},

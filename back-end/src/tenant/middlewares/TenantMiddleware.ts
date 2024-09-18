@@ -23,7 +23,7 @@ export class TenantMiddleware implements NestMiddleware {
       req['tenantId'] = null;
       return next();
     }
-    const tenant = this.tenantService.get(tenantId);
+    const tenant = await this.tenantService.get(tenantId);
     req['tenantId'] = tenant.id;
     next();
   }

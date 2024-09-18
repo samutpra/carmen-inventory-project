@@ -1,4 +1,4 @@
-export interface Product {
+export interface IProduct {
   id: string;
   productCode: string;
   name: string;
@@ -10,7 +10,7 @@ export interface Product {
   primaryInventoryUnitId: string;
 }
 
-export interface ProductList {
+export interface IProductList {
   total: number;
-  products: Product[];
+  data: IProduct[];
 }

@@ -12,13 +12,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MoreVertical, Plus, Trash2, Printer, Search } from "lucide-react";
-import { Currency } from "@/types/interfaces/currency";
+import { ICurrency } from "@/types/interfaces/currency";
 import ListPageTemplate from "@/components/templates/ListPageTemplate";
 import { ApiDomain } from "@/lib/apiDomain";
 
 export function CurrencyManagement() {
-
-  const [currencies, setCurrencies] = useState<Currency[]>([]);
+  const [currencies, setCurrencies] = useState<ICurrency[]>([]);
   const [showActive, setShowActive] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -130,7 +129,6 @@ export function CurrencyManagement() {
   );
 
   const fetchCurrencies = async () => {
-    
     const tenantId = localStorage.getItem("tenantId") || "";
     const token = localStorage.getItem("token") || "";
 
@@ -138,7 +136,7 @@ export function CurrencyManagement() {
       headers: {
         "Content-Type": "application/json",
         "x-tenant-id": tenantId,
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
     });
     const data = await response.json();
@@ -147,7 +145,7 @@ export function CurrencyManagement() {
 
   useEffect(() => {
     fetchCurrencies();
-  }, []); 
+  }, []);
 
   return (
     <>
