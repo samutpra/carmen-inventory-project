@@ -1,10 +1,19 @@
 /** @type {import('next').NextConfig} */
+
+import { paraglide } from "@inlang/paraglide-next/plugin";
+
 const nextConfig = {
-    eslint: {
-        // Warning: This allows production builds to successfully complete even if
-        // your project has ESLint errors.
-        ignoreDuringBuilds: true,
-      },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
+  transpilePackages: ["lucide-react"],
 };
 
-export default nextConfig;
+export default paraglide({
+  paraglide: {
+    project: "./project.inlang",
+    outdir: "./paraglide",
+  },
+  ...nextConfig,
+});
