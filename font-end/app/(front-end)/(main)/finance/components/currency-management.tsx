@@ -15,6 +15,7 @@ import { MoreVertical, Plus, Trash2, Printer, Search } from "lucide-react";
 import { ICurrency } from "@/types/interfaces/currency";
 import ListPageTemplate from "@/components/templates/ListPageTemplate";
 import { ApiDomain } from "@/lib/apiDomain";
+import { TenantID } from "@/lib/currentUser";
 
 export function CurrencyManagement() {
   const [currencies, setCurrencies] = useState<ICurrency[]>([]);
@@ -32,10 +33,10 @@ export function CurrencyManagement() {
   };
 
   const filteredCurrencies = currencies.filter(
-    (currency) =>
-      (showActive ? currency.active : true) &&
-      (currency.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        currency.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    (currency) => (currency)
+      // (showActive ? currency.active : true) &&
+      // (currency.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      //   currency.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -129,7 +130,7 @@ export function CurrencyManagement() {
   );
 
   const fetchCurrencies = async () => {
-    const tenantId = localStorage.getItem("tenantId") || "";
+    const tenantId = TenantID || "";
     const token = localStorage.getItem("token") || "";
 
     const response = await fetch(`${ApiDomain}/api/currencies`, {
