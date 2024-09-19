@@ -1,6 +1,17 @@
-import { pgTable, uuid, varchar, numeric, timestamp, index } from 'drizzle-orm/pg-core';
+import {
+  pgTable,
+  uuid,
+  varchar,
+  numeric,
+  timestamp,
+  index,
+  pgSchema,
+} from 'drizzle-orm/pg-core';
 
-const schemaPrefix = (tableName: string) => `${process.env.DRIZZLE_SCHEMA || 'public'}.${tableName}`;
+const schemaName = process.env.DRIZZLE_SCHEMA || 'public';
+const schemaPrefix = (tableName: string) => `${schemaName}.${tableName}`;
+
+export const schema = pgSchema(schemaName);
 
 export const tenantTable = pgTable('tenant', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -13,15 +24,15 @@ export const tenantTable = pgTable('tenant', {
 export type SelectTenant = typeof tenantTable.$inferSelect;
 export type InsertTenant = typeof tenantTable.$inferInsert;
 
-// export const currency = pgTable(schemaPrefix('currency'), {
-//   id: uuid('id').primaryKey().defaultRandom(),
-//   code: varchar('code', { length: 3 }).unique().notNull(),
-//   name: varchar('name').notNull(),
-//   symbol: varchar('symbol').notNull(),
-//   exchangeRate: numeric('exchange_rate').notNull(),
-//   createdAt: timestamp('created_at').defaultNow().notNull(),
-//   updatedAt: timestamp('updated_at').defaultNow().notNull(),
-// });
+export const currencyTable = pgTable('currency', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  code: varchar('code', { length: 3 }).unique().notNull(),
+  name: varchar('name').notNull(),
+  symbol: varchar('symbol').notNull(),
+  exchangeRate: numeric('exchange_rate').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
 
 // export const exchangeRateHistory = pgTable(schemaPrefix('exchange_rate_history'), {
 //   id: uuid('id').primaryKey().defaultRandom(),
@@ -32,8 +43,8 @@ export type InsertTenant = typeof tenantTable.$inferInsert;
 //   currencyIdIdx: index(schemaPrefix('currency_id_idx')).on( table.currencyId),
 // }));
 
-// export type SelectCurrency = typeof currency.$inferSelect;
-// export type InsertCurrency = typeof currency.$inferInsert;
+export type SelectCurrency = typeof currencyTable.$inferSelect;
+export type InsertCurrency = typeof currencyTable.$inferInsert;
 
 // export type SelectExchangeRateHistory = typeof exchangeRateHistory.$inferSelect;
 // export type InsertExchangeRateHistory = typeof exchangeRateHistory.$inferInsert;

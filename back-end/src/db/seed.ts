@@ -25,4 +25,4 @@ const main = async () => {
 	console.log("Seed done");
 };
 
-main();
+main().catch(console.error).finally(() => {});;
