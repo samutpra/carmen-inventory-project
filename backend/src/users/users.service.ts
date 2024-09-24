@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { SupabaseService } from 'src/supabase/supabase.service';
 
 @Injectable()
-export class UserService {
+export class UsersService {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
