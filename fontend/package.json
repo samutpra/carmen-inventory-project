@@ -1,7 +1,8 @@
 {
-  "name": "carmen-inventory",
+  "name": "carmen-inventory-fontend",
   "version": "0.1.0",
   "private": true,
+  "author": "samutpra@hotmail.com",
   "scripts": {
     "dev": "next dev -p 3500",
     "build": "paraglide-js compile --project ./project.inlang --outdir ./paraglide && next build",
