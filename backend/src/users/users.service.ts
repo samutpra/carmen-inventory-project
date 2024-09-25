@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SupabaseService } from 'src/supabase/supabase.service';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class UsersService {
@@ -10,13 +11,21 @@ export class UsersService {
     return 'This action adds a new user';
   }
 
-  findAll() {
-    const getAllUser = new SupabaseService().db.from('users').select('*');
-    return getAllUser;
+  async findAll(tx?: SupabaseClient) {
+    const db = tx || new SupabaseService().db;
+    const getAll = await db.schema('carmen_system').from('users').select('*');
+    return getAll;
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string, tx?: SupabaseClient) {
+    const db = tx || new SupabaseService().db;
+    const getOne = await db
+      .schema('carmen_system')
+      .from('users')
+      .select('*')
+      .eq('id', id)
+      .range(0, 1);
+    return getOne;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
