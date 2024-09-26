@@ -24,8 +24,8 @@ import {
 import { Bell, User, Settings, LogOut, Globe } from "lucide-react";
 import LanguageSwitcher from "@/components/languageSwitcher";
 import { ApiDomain } from "@/lib/apiDomain";
-import { ITenant } from "@/types/interfaces/tenant";
-import { setTenantID, TenantID } from "@/lib/currentUser";
+import { ITenant } from "@/types/tenant";
+import { setTenantId, TenantID } from "@/lib/currentUser";
 import { Mock_TenantList } from "@/app/mocks/tenantlist";
 
 export function TenantList() {
@@ -51,7 +51,7 @@ export function TenantList() {
 
     if (tenantid || tenantid == "") {
       tenantid = list[0] ? list[0].id : "";
-      setTenantID(tenantid);
+      setTenantId(tenantid);
     }
 
     setBusinessUnit(tenantid);
@@ -63,7 +63,7 @@ export function TenantList() {
         value={businessUnit}
         onValueChange={(businessUnit) => {
           console.log(businessUnit);
-          setTenantID(businessUnit);
+          setTenantId(businessUnit);
           setBusinessUnit(businessUnit);
         }}
       >

@@ -1,14 +1,14 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
-interface ListPageTemplateProps {
+interface IProps {
   title: string;
   actionButtons?: ReactNode;
   filters?: ReactNode;
   content: ReactNode;
-  bulkActions? : ReactNode;
+  bulkActions?: ReactNode;
 }
 
-const ListPageTemplate: React.FC<ListPageTemplateProps> = ({
+const ListPageTemplate: React.FC<IProps> = ({
   title,
   actionButtons,
   filters,
@@ -23,9 +23,7 @@ const ListPageTemplate: React.FC<ListPageTemplateProps> = ({
       </div>
       {filters && <div className="mb-4">{filters}</div>}
       {bulkActions && <div className="mb-4">{bulkActions}</div>}
-      <div className="bg-background rounded-lg shadow">
-        {content}
-      </div>
+      <div className="bg-background rounded-lg shadow">{content}</div>
     </div>
   );
 };

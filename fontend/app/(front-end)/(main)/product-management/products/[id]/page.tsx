@@ -10,8 +10,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { PencilIcon, TrashIcon, PlusIcon, X } from 'lucide-react'
 import { Input } from '@/components/ui/input';
-import { IProduct } from '@/types/interfaces/Product';
-import { mock_productList } from '@/app/mocks/productlist';
+import { IProduct } from '@/types/Product';
+import { mock_productList } from '../../../../../../../backend/src/_mocks/productlist';
 import { toast } from '@/hooks/use-toast';
 
 export default function ProductDetail({ params }: { params: { id: string } }) {

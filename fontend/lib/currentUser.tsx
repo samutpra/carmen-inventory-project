@@ -1,16 +1,16 @@
 "use client";
 
-export const getTenantID = () => {
+export const getTenantId = () => {
   if (typeof window !== "undefined") {
     return localStorage.getItem("tenant-id") || "";
   }
   return ""; // Default value for server-side rendering
 };
 
-export const setTenantID = (tenantid: string) => {
+export const setTenantId = (tenantid: string) => {
   if (typeof window !== "undefined") {
     localStorage.setItem("tenant-id", tenantid);
   }
 };
 
-export const TenantID = typeof window !== "undefined" ? getTenantID() : "";
+export const TenantID = typeof window !== "undefined" ? getTenantId() : "";

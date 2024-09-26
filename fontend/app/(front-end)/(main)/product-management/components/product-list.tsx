@@ -1,25 +1,28 @@
-'use client'
-import React, { useState, useEffect } from 'react';
-import {Link, useRouter } from '@/lib/i18n';
-import ListPageTemplate from '@/components/templates/ListPageTemplate';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { IProduct } from '@/types/interfaces/Product';
-import { mock_productList } from '@/app/mocks/productlist';
+"use client";
 
-interface ProductListProps {
-  onBack: () => void;
-}
+import React, { useState, useEffect } from "react";
+import { Link, useRouter } from "@/lib/i18n";
+import ListPageTemplate from "@/components/templates/ListPageTemplate";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { IProduct } from "@/types/Product";
+import { mock_productList } from "../../../../../../backend/src/_mocks/productlist";
 
-export default function ProductList({ onBack }: ProductListProps): JSX.Element {
-
+export default function ProductList(): JSX.Element {
   const router = useRouter();
   const [products, setProducts] = useState<IProduct[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
@@ -30,17 +33,16 @@ export default function ProductList({ onBack }: ProductListProps): JSX.Element {
   };
 
   const handleAddProduct = () => {
-    router.push('/product-management/products/new');
+    router.push("/product-management/products/new");
   };
 
   const handleBulkUpdate = () => {
-    router.push('/product-management/products/bulk-update');
+    router.push("/product-management/products/bulk-update");
   };
 
   const handleGenerateReport = () => {
-    router.push('/product-management/reports/products');
+    router.push("/product-management/reports/products");
   };
-
 
   useEffect(() => {
     async function fetchProducts() {
@@ -56,7 +58,7 @@ export default function ProductList({ onBack }: ProductListProps): JSX.Element {
         setProducts(data.data);
         setTotalPages(Math.ceil(data.total / pageSize));
       } catch (err) {
-        setError('Error fetching products');
+        setError("Error fetching products");
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -75,9 +77,7 @@ export default function ProductList({ onBack }: ProductListProps): JSX.Element {
 
   const actionButtons = (
     <>
-      <Button onClick={handleAddProduct}>
-        Add Product
-      </Button>
+      <Button onClick={handleAddProduct}>Add Product</Button>
       <Button variant="secondary" onClick={handleBulkUpdate}>
         Bulk Update
       </Button>
@@ -122,19 +122,29 @@ export default function ProductList({ onBack }: ProductListProps): JSX.Element {
                 <TableCell>{product.currency}</TableCell>
                 <TableCell>
                   <Badge variant={product.isActive ? "default" : "destructive"}>
-                    {product.isActive ? 'Active' : 'Inactive'}
+                    {product.isActive ? "Active" : "Inactive"}
                   </Badge>
                 </TableCell>
                 <TableCell>
                   <Button variant="link" asChild>
-                    <Link href={`/product-management/products/${product.id}`}>View</Link>
+                    <Link href={`/product-management/products/${product.id}`}>
+                      View
+                    </Link>
                   </Button>
                   <Button variant="link" asChild>
-                    <Link href={`/product-management/products/${product.id}/edit`}>Edit</Link>
+                    <Link
+                      href={`/product-management/products/${product.id}/edit`}
+                    >
+                      Edit
+                    </Link>
                   </Button>
-                  <Button 
+                  <Button
                     variant="link"
-                    onClick={() => alert(`Delete functionality will be implemented in the detail page`)}
+                    onClick={() =>
+                      alert(
+                        `Delete functionality will be implemented in the detail page`
+                      )
+                    }
                   >
                     Delete
                   </Button>

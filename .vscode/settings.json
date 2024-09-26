@@ -2,5 +2,11 @@
     "Codegeex.Chat.LanguagePreference": "English",
     "Codegeex.Comment.LanguagePreference": "English",
     "Codegeex.CommitMessage.LanguagePreference": "English",
-    "Codegeex.SidebarUI.LanguagePreference": "English"
+    "Codegeex.SidebarUI.LanguagePreference": "English",
+    "tailwindCSS.emmetCompletions": true,
+    "tailwindCSS.experimental.configFile": null,
+    "tailwindCSS.lint.cssConflict": "warning",
+    "tailwindCSS.lint.invalidApply": "ignore",
+    "tailwindCSS.lint.invalidScreen": "warning",
+    "tailwindCSS.lint.invalidTailwindDirective": "ignore"
 }

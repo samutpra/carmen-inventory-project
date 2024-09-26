@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MoreVertical, Plus, Trash2, Printer, Search } from "lucide-react";
-import { ICurrency } from "@/types/interfaces/currency";
+import { ICurrency } from "@/types/currency";
 import ListPageTemplate from "@/components/templates/ListPageTemplate";
 import { ApiDomain } from "@/lib/apiDomain";
 import { TenantID } from "@/lib/currentUser";

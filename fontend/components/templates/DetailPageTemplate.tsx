@@ -1,14 +1,14 @@
 import React, { ReactNode } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface DetailPageTemplateProps {
+interface IProps {
   title: string;
   actionButtons?: ReactNode;
   content: ReactNode;
   backLink: ReactNode;
 }
 
-const DetailPageTemplate: React.FC<DetailPageTemplateProps> = ({
+const DetailPageTemplate: React.FC<IProps> = ({
   title,
   actionButtons,
   content,

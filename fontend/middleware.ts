@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // src/middleware.ts
-import { middleware as i18nMiddleware } from "@/lib/i18n"
+import { middleware as i18nMiddleware } from "@/lib/i18n";
 
-import { NextResponse } from "next/server";
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { TenantMiddleware } from "./tenantmiddleware";
 
 const publicRoutes = ["/", "/login", "/signup"];
+const adminRoutes = ["/admin"];
 const mainRoutes = [
   "/dashboard",
   "/procurement",
@@ -16,33 +18,32 @@ const mainRoutes = [
   "/reporting-analytics",
   "/finance",
   "/system-administration",
-  "/help-support"
+  "/help-support",
 ];
 
+export async function middleware(request: NextRequest) {
+  const lang = i18nMiddleware.detectLanguage(request);
+  const response = i18nMiddleware.getResponse(request, lang);
 
-export async function middleware(request: any) {
-	const lang = i18nMiddleware.detectLanguage(request)
-	const response = i18nMiddleware.getResponse(request, lang)
+  // const url = new URL(request.url);
+  // const cookieStore = cookies();
+  // const isLoggedIn = cookieStore.get('isLoggedIn')?.value === 'true';
 
-	// const url = new URL(request.url);
-	// const cookieStore = cookies();
-	// const isLoggedIn = cookieStore.get('isLoggedIn')?.value === 'true';
-	
-	// if (!publicRoutes.includes(url.pathname) && !mainRoutes.some(route => url.pathname.startsWith(route))) {
-	//   if (!isLoggedIn) {
-	//     return NextResponse.redirect(new URL('/login', request.url));
-	//   }
-	// }
-  
-	// return NextResponse.next();
+  // if (!publicRoutes.includes(url.pathname) && !mainRoutes.some(route => url.pathname.startsWith(route))) {
+  //   if (!isLoggedIn) {
+  //     return NextResponse.redirect(new URL('/login', request.url));
+  //   }
+  // }
 
-	const tenantResponse = TenantMiddleware(request);
-	const tenantId = tenantResponse.headers.get('X-Tenant-ID') || 'main';
-	response.headers.append('X-Tenant-ID', tenantId);
+  // return NextResponse.next();
 
-	return response
+  const tenantResponse = TenantMiddleware(request);
+  const tenantId = tenantResponse.headers.get("X-Tenant-ID") || "main";
+  response.headers.append("X-Tenant-ID", tenantId);
+
+  return response;
 }
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
