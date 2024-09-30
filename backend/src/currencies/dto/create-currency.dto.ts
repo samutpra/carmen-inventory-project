@@ -1,29 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Currency } from '../entities/currency.entity';
+import { Currency } from 'src/entities';
+import { PartialType } from '@nestjs/mapped-types';
 
-export class CreateCurrencyDto implements Currency {
-  @ApiProperty({
-    description: 'Unique identifier for the currency',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-    required: true,
-  })
-  id: string;
-
-  @ApiProperty({
-    description: 'Date when the currency was created',
-    example: new Date(),
-    required: true,
-  })
-  create_On: Date;
-
-  @ApiProperty({
-    description: 'Date when the currency was last updated',
-    example: new Date(),
-    required: false,
-    nullable: true,
-  })
-  update_On: Date;
-
+export class CreateCurrencyDto extends PartialType(Currency) {
   @ApiProperty({
     description: 'Name of the currency',
     example: 'US Dollar',
@@ -41,7 +20,7 @@ export class CreateCurrencyDto implements Currency {
   @ApiProperty({
     description: 'Symbol representing the currency',
     example: '$',
-    required: true,
+    required: false,
   })
   symbol: string;
 

@@ -1,6 +1,6 @@
 export interface IUnitConversion {
-  unitId: string;
-  unitName: string;
+  id: string;
+  name: string;
   conversionFactor: number;
 
   type: string;

@@ -10,8 +10,8 @@ import {
 import { TenantsService } from './tenants.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { IResponseList } from 'src/_types/_IResponseList';
-import { Tenant } from './entities/tenant.entity';
+import { IResponseList } from 'src/interfaces';
+import { Tenant } from 'src/entities';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('api/v1/tenants')

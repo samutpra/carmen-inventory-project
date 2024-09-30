@@ -1,4 +1,4 @@
-import { IUnitConversion } from './unitconversion';
+import { IUnitConversion } from './iUnitconversion';
 
 export interface IProduct {
   name: string;
@@ -20,7 +20,7 @@ export interface IProduct {
   isActive: boolean;
 
   basePrice: number;
-  currency: string;
+  currencyId: string;
   taxType: string;
   taxRate: number;
   standardCost: number;

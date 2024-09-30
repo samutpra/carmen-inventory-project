@@ -1,6 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 import { Tenant } from '../entities/tenant.entity';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTenantDto extends PartialType(Tenant) {
   @ApiProperty({
@@ -18,4 +18,11 @@ export class CreateTenantDto extends PartialType(Tenant) {
     required: false,
   })
   description?: string;
+
+  @ApiProperty({
+    description: 'Whether the tenant is active or not',
+    example: true,
+    required: false,
+  })
+  isActive: boolean;
 }

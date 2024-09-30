@@ -1,17 +1,10 @@
-import { IBaseTable, IBasePimaryKey } from 'src/_types/_IBaseTable';
-import { ICurrency } from 'src/_types/currency';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IBasePimaryKey, IBaseTable, ICurrency } from 'src/interfaces';
 
 @Entity()
 export class Currency implements ICurrency, IBaseTable, IBasePimaryKey {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column()
-  create_On: Date;
-
-  @Column()
-  update_On: Date;
 
   @Column()
   name: string;
@@ -25,6 +18,12 @@ export class Currency implements ICurrency, IBaseTable, IBasePimaryKey {
   @Column({ nullable: true })
   description?: string | null;
 
-  @Column()
+  @Column('boolean', { default: true })
   isActive: boolean;
+
+  @Column('datetime', { default: () => 'CURRENT_TIMESTAMP' })
+  create_On: Date;
+
+  @Column('datetime', { default: () => 'CURRENT_TIMESTAMP' })
+  update_On: Date;
 }

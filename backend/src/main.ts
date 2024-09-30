@@ -1,14 +1,23 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
+import {
+  DocumentBuilder,
+  SwaggerDocumentOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
+
+import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  const options = new DocumentBuilder()
+  app.useGlobalPipes(new ValidationPipe());
+
+  const config = new DocumentBuilder()
     .setTitle('CARMEN INVENTORY API')
     .setDescription('API for managing inventory')
     .setVersion('1.0')
@@ -22,8 +31,14 @@ async function bootstrap() {
     )
     .build();
 
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api-docs', app, document);
+  const options: SwaggerDocumentOptions = {
+    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+  };
+
+  const document = SwaggerModule.createDocument(app, config, options);
+  SwaggerModule.setup('swagger', app, document, {
+    jsonDocumentUrl: 'swagger/json',
+  });
 
   // app.enableCors({
   //   origin: (origin, callback) => {

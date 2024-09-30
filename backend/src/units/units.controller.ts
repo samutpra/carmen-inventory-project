@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { UnitsService } from './units.service';
 import { CreateUnitDto } from './dto/create-unit.dto';
 import { UpdateUnitDto } from './dto/update-unit.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('units')
+@ApiTags('units')
 export class UnitsController {
   constructor(private readonly unitsService: UnitsService) {}
 
@@ -19,16 +29,16 @@ export class UnitsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.unitsService.findOne(+id);
+    return this.unitsService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUnitDto: UpdateUnitDto) {
-    return this.unitsService.update(+id, updateUnitDto);
+    return this.unitsService.update(id, updateUnitDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.unitsService.remove(+id);
+    return this.unitsService.remove(id);
   }
 }

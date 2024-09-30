@@ -1,7 +1,8 @@
-import { IUnitConversion } from 'src/_types/unitconversion';
-import { Product } from '../entities/product.entity';
+import { IUnitConversion } from 'src/interfaces';
+import { PartialType } from '@nestjs/mapped-types';
+import { Product } from 'src/entities';
 
-export class CreateProductDto implements Product {
+export class CreateProductDto extends PartialType(Product) {
   id: string;
   create_On: Date;
   update_On: Date;
@@ -19,7 +20,7 @@ export class CreateProductDto implements Product {
   barcode?: string;
   isActive: boolean;
   basePrice: number;
-  currency: string;
+  currencyId: string;
   taxType: string;
   taxRate: number;
   standardCost: number;

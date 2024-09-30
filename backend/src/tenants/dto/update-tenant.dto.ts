@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { v4 as uuidv4 } from 'uuid';
-import { Tenant } from '../entities/tenant.entity';
 import { PartialType } from '@nestjs/mapped-types';
+import { Tenant } from 'src/entities';
+import { ulid } from 'ulid';
 
 export class UpdateTenantDto extends PartialType(Tenant) {
   @ApiProperty({
     description: 'Tenant id',
-    example: uuidv4(),
+    example: ulid(),
     required: true,
     uniqueItems: true,
   })
@@ -27,4 +27,11 @@ export class UpdateTenantDto extends PartialType(Tenant) {
     required: false,
   })
   description?: string;
+
+  @ApiProperty({
+    description: 'Whether the tenant is active or not',
+    example: true,
+    required: false,
+  })
+  isActive: boolean;
 }

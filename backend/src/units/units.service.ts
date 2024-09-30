@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
 import { CreateUnitDto } from './dto/create-unit.dto';
+import { Injectable } from '@nestjs/common';
 import { UpdateUnitDto } from './dto/update-unit.dto';
 
 @Injectable()
@@ -12,15 +12,15 @@ export class UnitsService {
     return `This action returns all units`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} unit`;
   }
 
-  update(id: number, updateUnitDto: UpdateUnitDto) {
+  update(id: string, updateUnitDto: UpdateUnitDto) {
     return `This action updates a #${id} unit`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} unit`;
   }
 }

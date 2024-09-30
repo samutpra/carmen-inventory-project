@@ -10,36 +10,14 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { IResponseList } from 'src/_types/_IResponseList';
-import { Product } from './entities/product.entity';
+import { IResponseList } from 'src/interfaces';
+import { Product } from 'src/entities';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('api/v1/products')
 @ApiTags('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
-
-  @Post()
-  @ApiBody({
-    description: 'Create a new product',
-    type: CreateProductDto,
-    required: true,
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Product created successfully',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Bad request',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'Conflict',
-  })
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
-  }
 
   @Get()
   @ApiBody({
@@ -77,6 +55,28 @@ export class ProductsController {
   })
   async findOne(@Param('id') id: string): Promise<Product> {
     return this.productsService.findOne(id);
+  }
+
+  @Post()
+  @ApiBody({
+    description: 'Create a new product',
+    type: CreateProductDto,
+    required: true,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Product created successfully',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflict',
+  })
+  create(@Body() createProductDto: CreateProductDto) {
+    return this.productsService.create(createProductDto);
   }
 
   @Patch(':id')

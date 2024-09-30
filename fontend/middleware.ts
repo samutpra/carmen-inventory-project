@@ -1,10 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// src/middleware.ts
-import { middleware as i18nMiddleware } from "@/lib/i18n";
-
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
+
 import { TenantMiddleware } from "./tenantmiddleware";
+import { cookies } from "next/headers";
+import { middleware as i18nMiddleware } from "@/lib/i18n";
 
 const publicRoutes = ["/", "/login", "/signup"];
 const adminRoutes = ["/admin"];

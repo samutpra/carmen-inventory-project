@@ -1,5 +1,3 @@
-import {} from '@nestjs/common';
-
 export class User {
   username: string;
   email: string;

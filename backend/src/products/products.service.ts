@@ -1,12 +1,12 @@
-import { Mock_Product } from '../_mocks/mock_product';
+import { Default_PerPage, IResponseList } from 'src/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { CreateProductDto } from './dto/create-product.dto';
+import { DuplicateException } from 'src/lib';
+import { Mock_Product } from 'src/mocks';
+import { Product } from 'src/entities';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from './entities/product.entity';
-import { IResponseList } from 'src/_types/_IResponseList';
-import { K_PerPage } from 'src/_types/_IBaseTable';
-import { v4 as uuidv4 } from 'uuid';
-import { DuplicateException } from 'src/_lib/exception';
+import { ulid } from 'ulid';
 
 @Injectable()
 export class ProductsService {
@@ -20,7 +20,7 @@ export class ProductsService {
 
     const newProd: Product = {
       ...createProductDto,
-      id: uuidv4(),
+      id: ulid(),
       create_On: new Date(),
       update_On: new Date(),
     };
@@ -34,8 +34,8 @@ export class ProductsService {
       pagination: {
         total: products.length,
         page: 1,
-        perPage: K_PerPage,
-        pages: Math.ceil(products.length / K_PerPage),
+        perPage: Default_PerPage,
+        pages: Math.ceil(products.length / Default_PerPage),
       },
     };
     return res;

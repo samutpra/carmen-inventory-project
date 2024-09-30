@@ -1,12 +1,12 @@
-import { Tenant } from './entities/tenant.entity';
-import { IResponseList } from 'src/_types/_IResponseList';
+import { Default_PerPage, IResponseList } from 'src/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { CreateTenantDto } from './dto/create-tenant.dto';
+import { DuplicateException } from 'src/lib';
+import { Mock_Tenant } from 'src/mocks';
+import { Tenant } from 'src/entities';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { Mock_Tenant } from 'src/_mocks/mock_tenant';
-import { K_PerPage } from 'src/_types/_IBaseTable';
-import { DuplicateException } from 'src/_lib/exception';
-import { v4 as uuidv4 } from 'uuid';
+import { ulid } from 'ulid';
 
 @Injectable()
 export class TenantsService {
@@ -20,7 +20,7 @@ export class TenantsService {
 
     const newTenant: Tenant = {
       ...createTenantDto,
-      id: uuidv4(),
+      id: ulid(),
       create_On: new Date(),
       update_On: new Date(),
     };
@@ -34,8 +34,8 @@ export class TenantsService {
       pagination: {
         total: tenants.length,
         page: 1,
-        perPage: K_PerPage,
-        pages: Math.ceil(tenants.length / K_PerPage),
+        perPage: Default_PerPage,
+        pages: Math.ceil(tenants.length / Default_PerPage),
       },
     };
     return res;

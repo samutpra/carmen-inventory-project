@@ -1,10 +1,9 @@
-import { IBaseTable, IBasePimaryKey } from 'src/_types/_IBaseTable';
-import { ITenant } from 'src/_types/tenant';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IBasePimaryKey, IBaseTable, ITenant } from 'src/interfaces';
 
 @Entity('tenants')
 export class Tenant implements ITenant, IBaseTable, IBasePimaryKey {
-  @PrimaryColumn('uuid')
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -12,6 +11,9 @@ export class Tenant implements ITenant, IBaseTable, IBasePimaryKey {
 
   @Column({ nullable: true })
   description?: string;
+
+  @Column('boolean', { default: true })
+  isActive: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   create_On: Date;
