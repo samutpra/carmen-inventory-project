@@ -25,15 +25,16 @@ import {
   ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ResponseId, ResponseList, ResponseSingle } from 'src/interfaces';
-import { ExchangeRate } from 'src/entities';
-import { Mock_ExchangeRate } from 'src/mocks';
+import { ResponseId, ResponseList, ResponseSingle } from 'lib/types';
+import { ExchangeRate } from 'lib/entities';
+import { Mock_ExchangeRate } from 'lib/mocks';
 
 @Controller('api/exchangerate')
 @ApiTags('exchangerate')
 export class ExchangerateController {
   constructor(private readonly exchangerateService: ExchangerateService) {}
 
+  //#region GET ALL
   @Get('/v1')
   @ApiOkResponse({
     status: 200,
@@ -124,7 +125,9 @@ export class ExchangerateController {
   async findAll(): Promise<ResponseList<ExchangeRate>> {
     return this.exchangerateService.findAll();
   }
+  //#endregion GET ALL
 
+  //#region GET ONE
   @Get('/v1/:id')
   @ApiParam({ name: 'id', description: 'Exchangerate id' })
   @ApiOkResponse({
@@ -212,7 +215,9 @@ export class ExchangerateController {
   ): Promise<ResponseSingle<ExchangeRate>> {
     return this.exchangerateService.findOne(id);
   }
+  //#endregion GET ONE
 
+  //#region CREATE
   @Post('/v1')
   @ApiBody({
     type: CreateExchangerateDto,
@@ -311,7 +316,9 @@ export class ExchangerateController {
   ): Promise<ResponseId<string>> {
     return this.exchangerateService.create(createExchangerateDto);
   }
+  //#endregion Create
 
+  //#region UPDATE
   @Patch('/v1/:id')
   @ApiParam({ name: 'id', description: 'Exchangerate id' })
   @ApiBody({
@@ -400,7 +407,9 @@ export class ExchangerateController {
   ) {
     return this.exchangerateService.update(id, updateExchangerateDto);
   }
+  //#endregion UPDATE
 
+  //#region DELETE
   @Delete('/v1/:id')
   @ApiParam({ name: 'id', description: 'Exchangerate id' })
   @ApiResponse({
@@ -482,4 +491,5 @@ export class ExchangerateController {
   remove(@Param('id') id: string) {
     return this.exchangerateService.remove(id);
   }
+  //#endregion DELETE
 }

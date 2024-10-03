@@ -1,7 +1,7 @@
 import { CreateUserDto } from './dto/create-user.dto';
 import { Injectable } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
-import { SupabaseService } from 'src/_supabase/supabase.service';
+import { SupabaseService } from 'lib/Utils/supabase/supabase.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()

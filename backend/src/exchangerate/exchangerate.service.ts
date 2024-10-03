@@ -1,15 +1,15 @@
-import { Currency, ExchangeRate } from 'src/entities';
+import { Currency, ExchangeRate } from 'lib/entities';
 import {
   Default_PerPage,
   ResponseId,
   ResponseList,
   ResponseSingle,
-} from 'src/interfaces';
+} from 'lib/types';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateExchangerateDto } from './dto/create-exchangerate.dto';
 import { DuplicateException } from 'src/lib';
-import { Mock_ExchangeRate } from 'src/mocks';
+import { Mock_ExchangeRate } from 'lib/mocks';
 import { UpdateExchangerateDto } from './dto/update-exchangerate.dto';
 import { ulid } from 'ulid';
 
@@ -19,7 +19,9 @@ export class ExchangerateService {
     createExchangerateDto: CreateExchangerateDto,
   ): Promise<ResponseId<string>> {
     const found = Mock_ExchangeRate.find(
-      (exchangerate) => exchangerate.code === createExchangerateDto.code,
+      (exchangerate) =>
+        exchangerate.currencyId === createExchangerateDto.currencyId &&
+        exchangerate.atDate === createExchangerateDto.atDate,
     );
 
     if (found) {
@@ -29,8 +31,10 @@ export class ExchangerateService {
     const newExchangerate: ExchangeRate = {
       ...createExchangerateDto,
       id: ulid(),
-      create_On: new Date(),
-      update_On: new Date(),
+      created_On: new Date(),
+      created_by: 'USER-01',
+      updated_On: new Date(),
+      updated_by: 'USER-01',
     };
     Mock_ExchangeRate.push(newExchangerate);
 

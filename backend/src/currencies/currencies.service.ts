@@ -3,18 +3,19 @@ import {
   ResponseId,
   ResponseList,
   ResponseSingle,
-} from 'src/interfaces';
+} from 'lib/types';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateCurrencyDto } from './dto/create-currency.dto';
-import { Currency } from 'src/entities';
+import { Currency } from 'lib/entities';
 import { DuplicateException } from 'src/lib';
-import { Mock_Currency } from 'src/mocks';
+import { Mock_Currency } from 'lib/mocks';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { ulid } from 'ulid';
 
 @Injectable()
 export class CurrenciesService {
+  //#region CREATE
   async create(
     createCurrencyDto: CreateCurrencyDto,
   ): Promise<ResponseId<string>> {
@@ -28,8 +29,10 @@ export class CurrenciesService {
     const newCurrency: Currency = {
       ...createCurrencyDto,
       id: ulid(),
-      create_On: new Date(),
-      update_On: new Date(),
+      created_On: new Date(),
+      created_by: 'USER-01',
+      updated_On: new Date(),
+      updated_by: 'USER-01',
     };
     Mock_Currency.push(newCurrency);
 
@@ -39,7 +42,9 @@ export class CurrenciesService {
 
     return res;
   }
+  //#endregion CREATE
 
+  //#region GET ALL
   async findAll(): Promise<ResponseList<Currency>> {
     const currencies = Mock_Currency;
     const res: ResponseList<Currency> = {
@@ -53,7 +58,9 @@ export class CurrenciesService {
     };
     return res;
   }
+  //#endregion GET ALL
 
+  //#region GET ONE
   async findOne(id: string): Promise<ResponseSingle<Currency>> {
     const currency = Mock_Currency.find((currency) => currency.id === id);
     if (!currency) {
@@ -64,8 +71,13 @@ export class CurrenciesService {
     };
     return res;
   }
+  //#endregion GET ONE
 
-  update(id: string, updateCurrencyDto: UpdateCurrencyDto) {
+  //#region UPDATE
+  async update(
+    id: string,
+    updateCurrencyDto: UpdateCurrencyDto,
+  ): Promise<ResponseId<string>> {
     const index = Mock_Currency.findIndex((currency) => currency.id === id);
     if (index === -1) {
       throw new NotFoundException('Currency not found');
@@ -74,8 +86,16 @@ export class CurrenciesService {
     if (index !== -1) {
       Mock_Currency[index] = { ...Mock_Currency[index], ...updateCurrencyDto };
     }
-  }
 
+    const res: ResponseId<string> = {
+      id: Mock_Currency[index].id,
+    };
+
+    return res;
+  }
+  //#endregion UPDATE
+
+  //#region DELETE
   remove(id: string) {
     const index = Mock_Currency.findIndex((currency) => currency.id === id);
     if (index === -1) {
@@ -86,4 +106,5 @@ export class CurrenciesService {
       Mock_Currency.splice(index, 1);
     }
   }
+  //#endregion DELETE
 }

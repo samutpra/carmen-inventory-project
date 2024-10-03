@@ -10,8 +10,8 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { IResponseList } from 'src/interfaces';
-import { Product } from 'src/entities';
+import { IResponseList } from 'lib/types';
+import { Product } from 'lib/entities';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('api/v1/products')

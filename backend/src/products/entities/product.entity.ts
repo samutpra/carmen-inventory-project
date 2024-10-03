@@ -4,7 +4,7 @@ import {
   IBaseTable,
   IProduct,
   IUnitConversion,
-} from 'src/interfaces';
+} from 'lib/types';
 
 @Entity()
 export class Product implements IProduct, IBaseTable, IBasePimaryKey {
@@ -14,98 +14,39 @@ export class Product implements IProduct, IBaseTable, IBasePimaryKey {
   @Column()
   name: string;
 
-  @Column('numeric', { precision: 10, scale: 2 })
-  price: number;
+  @Column()
+  code: string;
 
   @Column()
   description: string;
 
   @Column()
-  productCode: string;
-
-  @Column()
   localDescription: string;
 
-  @Column()
-  categoryId: string;
+  @Column('numeric', { precision: 10, scale: 2 })
+  price: number;
 
   @Column()
-  subCategoryId: string;
+  productCategoryId: string;
 
   @Column()
-  itemGroupId: string;
+  productSubCategoryId: string;
 
   @Column()
-  primaryInventoryUnitId: string;
+  productItemGroupId: string;
 
-  @Column()
-  size?: string;
-  @Column()
-  color?: string;
-  @Column()
-  barcode?: string;
   @Column()
   isActive: boolean;
 
-  @Column('numeric')
-  basePrice: number;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_On: Date;
 
   @Column()
-  currencyId: string;
+  created_by: string;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updated_On: Date;
 
   @Column()
-  taxType: string;
-
-  @Column()
-  taxRate: number;
-
-  @Column()
-  standardCost: number;
-
-  @Column()
-  lastCost: number;
-
-  @Column()
-  priceDeviationLimit: number;
-
-  @Column()
-  quantityDeviationLimit: number;
-
-  @Column()
-  minStockLevel: number;
-
-  @Column()
-  maxStockLevel: number;
-
-  @Column()
-  isForSale: boolean;
-
-  @Column()
-  isIngredient: boolean;
-
-  @Column()
-  weight?: number;
-
-  // dimensions?: { length: number; width: number; height: number };
-
-  @Column()
-  shelfLife?: number;
-
-  @Column()
-  storageInstructions?: string;
-
-  @Column()
-  imageUrl?: string;
-
-  @Column()
-  preferVendor?: string;
-
-  @Column()
-  unitConversions?: IUnitConversion[];
-
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
-  create_On: Date;
-
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
-  update_On: Date;
+  updated_by: string;
 }

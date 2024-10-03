@@ -1,10 +1,10 @@
-import { Default_PerPage, IResponseList } from 'src/interfaces';
+import { Default_PerPage, IResponseList } from 'lib/types';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { DuplicateException } from 'src/lib';
-import { Mock_Tenant } from 'src/mocks';
-import { Tenant } from 'src/entities';
+import { Mock_Tenant } from 'lib/mocks';
+import { Tenant } from 'lib/entities';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { ulid } from 'ulid';
 
@@ -21,8 +21,10 @@ export class TenantsService {
     const newTenant: Tenant = {
       ...createTenantDto,
       id: ulid(),
-      create_On: new Date(),
-      update_On: new Date(),
+      created_On: new Date(),
+      created_by: 'USER-01',
+      updated_On: new Date(),
+      updated_by: 'USER-01',
     };
     Mock_Tenant.push(newTenant);
   }

@@ -1,0 +1,28 @@
+import { IBasePimaryKey, IBaseTable } from './iBase';
+
+export interface ICommentAndAttachment extends IBasePimaryKey, IBaseTable {
+  comment?: string;
+  attachments?: File;
+  atDate: Date;
+  isActive: boolean;
+  publicAccess: boolean;
+}
+
+export interface ICommentAndAttachmentCreate
+  extends Partial<ICommentAndAttachment> {
+  comment?: string;
+  attachments?: File;
+  atDate: Date;
+  isActive: boolean;
+  publicAccess: boolean;
+}
+
+export interface ICommentAndAttachmentUpdate
+  extends Partial<ICommentAndAttachment> {
+  id: string;
+  comment?: string;
+  attachments?: File;
+  atDate?: Date;
+  isActive?: boolean;
+  publicAccess?: boolean;
+}

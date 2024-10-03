@@ -1,0 +1,5 @@
+export enum enumCostingMethod {
+  FIFO = 'FIFO',
+  MOVING_AVERAGE = 'MOVING_AVERAGE',
+  WEIGHTED_AVERAGE = 'WEIGHTED_AVERAGE',
+}

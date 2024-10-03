@@ -1,10 +1,10 @@
-import { Default_PerPage, IResponseList } from 'src/interfaces';
+import { Default_PerPage, IResponseList } from 'lib/types';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { DuplicateException } from 'src/lib';
-import { Mock_Product } from 'src/mocks';
-import { Product } from 'src/entities';
+import { Mock_Product } from 'lib/mocks';
+import { Product } from 'lib/entities';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ulid } from 'ulid';
 
@@ -12,7 +12,7 @@ import { ulid } from 'ulid';
 export class ProductsService {
   create(createProductDto: CreateProductDto) {
     const found = Mock_Product.find(
-      (product) => product.productCode === createProductDto.productCode,
+      (product) => product.code === createProductDto.code,
     );
     if (found) {
       throw new DuplicateException('Product already exists');
@@ -21,8 +21,10 @@ export class ProductsService {
     const newProd: Product = {
       ...createProductDto,
       id: ulid(),
-      create_On: new Date(),
-      update_On: new Date(),
+      created_On: new Date(),
+      created_by: 'USER-01',
+      updated_On: new Date(),
+      updated_by: 'USER-01',
     };
     Mock_Product.push(newProd);
   }

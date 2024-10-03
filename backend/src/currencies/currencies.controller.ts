@@ -10,8 +10,8 @@ import {
 import { CurrenciesService } from './currencies.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
-import { Currency } from 'src/entities';
-import { ResponseId, ResponseList, ResponseSingle } from 'src/interfaces';
+import { Currency } from 'lib/entities';
+import { ResponseId, ResponseList, ResponseSingle } from 'lib/types';
 import {
   ApiBody,
   ApiResponse,
@@ -27,12 +27,14 @@ import {
   ApiConflictResponse,
   ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
-import { Mock_Currency } from 'src/mocks';
+import { Mock_Currency } from 'lib/mocks';
 
 @Controller('api/currencies')
 @ApiTags('currencies')
 export class CurrenciesController {
   constructor(private readonly currenciesService: CurrenciesService) {}
+
+  //#region CREATE
   @Post('/v1')
   @ApiBody({
     type: CreateCurrencyDto,
@@ -152,12 +154,14 @@ export class CurrenciesController {
       error: 'Too Many Requests',
     },
   })
-  create(
+  async create(
     @Body() createCurrencyDto: CreateCurrencyDto,
   ): Promise<ResponseId<string>> {
     return this.currenciesService.create(createCurrencyDto);
   }
+  //#endregion CREATE
 
+  //#region GET ALL
   @Get('/v1')
   @ApiOkResponse({
     status: 200,
@@ -248,7 +252,9 @@ export class CurrenciesController {
   async findAll(): Promise<ResponseList<Currency>> {
     return this.currenciesService.findAll();
   }
+  //#endregion GET ALL
 
+  //#region GET ONE
   @Get('/v1/:id')
   @ApiParam({ name: 'id', description: 'Currency id' })
   @ApiOkResponse({
@@ -334,11 +340,13 @@ export class CurrenciesController {
   async findOne(@Param('id') id: string): Promise<ResponseSingle<Currency>> {
     return this.currenciesService.findOne(id);
   }
+  //#endregion GET ONE
 
+  //#region UPDATE
   @Patch('/v1/:id')
   @ApiParam({ name: 'id', description: 'Currency id' })
   @ApiBody({
-    type: CreateCurrencyDto,
+    type: UpdateCurrencyDto,
     description: 'Update a currency by id',
   })
   @ApiResponse({
@@ -417,13 +425,15 @@ export class CurrenciesController {
       error: 'Too Many Requests',
     },
   })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateCurrencyDto: UpdateCurrencyDto,
-  ) {
+  ): Promise<ResponseId<string>> {
     return this.currenciesService.update(id, updateCurrencyDto);
   }
+  //#endregion UPDATE
 
+  //#region DELETE
   @Delete('/v1/:id')
   @ApiParam({ name: 'id', description: 'Currency id' })
   @ApiResponse({
@@ -505,4 +515,5 @@ export class CurrenciesController {
   remove(@Param('id') id: string) {
     return this.currenciesService.remove(id);
   }
+  //#endregion DELETE
 }

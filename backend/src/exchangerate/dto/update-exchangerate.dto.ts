@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ExchangeRate } from 'src/entities';
+import { ExchangeRate } from 'lib/entities';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class UpdateExchangerateDto extends PartialType(ExchangeRate) {

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
-import { Tenant } from 'src/entities';
+import { Tenant } from 'lib/entities';
 import { ulid } from 'ulid';
 
 export class UpdateTenantDto extends PartialType(Tenant) {

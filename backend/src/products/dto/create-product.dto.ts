@@ -1,40 +1,19 @@
-import { IUnitConversion } from 'src/interfaces';
-import { PartialType } from '@nestjs/mapped-types';
-import { Product } from 'src/entities';
+import { IProductCreate, IUnitConversion } from 'lib/types';
 
-export class CreateProductDto extends PartialType(Product) {
-  id: string;
-  create_On: Date;
-  update_On: Date;
+import { PartialType } from '@nestjs/mapped-types';
+
+export class CreateProductDto implements IProductCreate {
   name: string;
-  price: number;
+  code: string;
   description: string;
-  productCode: string;
   localDescription: string;
-  categoryId: string;
-  subCategoryId: string;
-  itemGroupId: string;
-  primaryInventoryUnitId: string;
-  size?: string;
-  color?: string;
-  barcode?: string;
+  productCategoryId: string;
+  productSubCategoryId: string;
+  productItemGroupId: string;
+  price: number;
+  quantity: number;
+  unit: string;
+  unitConversion: IUnitConversion[];
+  imageUrl: string;
   isActive: boolean;
-  basePrice: number;
-  currencyId: string;
-  taxType: string;
-  taxRate: number;
-  standardCost: number;
-  lastCost: number;
-  priceDeviationLimit: number;
-  quantityDeviationLimit: number;
-  minStockLevel: number;
-  maxStockLevel: number;
-  isForSale: boolean;
-  isIngredient: boolean;
-  weight?: number;
-  shelfLife?: number;
-  storageInstructions?: string;
-  imageUrl?: string;
-  preferVendor?: string;
-  unitConversions?: IUnitConversion[];
 }
