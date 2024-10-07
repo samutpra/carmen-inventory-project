@@ -29,6 +29,11 @@ async function bootstrap() {
       'https://carmen-inventory-backend.vercel.app/',
       'Dev Cloud Environment',
     )
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      in: 'header',
+    })
     .build();
 
   const options: SwaggerDocumentOptions = {

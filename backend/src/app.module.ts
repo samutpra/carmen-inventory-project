@@ -8,6 +8,7 @@ import { StoreLocationsModule } from './storelocations/storelocations.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { UnitsModule } from './units/units.module';
 import { UserModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from './users/users.module';
     UnitsModule,
     StoreLocationsModule,
     ExchangerateModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

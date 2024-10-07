@@ -6,41 +6,48 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { StoreLocationsService } from './storelocations.service';
 import { CreateStoreLocationDto } from './dto/create-storelocation.dto';
 import { UpdateStoreLocationDto } from './dto/update-storelocation.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { IResponseId } from 'lib/types';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
-@Controller('api/storelocations')
+@Controller('api/v1/storelocations')
 @ApiTags('storelocations')
+@ApiBearerAuth()
 export class StoreLocationsController {
   constructor(private readonly storelocationsService: StoreLocationsService) {}
 
-  @Post('/v1')
+  @Post()
   @ApiBody({
     description: 'Create a new storelocation',
     type: CreateStoreLocationDto,
     required: true,
   })
+  @UseGuards(JwtAuthGuard)
   async create(
     @Body() createLocationDto: CreateStoreLocationDto,
   ): Promise<IResponseId<string>> {
     return this.storelocationsService.create(createLocationDto);
   }
 
-  @Get('/v1')
+  @Get()
+  @UseGuards(JwtAuthGuard)
   findAll() {
     return this.storelocationsService.findAll();
   }
 
-  @Get('/v1/:id')
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.storelocationsService.findOne(id);
   }
 
-  @Patch('/v1/:id')
+  @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: string,
     @Body() updateLocationDto: UpdateStoreLocationDto,
@@ -48,7 +55,8 @@ export class StoreLocationsController {
     return this.storelocationsService.update(id, updateLocationDto);
   }
 
-  @Delete('/v1/:id')
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.storelocationsService.remove(id);
   }

@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { CurrenciesService } from './currencies.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
@@ -26,16 +27,19 @@ import {
   ApiMethodNotAllowedResponse,
   ApiConflictResponse,
   ApiTooManyRequestsResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { Mock_Currency } from 'lib/mocks';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
-@Controller('api/currencies')
+@Controller('api/v1/currencies')
 @ApiTags('currencies')
+@ApiBearerAuth()
 export class CurrenciesController {
   constructor(private readonly currenciesService: CurrenciesService) {}
 
   //#region CREATE
-  @Post('/v1')
+  @Post()
   @ApiBody({
     type: CreateCurrencyDto,
     description: 'Create a new currency',
@@ -154,6 +158,7 @@ export class CurrenciesController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   async create(
     @Body() createCurrencyDto: CreateCurrencyDto,
   ): Promise<ResponseId<string>> {
@@ -162,7 +167,7 @@ export class CurrenciesController {
   //#endregion CREATE
 
   //#region GET ALL
-  @Get('/v1')
+  @Get()
   @ApiOkResponse({
     status: 200,
     description: 'Currencies retrieved successfully',
@@ -249,13 +254,14 @@ export class CurrenciesController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   async findAll(): Promise<ResponseList<Currency>> {
     return this.currenciesService.findAll();
   }
   //#endregion GET ALL
 
   //#region GET ONE
-  @Get('/v1/:id')
+  @Get(':id')
   @ApiParam({ name: 'id', description: 'Currency id' })
   @ApiOkResponse({
     status: 200,
@@ -337,13 +343,14 @@ export class CurrenciesController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string): Promise<ResponseSingle<Currency>> {
     return this.currenciesService.findOne(id);
   }
   //#endregion GET ONE
 
   //#region UPDATE
-  @Patch('/v1/:id')
+  @Patch(':id')
   @ApiParam({ name: 'id', description: 'Currency id' })
   @ApiBody({
     type: UpdateCurrencyDto,
@@ -425,6 +432,7 @@ export class CurrenciesController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id') id: string,
     @Body() updateCurrencyDto: UpdateCurrencyDto,
@@ -434,7 +442,7 @@ export class CurrenciesController {
   //#endregion UPDATE
 
   //#region DELETE
-  @Delete('/v1/:id')
+  @Delete(':id')
   @ApiParam({ name: 'id', description: 'Currency id' })
   @ApiResponse({
     status: 200,
@@ -512,6 +520,7 @@ export class CurrenciesController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.currenciesService.remove(id);
   }

@@ -1,17 +1,21 @@
 meta {
-  name: 06 - Post (USD - Tenant 2)
+  name: 03 - Post
   type: http
-  seq: 6
+  seq: 3
 }
 
 post {
-  url: {{host}}/api/v1/currencies
+  url: {{host}}/api/v1/storelocation
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   x-tenant-id: 8449fe63-8d61-4bb9-8122-a897e6998d8d
+}
+
+auth:bearer {
+  token: {{login_jwt}}
 }
 
 body:json {

@@ -1,4 +1,7 @@
 import { IBasePimaryKey, IBaseTable } from './iBase';
+
+import { enumPurchaseRequestItemStatus } from 'lib/enums';
+
 export interface IPurchaseRequestItem extends IBasePimaryKey, IBaseTable {
   location: string;
   name: string;
@@ -33,9 +36,9 @@ export interface IPurchaseRequestItem extends IBasePimaryKey, IBaseTable {
   accountCode: string;
   jobCode: string;
 
-  status?: 'Accepted' | 'Rejected' | 'Review';
+  status?: enumPurchaseRequestItemStatus;
 
-  inventoryInfo(): {
+  inventoryInfo: {
     onHand(): number;
     onOrdered(): number;
     reorderLevel(): number;

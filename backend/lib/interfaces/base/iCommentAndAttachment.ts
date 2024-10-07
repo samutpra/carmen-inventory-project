@@ -3,7 +3,7 @@ import { IBasePimaryKey, IBaseTable } from './iBase';
 export interface ICommentAndAttachment extends IBasePimaryKey, IBaseTable {
   comment?: string;
   attachments?: File;
-  atDate: Date;
+  timeStamp: Date;
   isActive: boolean;
   publicAccess: boolean;
 }
@@ -12,7 +12,7 @@ export interface ICommentAndAttachmentCreate
   extends Partial<ICommentAndAttachment> {
   comment?: string;
   attachments?: File;
-  atDate: Date;
+  timeStamp: Date;
   isActive: boolean;
   publicAccess: boolean;
 }
@@ -22,7 +22,7 @@ export interface ICommentAndAttachmentUpdate
   id: string;
   comment?: string;
   attachments?: File;
-  atDate?: Date;
+  timeStamp?: Date;
   isActive?: boolean;
   publicAccess?: boolean;
 }

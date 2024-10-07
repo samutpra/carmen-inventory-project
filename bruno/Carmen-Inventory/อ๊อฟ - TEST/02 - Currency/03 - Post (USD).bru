@@ -5,13 +5,17 @@ meta {
 }
 
 post {
-  url: {{host}}/api/currencies
+  url: {{host}}/api/v1/currencies
   body: json
-  auth: none
+  auth: bearer
 }
 
 headers {
   x-tenant-id: 8449fe63-8d61-4bb9-8122-a897e6998d8d
+}
+
+auth:bearer {
+  token: {{login_jwt}}
 }
 
 body:json {

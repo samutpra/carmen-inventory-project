@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ExchangerateService } from './exchangerate.service';
 import { CreateExchangerateDto } from './dto/create-exchangerate.dto';
@@ -24,18 +25,21 @@ import {
   ApiTags,
   ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { ResponseId, ResponseList, ResponseSingle } from 'lib/types';
 import { ExchangeRate } from 'lib/entities';
 import { Mock_ExchangeRate } from 'lib/mocks';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
-@Controller('api/exchangerate')
+@Controller('api/v1/exchangerate')
 @ApiTags('exchangerate')
+@ApiBearerAuth()
 export class ExchangerateController {
   constructor(private readonly exchangerateService: ExchangerateService) {}
 
   //#region GET ALL
-  @Get('/v1')
+  @Get()
   @ApiOkResponse({
     status: 200,
     description: 'Exchangerate created successfully',
@@ -122,13 +126,14 @@ export class ExchangerateController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   async findAll(): Promise<ResponseList<ExchangeRate>> {
     return this.exchangerateService.findAll();
   }
   //#endregion GET ALL
 
   //#region GET ONE
-  @Get('/v1/:id')
+  @Get(':id')
   @ApiParam({ name: 'id', description: 'Exchangerate id' })
   @ApiOkResponse({
     status: 200,
@@ -210,6 +215,7 @@ export class ExchangerateController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   async findOne(
     @Param('id') id: string,
   ): Promise<ResponseSingle<ExchangeRate>> {
@@ -218,7 +224,7 @@ export class ExchangerateController {
   //#endregion GET ONE
 
   //#region CREATE
-  @Post('/v1')
+  @Post()
   @ApiBody({
     type: CreateExchangerateDto,
     description: 'Create a new exchangerate',
@@ -311,6 +317,7 @@ export class ExchangerateController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   async create(
     @Body() createExchangerateDto: CreateExchangerateDto,
   ): Promise<ResponseId<string>> {
@@ -319,7 +326,7 @@ export class ExchangerateController {
   //#endregion Create
 
   //#region UPDATE
-  @Patch('/v1/:id')
+  @Patch(':id')
   @ApiParam({ name: 'id', description: 'Exchangerate id' })
   @ApiBody({
     type: CreateExchangerateDto,
@@ -401,6 +408,7 @@ export class ExchangerateController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: string,
     @Body() updateExchangerateDto: UpdateExchangerateDto,
@@ -410,7 +418,7 @@ export class ExchangerateController {
   //#endregion UPDATE
 
   //#region DELETE
-  @Delete('/v1/:id')
+  @Delete(':id')
   @ApiParam({ name: 'id', description: 'Exchangerate id' })
   @ApiResponse({
     status: 200,
@@ -488,6 +496,7 @@ export class ExchangerateController {
       error: 'Too Many Requests',
     },
   })
+  @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.exchangerateService.remove(id);
   }
