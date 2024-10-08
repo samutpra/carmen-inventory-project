@@ -3,12 +3,12 @@ import {
   ResponseId,
   ResponseList,
   ResponseSingle,
-} from 'lib/types';
+} from 'lib/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { Currency } from 'lib/entities';
-import { DuplicateException } from 'src/lib';
+import { DuplicateException } from 'lib/utils/exceptions';
 import { Mock_Currency } from 'lib/mocks';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { ulid } from 'ulid';

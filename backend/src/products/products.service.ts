@@ -1,8 +1,8 @@
-import { Default_PerPage, IResponseList } from 'lib/types';
+import { Default_PerPage, IResponseList } from 'lib/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateProductDto } from './dto/create-product.dto';
-import { DuplicateException } from 'src/lib';
+import { DuplicateException } from 'lib/utils';
 import { Mock_Product } from 'lib/mocks';
 import { Product } from 'lib/entities';
 import { UpdateProductDto } from './dto/update-product.dto';

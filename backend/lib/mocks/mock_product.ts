@@ -8,8 +8,7 @@ export const Mock_Product: Product[] = [
     name: 'Standard Room',
     description: 'Comfortable standard room with basic amenities',
     localDescription: 'Habitación estándar cómoda con servicios básicos',
-    productCategoryId: 'CATEGORY-001',
-    productSubCategoryId: 'SUBCAT-001',
+
     productItemGroupId: 'GRP-ACCOM',
     isActive: true,
     price: 0,
@@ -24,8 +23,7 @@ export const Mock_Product: Product[] = [
     name: 'Deluxe Room',
     description: 'Spacious deluxe room with premium amenities',
     localDescription: 'Habitación de lujo espaciosa con servicios premium',
-    productCategoryId: 'CAT-ROOM',
-    productSubCategoryId: 'SUBCAT-DLX',
+
     productItemGroupId: 'GRP-ACCOM',
     isActive: true,
     price: 0,
@@ -40,8 +38,7 @@ export const Mock_Product: Product[] = [
     name: 'Suite',
     description: 'Luxurious suite with separate living area',
     localDescription: 'Suite lujosa con área de estar separada',
-    productCategoryId: 'CAT-ROOM',
-    productSubCategoryId: 'SUBCAT-STE',
+
     productItemGroupId: 'GRP-ACCOM',
     isActive: true,
     price: 0,
@@ -56,8 +53,7 @@ export const Mock_Product: Product[] = [
     name: 'Breakfast Buffet',
     description: 'Full breakfast buffet service',
     localDescription: 'Servicio de desayuno buffet completo',
-    productCategoryId: 'CAT-FOOD',
-    productSubCategoryId: 'SUBCAT-BRKFST',
+
     productItemGroupId: 'GRP-DINING',
     isActive: true,
     price: 0,
@@ -72,8 +68,7 @@ export const Mock_Product: Product[] = [
     name: 'Wi-Fi Service',
     description: 'High-speed Wi-Fi internet access',
     localDescription: 'Acceso a internet Wi-Fi de alta velocidad',
-    productCategoryId: 'CAT-SERVICE',
-    productSubCategoryId: 'SUBCAT-INTERNET',
+
     productItemGroupId: 'GRP-AMENITIES',
     isActive: true,
     price: 0,

@@ -4,11 +4,11 @@ import {
   ResponseId,
   ResponseList,
   ResponseSingle,
-} from 'lib/types';
+} from 'lib/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateExchangerateDto } from './dto/create-exchangerate.dto';
-import { DuplicateException } from 'src/lib';
+import { DuplicateException } from 'lib/utils';
 import { Mock_ExchangeRate } from 'lib/mocks';
 import { UpdateExchangerateDto } from './dto/update-exchangerate.dto';
 import { ulid } from 'ulid';

@@ -13,6 +13,9 @@ export interface IBaseTable {
   created_by: string;
   updated_On?: Date;
   updated_by?: string;
+  deleted_On?: Date;
+  deleted_by?: string;
+  isDeleted?: boolean;
 }
 
 export class BaseTable implements IBaseTable {
@@ -20,6 +23,9 @@ export class BaseTable implements IBaseTable {
   created_by: string;
   updated_On?: Date;
   updated_by?: string;
+  deleted_On?: Date;
+  deleted_by?: string;
+  isDeleted?: boolean;
 }
 
 export interface IResponseList<T> {

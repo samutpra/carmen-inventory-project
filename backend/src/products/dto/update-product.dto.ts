@@ -1,4 +1,4 @@
-import { IProductInfo, IProductUpdate } from 'lib/types';
+import { IProductInfo, IProductUpdate } from 'lib/interfaces';
 import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class UpdateProductDto implements IProductUpdate {

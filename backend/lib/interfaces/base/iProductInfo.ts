@@ -6,28 +6,15 @@ export interface IProductInfo extends IBasePimaryKey, IBaseTable {
   productId: string;
 
   primaryInventoryUnitId: string;
-  primaryInventoryUnit?: IUnit[];
   primaryOrderUnitId: string;
-  primaryOrderUnit?: IUnit[];
+  OrderUnit?: IUnit[];
   primaryRecipeUnitId: string;
-  primaryRecipeUnit: IUnit[];
+  RecipeUnit?: IUnit[];
   primaryCountingUnitId: string;
-  primaryCountingUnit: IUnit[];
-
-  imageUrl?: string;
-
-  standardCost: number;
-  lastCost: number;
+  CountingUnit?: IUnit[];
 
   taxType: string;
   taxRate: number;
-
-  preferVendor?: string;
-  priceDeviationLimit: number;
-  quantityDeviationLimit: number;
-
-  minStockLevel: number;
-  maxStockLevel: number;
 
   isForSale: boolean;
   isIngredient: boolean;
@@ -40,12 +27,60 @@ export interface IProductInfo extends IBasePimaryKey, IBaseTable {
     storageInstructions?: string;
     weight?: number;
   };
+  standardCost?: number;
+  lastCost?: number;
+  preferVendor?: string;
+  priceDeviationLimit?: number;
+  quantityDeviationLimit?: number;
+  minStockLevel?: number;
+  maxStockLevel?: number;
+  imageUrl?: string;
+  isActive: boolean;
 }
 
 export interface IProductInfoCreate extends Partial<IProductInfo> {
   productId: string;
+  primaryInventoryUnitId: string;
+  primaryOrderUnitId: string;
+  primaryRecipeUnitId: string;
+  primaryCountingUnitId: string;
+  taxType: string;
+  isForSale: boolean;
+  isIngredient: boolean;
+  attributes: {
+    dimensions?: { length?: number; width?: number; height?: number };
+    size?: string;
+    color?: string;
+    shelfLife?: number;
+    storageInstructions?: string;
+    weight?: number;
+  };
 }
 
 export interface IProductInfoUpdate extends Partial<IProductInfo> {
+  id: string; // id is required for update
   productId: string;
+  primaryInventoryUnitId?: string;
+  primaryOrderUnitId?: string;
+  primaryRecipeUnitId?: string;
+  primaryCountingUnitId?: string;
+  taxType?: string;
+  isForSale?: boolean;
+  isIngredient?: boolean;
+  attributes?: {
+    dimensions?: { length?: number; width?: number; height?: number };
+    size?: string;
+    color?: string;
+    shelfLife?: number;
+    storageInstructions?: string;
+    weight?: number;
+  };
+  standardCost?: number;
+  lastCost?: number;
+  preferVendor?: string;
+  priceDeviationLimit?: number;
+  quantityDeviationLimit?: number;
+  minStockLevel?: number;
+  maxStockLevel?: number;
+  imageUrl?: string;
 }

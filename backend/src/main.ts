@@ -29,6 +29,12 @@ async function bootstrap() {
       'https://carmen-inventory-backend.vercel.app/',
       'Dev Cloud Environment',
     )
+    // .addSecurity('token', {
+    //   type: 'apiKey',
+    //   scheme: 'api_key',
+    //   in: 'header',
+    //   name: 'auth-token',
+    // })
     .addBearerAuth({
       type: 'http',
       scheme: 'bearer',

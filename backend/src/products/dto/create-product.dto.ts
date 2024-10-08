@@ -1,4 +1,4 @@
-import { IProductCreate, IUnitConversion } from 'lib/types';
+import { IProductCreate, IUnitConversion } from 'lib/interfaces';
 
 import { PartialType } from '@nestjs/mapped-types';
 

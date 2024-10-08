@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IExchangeRateCreate } from 'lib/types';
+import { IExchangeRateCreate } from 'lib/interfaces';
 
 export class CreateExchangerateDto implements IExchangeRateCreate {
   currencyId: string;

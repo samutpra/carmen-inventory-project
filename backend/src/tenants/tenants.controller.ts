@@ -11,7 +11,7 @@ import {
 import { TenantsService } from './tenants.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { IResponseList } from 'lib/types';
+import { IResponseList } from 'lib/interfaces';
 import { Tenant } from 'lib/entities';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
@@ -21,12 +21,6 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 @ApiBearerAuth()
 export class TenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
-
-  @Post()
-  @UseGuards(JwtAuthGuard)
-  create(@Body() createTenantDto: CreateTenantDto) {
-    return this.tenantsService.create(createTenantDto);
-  }
 
   @Get()
   @UseGuards(JwtAuthGuard)
@@ -38,6 +32,12 @@ export class TenantsController {
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string): Promise<Tenant> {
     return this.tenantsService.findOne(id);
+  }
+
+  @Post()
+  @UseGuards(JwtAuthGuard)
+  create(@Body() createTenantDto: CreateTenantDto) {
+    return this.tenantsService.create(createTenantDto);
   }
 
   @Patch(':id')

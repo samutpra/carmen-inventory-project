@@ -1,8 +1,8 @@
-import { Default_PerPage, IResponseList } from 'lib/types';
+import { Default_PerPage, IResponseList } from 'lib/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateTenantDto } from './dto/create-tenant.dto';
-import { DuplicateException } from 'src/lib';
+import { DuplicateException } from 'lib/utils';
 import { Mock_Tenant } from 'lib/mocks';
 import { Tenant } from 'lib/entities';
 import { UpdateTenantDto } from './dto/update-tenant.dto';

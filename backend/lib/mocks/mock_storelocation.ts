@@ -1,7 +1,7 @@
 import { StoreLocation } from 'lib/entities';
 import { faker } from '@faker-js/faker';
 
-export const Mock_Location: StoreLocation[] = [
+export const Mock_StoreLocation: StoreLocation[] = [
   {
     id: '01J8ZD4QYBYTFY048VW5PNKH7M',
     code: 'ST-001',

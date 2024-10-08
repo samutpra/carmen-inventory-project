@@ -1,13 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import {
-  IBasePimaryKey,
-  IBaseTable,
-  IProduct,
-  IUnitConversion,
-} from 'lib/types';
+
+import { IProduct } from 'lib/interfaces';
 
 @Entity()
-export class Product implements IProduct, IBaseTable, IBasePimaryKey {
+export class Product implements IProduct {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -27,12 +23,6 @@ export class Product implements IProduct, IBaseTable, IBasePimaryKey {
   price: number;
 
   @Column()
-  productCategoryId: string;
-
-  @Column()
-  productSubCategoryId: string;
-
-  @Column()
   productItemGroupId: string;
 
   @Column()
@@ -45,8 +35,17 @@ export class Product implements IProduct, IBaseTable, IBasePimaryKey {
   created_by: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_On: Date;
+  updated_On?: Date;
 
   @Column()
-  updated_by: string;
+  updated_by?: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  deleted_On?: Date;
+
+  @Column({ nullable: true })
+  deleted_by?: string;
+
+  @Column()
+  isDeleted?: boolean;
 }

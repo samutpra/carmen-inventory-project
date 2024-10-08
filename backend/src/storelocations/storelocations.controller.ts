@@ -12,8 +12,15 @@ import { StoreLocationsService } from './storelocations.service';
 import { CreateStoreLocationDto } from './dto/create-storelocation.dto';
 import { UpdateStoreLocationDto } from './dto/update-storelocation.dto';
 import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-import { IResponseId } from 'lib/types';
+import {
+  IResponseId,
+  IResponseList,
+  IResponseSingle,
+  IStoreLocation,
+} from 'lib/interfaces';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { StoreLocation } from 'lib/entities';
+import { I } from '@faker-js/faker/dist/airline-C5Qwd7_q';
 
 @Controller('api/v1/storelocations')
 @ApiTags('storelocations')
@@ -36,14 +43,16 @@ export class StoreLocationsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll() {
-    return this.storelocationsService.findAll();
+  async findAll(): Promise<IResponseList<IStoreLocation>> {
+    return await this.storelocationsService.findAll();
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  findOne(@Param('id') id: string) {
-    return this.storelocationsService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<IResponseSingle<IStoreLocation>> {
+    return await this.storelocationsService.findOne(id);
   }
 
   @Patch(':id')

@@ -10,8 +10,6 @@ export interface IProduct extends IBasePimaryKey, IBaseTable {
 
   barcode?: string;
 
-  productCategoryId: string;
-  productSubCategoryId: string;
   productItemGroupId: string;
 
   isActive: boolean;
@@ -22,8 +20,6 @@ export interface IProductCreate extends Partial<IProduct> {
   code: string;
   description: string;
   localDescription: string;
-  productCategoryId: string;
-  productSubCategoryId: string;
   productItemGroupId: string;
   isActive: boolean;
 
@@ -36,8 +32,6 @@ export interface IProductUpdate extends Partial<IProduct> {
   name?: string;
   description?: string;
   localDescription?: string;
-  productCategoryId?: string;
-  productSubCategoryId?: string;
   productItemGroupId?: string;
   isActive?: boolean;
 

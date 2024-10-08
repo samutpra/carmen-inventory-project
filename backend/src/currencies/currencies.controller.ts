@@ -12,7 +12,7 @@ import { CurrenciesService } from './currencies.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { Currency } from 'lib/entities';
-import { ResponseId, ResponseList, ResponseSingle } from 'lib/types';
+import { ResponseId, ResponseList, ResponseSingle } from 'lib/interfaces';
 import {
   ApiBody,
   ApiResponse,

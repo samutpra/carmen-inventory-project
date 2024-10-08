@@ -1,18 +1,14 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import {
-  IBasePimaryKey,
-  IBaseTable,
-  IDepartment,
-  IStoreLocation,
-} from 'lib/types';
+
+import { IStoreLocation } from 'lib/interfaces';
 
 @Entity()
-export class StoreLocation
-  implements IStoreLocation, IBaseTable, IBasePimaryKey
-{
-  name: string;
+export class StoreLocation implements IStoreLocation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column()
+  name: string;
 
   @Column()
   code: string;
@@ -30,8 +26,17 @@ export class StoreLocation
   created_by: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_On: Date;
+  updated_On?: Date;
 
   @Column()
-  updated_by: string;
+  updated_by?: string;
+
+  @Column({ type: 'timestamp', nullable: true })
+  deleted_On?: Date;
+
+  @Column({ nullable: true })
+  deleted_by?: string;
+
+  @Column()
+  isDeleted?: boolean;
 }
