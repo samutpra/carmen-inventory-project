@@ -1,4 +1,4 @@
-import { IBasePimaryKey, IBaseTable } from './iBase';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 export interface IVendor extends IBasePimaryKey, IBaseTable {
   name: string;
   description?: string;

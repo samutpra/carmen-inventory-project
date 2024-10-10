@@ -1,4 +1,4 @@
-import { IBasePimaryKey, IBaseTable } from './iBase';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
 export interface IDepartment extends IBasePimaryKey, IBaseTable {
   id: string;

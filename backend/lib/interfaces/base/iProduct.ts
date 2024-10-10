@@ -1,4 +1,4 @@
-import { IBasePimaryKey, IBaseTable } from './iBase';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
 import { IProductInfo } from './iProductInfo';
 
@@ -22,7 +22,6 @@ export interface IProductCreate extends Partial<IProduct> {
   localDescription: string;
   productItemGroupId: string;
   isActive: boolean;
-
   ProductInfo?: IProductInfo;
 }
 
@@ -34,6 +33,5 @@ export interface IProductUpdate extends Partial<IProduct> {
   localDescription?: string;
   productItemGroupId?: string;
   isActive?: boolean;
-
   ProductInfo?: IProductInfo;
 }

@@ -1,4 +1,4 @@
-import { IBasePimaryKey, IBaseTable } from '../base/iBase';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
 export interface IUser extends IBasePimaryKey, IBaseTable {
   name: string;

@@ -7,8 +7,6 @@ export class CreateProductDto implements IProductCreate {
   code: string;
   description: string;
   localDescription: string;
-  productCategoryId: string;
-  productSubCategoryId: string;
   productItemGroupId: string;
   price: number;
   quantity: number;

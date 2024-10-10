@@ -1,4 +1,4 @@
-import { IBasePimaryKey, IBaseTable } from '../base';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
 export interface IPassword extends IBasePimaryKey, IBaseTable {
   userId: string; // foreign key

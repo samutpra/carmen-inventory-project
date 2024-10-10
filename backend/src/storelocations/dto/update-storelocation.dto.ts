@@ -1,6 +1,13 @@
-import { CreateStoreLocationDto } from './create-storelocation.dto';
-import { PartialType } from '@nestjs/mapped-types';
+import { IStoreLocationUpdate } from 'lib/interfaces';
 
-export class UpdateStoreLocationDto extends PartialType(
-  CreateStoreLocationDto,
-) {}
+export class UpdateStoreLocationDto implements IStoreLocationUpdate {
+  id: string;
+  code?: string;
+  name?: string;
+  departmentId?: string;
+  isActive?: boolean;
+  created_On?: Date;
+  created_By?: string;
+  updated_On?: Date;
+  updated_By?: string;
+}

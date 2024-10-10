@@ -1,4 +1,4 @@
-import { IBasePimaryKey, IBaseTable } from './iBase';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
 import { IProductCategory } from './iProductCategory';
 

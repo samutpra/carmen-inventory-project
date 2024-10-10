@@ -26,19 +26,19 @@ export class Currency implements ICurrency {
   created_On: Date;
 
   @Column()
-  created_by: string;
+  created_By: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_On?: Date;
 
   @Column()
-  updated_by?: string;
+  updated_By?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   deleted_On?: Date;
 
   @Column({ nullable: true })
-  deleted_by?: string;
+  deleted_By?: string;
 
   @Column()
   isDeleted?: boolean;

@@ -1,13 +1,13 @@
-import { IBasePimaryKey, IBaseTable } from './iBase';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 import {
   enumDocumentStatus,
   enumWorkflowStage,
   enumWorkflowStatus,
 } from 'lib/enums';
 
-import { IActivityLogEntry } from './iActivityLogEntry';
+import { IActivityLog } from './iActivityLog';
 import { ICommentAndAttachment } from './iCommentAndAttachment';
-import { IMoney } from './iMoney';
+import { IMoney } from '../helper/iMoney';
 import { IPRType } from './iPRType';
 import { IPurchaseRequestItem } from './iPurchaseRequestItem';
 import { IWorkflowStep } from './iWorkflowStep';
@@ -44,7 +44,7 @@ export interface IPurchaseRequest extends IBasePimaryKey, IBaseTable {
   comments?: ICommentAndAttachment[];
   approvals: IWorkflowStep[];
   deliveryPoint: string;
-  activityLog: IActivityLogEntry[];
+  activityLog: IActivityLog[];
   additionalCharges: IMoney;
 
   items: IPurchaseRequestItem[];

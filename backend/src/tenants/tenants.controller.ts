@@ -11,10 +11,10 @@ import {
 import { TenantsService } from './tenants.service';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { IResponseList } from 'lib/interfaces';
 import { Tenant } from 'lib/entities';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { IResponseList } from 'lib/interfaces/helper/iResponse';
 
 @Controller('api/v1/tenants')
 @ApiTags('tenants')

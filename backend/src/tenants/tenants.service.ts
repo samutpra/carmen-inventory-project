@@ -1,8 +1,9 @@
-import { Default_PerPage, IResponseList } from 'lib/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateTenantDto } from './dto/create-tenant.dto';
+import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
 import { DuplicateException } from 'lib/utils';
+import { IResponseList } from 'lib/interfaces/helper/iResponse';
 import { Mock_Tenant } from 'lib/mocks';
 import { Tenant } from 'lib/entities';
 import { UpdateTenantDto } from './dto/update-tenant.dto';
@@ -22,9 +23,9 @@ export class TenantsService {
       ...createTenantDto,
       id: ulid(),
       created_On: new Date(),
-      created_by: 'USER-01',
+      created_By: 'USER-01',
       updated_On: new Date(),
-      updated_by: 'USER-01',
+      updated_By: 'USER-01',
     };
     Mock_Tenant.push(newTenant);
   }

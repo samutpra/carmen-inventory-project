@@ -1,13 +1,13 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
-  Default_PerPage,
   ResponseId,
   ResponseList,
   ResponseSingle,
-} from 'lib/interfaces';
-import { Injectable, NotFoundException } from '@nestjs/common';
+} from 'lib/interfaces/helper/iResponse';
 
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { Currency } from 'lib/entities';
+import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
 import { DuplicateException } from 'lib/utils/exceptions';
 import { Mock_Currency } from 'lib/mocks';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
@@ -30,9 +30,9 @@ export class CurrenciesService {
       ...createCurrencyDto,
       id: ulid(),
       created_On: new Date(),
-      created_by: 'USER-01',
+      created_By: 'USER-01',
       updated_On: new Date(),
-      updated_by: 'USER-01',
+      updated_By: 'USER-01',
     };
     Mock_Currency.push(newCurrency);
 

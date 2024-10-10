@@ -1,15 +1,12 @@
 import { Currency, ExchangeRate } from 'lib/entities';
-import {
-  Default_PerPage,
-  ResponseId,
-  ResponseList,
-  ResponseSingle,
-} from 'lib/interfaces';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ResponseList, ResponseSingle } from 'lib/interfaces/helper/iResponse';
 
 import { CreateExchangerateDto } from './dto/create-exchangerate.dto';
+import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
 import { DuplicateException } from 'lib/utils';
 import { Mock_ExchangeRate } from 'lib/mocks';
+import { ResponseId } from 'lib/interfaces/helper/iResponse';
 import { UpdateExchangerateDto } from './dto/update-exchangerate.dto';
 import { ulid } from 'ulid';
 
@@ -32,9 +29,9 @@ export class ExchangerateService {
       ...createExchangerateDto,
       id: ulid(),
       created_On: new Date(),
-      created_by: 'USER-01',
+      created_By: 'USER-01',
       updated_On: new Date(),
-      updated_by: 'USER-01',
+      updated_By: 'USER-01',
     };
     Mock_ExchangeRate.push(newExchangerate);
 

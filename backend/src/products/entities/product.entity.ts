@@ -32,20 +32,11 @@ export class Product implements IProduct {
   created_On: Date;
 
   @Column()
-  created_by: string;
+  created_By: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_On?: Date;
 
   @Column()
-  updated_by?: string;
-
-  @Column({ type: 'timestamp', nullable: true })
-  deleted_On?: Date;
-
-  @Column({ nullable: true })
-  deleted_by?: string;
-
-  @Column()
-  isDeleted?: boolean;
+  updated_By?: string;
 }

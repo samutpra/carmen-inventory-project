@@ -12,10 +12,10 @@ post {
 
 body:json {
   {
-    "refresh" : "{{login_jwt}}"
+    "refresh" : "{{access_token}}"
   }
 }
 
 script:post-response {
-  bru.setEnvVar('login_jwt',res.body.accessToken)
+  bru.setEnvVar('access_token',res.body.accessToken)
 }

@@ -1,74 +1,56 @@
-import { Default_PerPage, IResponseList } from 'lib/interfaces';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { DuplicateException } from 'lib/utils';
 import { Mock_Product } from 'lib/mocks';
-import { Product } from 'lib/entities';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ulid } from 'ulid';
+import { DRIZZLE } from 'src/drizzle/drizzle.module';
+import { DrizzleDB } from 'src/drizzle/types/drizzle';
+import { products } from 'src/drizzle/schema/tenant/products.schema';
+import { IResponseList } from 'lib/interfaces/helper/iResponse';
+import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
 
 @Injectable()
 export class ProductsService {
-  create(createProductDto: CreateProductDto) {
-    const found = Mock_Product.find(
-      (product) => product.code === createProductDto.code,
-    );
-    if (found) {
-      throw new DuplicateException('Product already exists');
-    }
+  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 
-    const newProd: Product = {
-      ...createProductDto,
-      id: ulid(),
-      created_On: new Date(),
-      created_by: 'USER-01',
-      updated_On: new Date(),
-      updated_by: 'USER-01',
-    };
-    Mock_Product.push(newProd);
+  create(createProductDto: CreateProductDto) {
+    // const create_By = ulid();
+    // const product: typeof products.$inferInsert = {
+    //   ...createProductDto,
+    // };
+    // this.db.insert(products).values(product).execute();
+    // return product;
+
+    return 'This action adds a new product';
   }
 
-  async findAll(): Promise<IResponseList<Product>> {
-    const products = Mock_Product;
-    const res: IResponseList<Product> = {
-      data: products,
+  async findAll() {
+    //const products = Mock_Product;
+    const r = await this.db.query.products.findMany();
+    const res: IResponseList<typeof products> = {
+      data: r,
       pagination: {
-        total: products.length,
+        total: r.length,
         page: 1,
         perPage: Default_PerPage,
-        pages: Math.ceil(products.length / Default_PerPage),
+        pages: Math.ceil(r.length / Default_PerPage),
       },
     };
     return res;
   }
 
-  async findOne(id: string): Promise<Product> {
-    const product = Mock_Product.find((product) => product.id === id);
-    return product;
+  async findOne(id: string) {
+    const r = await this.db.query.products.findUnique((o) => o.id === id);
+    return r;
   }
 
   update(id: string, updateProductDto: UpdateProductDto) {
-    const index = Mock_Product.findIndex((product) => product.id === id);
-
-    if (index === -1) {
-      throw new NotFoundException('Product not found');
-    }
-
-    if (index !== -1) {
-      Mock_Product[index] = { ...Mock_Product[index], ...updateProductDto };
-    }
+    return `This action updates a #${id} product`;
   }
 
   remove(id: string) {
-    const index = Mock_Product.findIndex((product) => product.id === id);
-
-    if (index === -1) {
-      throw new NotFoundException('Product not found');
-    }
-
-    if (index !== -1) {
-      Mock_Product.splice(index, 1);
-    }
+    return `This action removes a #${id} product`;
   }
 }

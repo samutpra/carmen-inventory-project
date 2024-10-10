@@ -1,4 +1,4 @@
-import { IBasePimaryKey, IBaseTable } from './iBase';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
 export interface IProductCategory extends IBasePimaryKey, IBaseTable {
   name: string;

@@ -11,10 +11,10 @@ import {
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { IResponseList } from 'lib/interfaces';
-import { Product } from 'lib/entities';
 import { ApiBody, ApiResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { products } from 'src/drizzle/schema/tenant/products.schema';
+import { IResponseList } from 'lib/interfaces/helper/iResponse';
 
 @Controller('api/v1/products')
 @ApiTags('products')
@@ -36,7 +36,7 @@ export class ProductsController {
     description: 'Bad request',
   })
   @UseGuards(JwtAuthGuard)
-  async findAll(): Promise<IResponseList<Product>> {
+  async findAll(): Promise<IResponseList<typeof products>> {
     return this.productsService.findAll();
   }
 
@@ -58,7 +58,7 @@ export class ProductsController {
     description: 'Product not found',
   })
   @UseGuards(JwtAuthGuard)
-  async findOne(@Param('id') id: string): Promise<Product> {
+  async findOne(@Param('id') id: string): Promise<typeof products> {
     return this.productsService.findOne(id);
   }
 

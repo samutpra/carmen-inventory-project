@@ -2,7 +2,11 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { IStoreLocation } from 'lib/interfaces';
 
-@Entity()
+@Entity({
+  schema: 'tenant_base',
+  name: 'store_locations',
+  synchronize: true,
+})
 export class StoreLocation implements IStoreLocation {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -23,19 +27,19 @@ export class StoreLocation implements IStoreLocation {
   created_On: Date;
 
   @Column()
-  created_by: string;
+  created_By: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_On?: Date;
 
   @Column()
-  updated_by?: string;
+  updated_By?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   deleted_On?: Date;
 
   @Column({ nullable: true })
-  deleted_by?: string;
+  deleted_By?: string;
 
   @Column()
   isDeleted?: boolean;

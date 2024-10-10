@@ -12,7 +12,6 @@ import { CurrenciesService } from './currencies.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { Currency } from 'lib/entities';
-import { ResponseId, ResponseList, ResponseSingle } from 'lib/interfaces';
 import {
   ApiBody,
   ApiResponse,
@@ -29,8 +28,14 @@ import {
   ApiTooManyRequestsResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+
 import { Mock_Currency } from 'lib/mocks';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import {
+  ResponseId,
+  ResponseList,
+  ResponseSingle,
+} from 'lib/interfaces/helper/iResponse';
 
 @Controller('api/v1/currencies')
 @ApiTags('currencies')

@@ -27,10 +27,14 @@ import {
   ApiUnauthorizedResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { ResponseId, ResponseList, ResponseSingle } from 'lib/interfaces';
 import { ExchangeRate } from 'lib/entities';
 import { Mock_ExchangeRate } from 'lib/mocks';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import {
+  ResponseId,
+  ResponseList,
+  ResponseSingle,
+} from 'lib/interfaces/helper/iResponse';
 
 @Controller('api/v1/exchangerate')
 @ApiTags('exchangerate')

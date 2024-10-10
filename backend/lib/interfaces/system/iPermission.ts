@@ -1,4 +1,4 @@
-import { IBasePimaryKey, IBaseTable } from '../base/iBase';
+import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
 /* todo : fix it */
 export interface IPermission extends IBasePimaryKey, IBaseTable {

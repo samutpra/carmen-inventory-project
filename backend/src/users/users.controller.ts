@@ -22,14 +22,14 @@ export class UsersController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  findAll() {
-    return this.usersService.findAll();
+  getAll() {
+    return this.usersService.getAll();
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+  get(@Param('id') id: string) {
+    return this.usersService.get(id);
   }
 
   @Post()
@@ -46,7 +46,7 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  delete(@Param('id') id: string) {
+    return this.usersService.delete(id);
   }
 }
