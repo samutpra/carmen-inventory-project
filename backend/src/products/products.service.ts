@@ -5,7 +5,7 @@ import { DuplicateException } from 'lib/utils';
 import { Mock_Product } from 'lib/mocks';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ulid } from 'ulid';
-import { DRIZZLE } from 'src/drizzle/drizzle.module';
+import { DRIZZLE_SYSTEM, DRIZZLE_TENANT } from 'src/drizzle/drizzle.module';
 import { DrizzleDB } from 'src/drizzle/types/drizzle';
 import { products } from 'src/drizzle/schema/tenant/products.schema';
 import { IResponseList } from 'lib/interfaces/helper/iResponse';
@@ -13,7 +13,10 @@ import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
 
 @Injectable()
 export class ProductsService {
-  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
+  constructor(
+    @Inject(DRIZZLE_SYSTEM) private readonly db_system: DrizzleDB,
+    @Inject(DRIZZLE_TENANT) private readonly db_tenant: DrizzleDB,
+  ) {}
 
   create(createProductDto: CreateProductDto) {
     // const create_By = ulid();
@@ -28,7 +31,7 @@ export class ProductsService {
 
   async findAll() {
     //const products = Mock_Product;
-    const r = await this.db.query.products.findMany();
+    const r = await this.db_tenant.query.products.findMany();
     const res: IResponseList<typeof products> = {
       data: r,
       pagination: {
@@ -42,7 +45,9 @@ export class ProductsService {
   }
 
   async findOne(id: string) {
-    const r = await this.db.query.products.findUnique((o) => o.id === id);
+    const r = await this.db_tenant.query.products.findUnique(
+      (o) => o.id === id,
+    );
     return r;
   }
 

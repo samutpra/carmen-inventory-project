@@ -1,2 +1,0 @@
-Username: supabase
-Password: this_password_is_insecure_and_should_be_updated

@@ -4,9 +4,8 @@ import { PgTable, boolean, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { columns_created, columns_updated } from '../column.helper';
 
 import { productItemGroups } from './productItemGroups.schema';
-import { tenantSchema } from '../const';
 
-export const products = tenantSchema().table('products', {
+export const products = pgTable('products', {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 256 }).notNull(),
   code: varchar({ length: 256 }).notNull(),

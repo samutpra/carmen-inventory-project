@@ -1,6 +1,9 @@
-import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
+import { IBaseActivity, IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
-export interface IDeliveryPoint extends IBasePimaryKey, IBaseTable {
+export interface IDeliveryPoint
+  extends IBasePimaryKey,
+    IBaseTable,
+    IBaseActivity {
   name: string;
   description: string;
   isActive: boolean;

@@ -1,5 +1,5 @@
-export * from 'lib/interfaces/base/iActivityLog';
-export * from 'lib/interfaces/base/iCommentAndAttachment';
+export * from 'lib/interfaces/helper/iActivityLog';
+export * from 'lib/interfaces/helper/iCommentAndAttachment';
 export * from 'lib/interfaces/base/iCurrency';
 export * from 'lib/interfaces/base/iDeliveryPoint';
 export * from 'lib/interfaces/base/iDepartment';

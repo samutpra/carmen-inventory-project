@@ -1,6 +1,6 @@
 import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
-import { ICommentAndAttachment } from './iCommentAndAttachment';
+import { ICommentAndAttachment } from '../helper/iCommentAndAttachment';
 
 export interface PurchaseOrderItem extends IBasePimaryKey, IBaseTable {
   name: string;

@@ -22,10 +22,10 @@ export class TenantsService {
     const newTenant: Tenant = {
       ...createTenantDto,
       id: ulid(),
-      created_On: new Date(),
-      created_By: 'USER-01',
-      updated_On: new Date(),
-      updated_By: 'USER-01',
+      createdAt: new Date(),
+      createdBy: 'USER-01',
+      updatedAt: new Date(),
+      updatedBy: 'USER-01',
     };
     Mock_Tenant.push(newTenant);
   }

@@ -14,8 +14,6 @@ import { UpdateStoreLocationDto } from './dto/update-storelocation.dto';
 import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { StoreLocation } from 'lib/entities';
-import { I } from '@faker-js/faker/dist/airline-C5Qwd7_q';
 
 @Controller('api/v1/storelocations')
 @ApiTags('storelocations')

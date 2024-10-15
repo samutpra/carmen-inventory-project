@@ -1,8 +1,5 @@
 import 'dotenv/config';
 
-export * from './system/users.schema';
-export * from './system/userProfileInfo.schema';
-
 export * from './tenant/productCategories.schema';
 export * from './tenant/productSubCategories.schema';
 export * from './tenant/productItemGroups.schema';

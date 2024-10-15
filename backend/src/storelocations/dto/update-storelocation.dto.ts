@@ -6,8 +6,8 @@ export class UpdateStoreLocationDto implements IStoreLocationUpdate {
   name?: string;
   departmentId?: string;
   isActive?: boolean;
-  created_On?: Date;
-  created_By?: string;
-  updated_On?: Date;
-  updated_By?: string;
+  createdAt?: Date;
+  createdBy?: string;
+  updatedAt?: Date;
+  updatedBy?: string;
 }

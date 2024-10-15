@@ -29,10 +29,10 @@ export class StoreLocationsService
         data: {
           ...createStoreLocationDto,
           id: '1', // Mock ID
-          created_On: new Date(),
-          created_By: '1',
-          updated_On: new Date(),
-          updated_By: '1',
+          createdAt: new Date(),
+          createdBy: '1',
+          updatedAt: new Date(),
+          updatedBy: '1',
         },
       }),
     );

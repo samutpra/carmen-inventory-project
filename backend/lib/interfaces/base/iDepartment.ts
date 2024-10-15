@@ -1,7 +1,6 @@
-import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
+import { IBaseComments, IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
-export interface IDepartment extends IBasePimaryKey, IBaseTable {
-  id: string;
+export interface IDepartment extends IBasePimaryKey, IBaseComments, IBaseTable {
   name: string;
   description?: string;
   isActive: boolean;

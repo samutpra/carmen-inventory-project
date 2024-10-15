@@ -16,6 +16,8 @@ export default function HomePage() {
 					Go to Menu
 				</Link>
 			</div>
+
+			{/* <p className='text-sm text-gray-500 mt-4'>Made with ❤️ by <a href='https://github.com/paraglide' target='_blank' rel='noopener noreferrer'>Paraglide</a></p> */}
 		</div>
 	);
 }

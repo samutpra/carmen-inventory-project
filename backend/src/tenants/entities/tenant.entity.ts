@@ -17,16 +17,16 @@ export class Tenant implements ITenant {
   isActive: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_On: Date;
+  createdAt: Date;
 
   @Column()
-  created_By: string;
+  createdBy: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_On?: Date;
+  updatedAt?: Date;
 
   @Column()
-  updated_By?: string;
+  updatedBy?: string;
 
   @Column({ type: 'timestamp', nullable: true })
   deleted_On?: Date;

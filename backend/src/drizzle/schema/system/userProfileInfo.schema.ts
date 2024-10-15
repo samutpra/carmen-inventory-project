@@ -1,10 +1,16 @@
-import { PgTable, PgTableFn, jsonb, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+  PgTable,
+  PgTableFn,
+  jsonb,
+  pgTable,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { columns_created, columns_updated } from '../column.helper';
 
-import { systemSchema } from '../const';
 import { users } from './users.schema';
 
-export const userProfileInfo = systemSchema().table('user_profile_info', {
+export const userProfileInfo = pgTable('user_profile_info', {
   id: uuid()
     .references(() => users.id)
     .unique()

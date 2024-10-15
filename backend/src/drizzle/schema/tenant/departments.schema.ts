@@ -3,7 +3,7 @@ import { columns_created, columns_updated } from '../column.helper';
 
 import { tenantSchema } from '../const';
 
-export const departments = tenantSchema().table('departments', {
+const departments = tenantSchema().table('departments', {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({ length: 256 }).notNull(),
   code: varchar({ length: 256 }).notNull(),
@@ -11,3 +11,5 @@ export const departments = tenantSchema().table('departments', {
   ...columns_created,
   ...columns_updated,
 });
+
+export { departments };

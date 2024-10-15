@@ -5,8 +5,8 @@ import {
   enumWorkflowStatus,
 } from 'lib/enums';
 
-import { IActivityLog } from './iActivityLog';
-import { ICommentAndAttachment } from './iCommentAndAttachment';
+import { IActivityLog } from '../helper/iActivityLog';
+import { ICommentAndAttachment } from '../helper/iCommentAndAttachment';
 import { IMoney } from '../helper/iMoney';
 import { IPRType } from './iPRType';
 import { IPurchaseRequestItem } from './iPurchaseRequestItem';

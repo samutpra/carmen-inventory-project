@@ -6,8 +6,8 @@ export class CreateStoreLocationDto implements IStoreLocationCreate {
   departmentId: string;
   isActive: boolean;
   id?: string;
-  created_On?: Date;
-  created_By?: string;
-  updated_On?: Date;
-  updated_By?: string;
+  createdAt?: Date;
+  createdBy?: string;
+  updatedAt?: Date;
+  updatedBy?: string;
 }

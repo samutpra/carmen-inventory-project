@@ -1,6 +1,6 @@
-import { IBasePimaryKey, IBaseTable } from '../helper/iBase';
+import { IBaseActivity, IBasePimaryKey, IBaseTable } from '../helper/iBase';
 
-export interface ICurrency extends IBasePimaryKey, IBaseTable {
+export interface ICurrency extends IBasePimaryKey, IBaseTable, IBaseActivity {
   name: string;
   code: string;
   symbol?: string;
