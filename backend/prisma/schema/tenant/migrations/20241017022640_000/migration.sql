@@ -20,7 +20,7 @@ CREATE TABLE "DeliveryPoint" (
     "longitude" DOUBLE PRECISION NOT NULL,
     "phone" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "DeliveryPoint_pkey" PRIMARY KEY ("id")
 );
@@ -29,7 +29,7 @@ CREATE TABLE "DeliveryPoint" (
 CREATE TABLE "Department" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Department_pkey" PRIMARY KEY ("id")
 );
@@ -50,7 +50,7 @@ CREATE TABLE "Product" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Product_pkey" PRIMARY KEY ("id")
 );
@@ -69,7 +69,7 @@ CREATE TABLE "ProductCategory" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "ProductCategory_pkey" PRIMARY KEY ("id")
 );
@@ -79,7 +79,7 @@ CREATE TABLE "ProductSubCategory" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "productCategoryId" TEXT NOT NULL,
 
     CONSTRAINT "ProductSubCategory_pkey" PRIMARY KEY ("id")
@@ -90,7 +90,7 @@ CREATE TABLE "ProductItemGroup" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "productSubCategoryId" TEXT NOT NULL,
 
     CONSTRAINT "ProductItemGroup_pkey" PRIMARY KEY ("id")
@@ -101,7 +101,7 @@ CREATE TABLE "PRType" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "PRType_pkey" PRIMARY KEY ("id")
 );
@@ -111,7 +111,7 @@ CREATE TABLE "PurchaseRequest" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "prTypeId" TEXT NOT NULL,
 
     CONSTRAINT "PurchaseRequest_pkey" PRIMARY KEY ("id")
@@ -122,7 +122,7 @@ CREATE TABLE "PurchaseRequestItem" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "purchaseRequestId" TEXT NOT NULL,
 
     CONSTRAINT "PurchaseRequestItem_pkey" PRIMARY KEY ("id")
@@ -133,7 +133,7 @@ CREATE TABLE "PurchaseOrder" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "PurchaseOrder_pkey" PRIMARY KEY ("id")
 );
@@ -143,7 +143,7 @@ CREATE TABLE "PurchaseOrderItem" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "purchaseOrderId" TEXT NOT NULL,
 
     CONSTRAINT "PurchaseOrderItem_pkey" PRIMARY KEY ("id")
@@ -154,7 +154,7 @@ CREATE TABLE "Location" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
 );
@@ -164,7 +164,7 @@ CREATE TABLE "Unit" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Unit_pkey" PRIMARY KEY ("id")
 );
@@ -174,7 +174,7 @@ CREATE TABLE "UnitConversion" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "UnitConversion_pkey" PRIMARY KEY ("id")
 );
@@ -184,7 +184,7 @@ CREATE TABLE "Vendor" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Vendor_pkey" PRIMARY KEY ("id")
 );
@@ -194,7 +194,7 @@ CREATE TABLE "VendorContact" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "vendorId" TEXT,
 
     CONSTRAINT "VendorContact_pkey" PRIMARY KEY ("id")
@@ -205,7 +205,7 @@ CREATE TABLE "VendorAddress" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "vendorId" TEXT NOT NULL,
 
     CONSTRAINT "VendorAddress_pkey" PRIMARY KEY ("id")
@@ -216,7 +216,7 @@ CREATE TABLE "VendorProduct" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "active" BOOLEAN NOT NULL DEFAULT true,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
     "vendorId" TEXT NOT NULL,
     "productId" TEXT NOT NULL,
 

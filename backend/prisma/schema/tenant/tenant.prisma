@@ -36,13 +36,13 @@ model DeliveryPoint {
   longitude  Float
   phone      String
   email      String
-  active     Boolean @default(true)
+  isActive     Boolean @default(true)
 }
 
 model Department {
   id   String @id @default(uuid())
   name       String   @unique
-  active     Boolean @default(true)
+  isActive     Boolean @default(true)
 }
 
 model ExchangeRate {
@@ -59,7 +59,7 @@ model Product {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   productInfo ProductInfo?
   vendorProduct VendorProduct[]
@@ -78,7 +78,7 @@ model ProductCategory {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   productSubCategory ProductSubCategory[]
 }
@@ -88,7 +88,7 @@ model ProductSubCategory {
   name        String   @unique
 
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   productCategory ProductCategory @relation(fields: [productCategoryId], references: [id])
   productCategoryId String
@@ -100,7 +100,7 @@ model ProductItemGroup {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   productSubCategory ProductSubCategory @relation(fields: [productSubCategoryId], references: [id])
   productSubCategoryId String
@@ -110,7 +110,7 @@ model PRType {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   purchaseRequest PurchaseRequest[]
 }
@@ -119,7 +119,7 @@ model PurchaseRequest {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   prType PRType @relation(fields: [prTypeId], references: [id])
   prTypeId String
@@ -131,7 +131,7 @@ model PurchaseRequestItem {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   purchaseRequest PurchaseRequest @relation(fields: [purchaseRequestId], references: [id])
   purchaseRequestId String
@@ -141,7 +141,7 @@ model PurchaseOrder {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   purchaseOrderItems PurchaseOrderItem[]
 }
@@ -150,7 +150,7 @@ model PurchaseOrderItem {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
   purchaseOrderId String
@@ -160,28 +160,28 @@ model Location {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 }
 
 model Unit {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 }
 
 model UnitConversion {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 }
 
 model Vendor{
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   vendorContact VendorContact[]
   vendorAddress VendorAddress[]
@@ -192,7 +192,7 @@ model VendorContact {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   vendor Vendor? @relation(fields: [vendorId], references: [id])
   vendorId String?
@@ -202,7 +202,7 @@ model VendorAddress {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   vendor Vendor @relation(fields: [vendorId], references: [id])
   vendorId String
@@ -212,7 +212,7 @@ model VendorProduct {
   id   String @id @default(uuid())
   name        String   @unique
   description String
-  active      Boolean @default(true)
+  isActive      Boolean @default(true)
 
   vendor Vendor @relation(fields: [vendorId], references: [id])
   vendorId String

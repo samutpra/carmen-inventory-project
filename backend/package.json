@@ -20,11 +20,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "supabase:init": "supabase init",
     "prisma:generate": "prisma generate --schema prisma/schema/system/system.prisma && prisma generate --schema prisma/schema/tenant/tenant.prisma",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:seed": "ts-node ./src/drizzle/seed.ts",
-    "db:reset": "ts-node ./src/drizzle/reset.ts",
-    "db:resync": "ts-node ./src/drizzle/reset.ts && drizzle-kit generate && drizzle-kit migrate && ts-node ./src/drizzle/seed.ts"
+    "prisma:reset": "prisma migrate reset --schema prisma/schema/system/system.prisma && prisma migrate reset --schema prisma/schema/tenant/tenant.prisma",
+    "prisma:dev": "prisma generate --schema prisma/schema/system/system.prisma && prisma generate --schema prisma/schema/tenant/tenant.prisma && ts-node ./src/main.ts",
+    "prisma:seed": "prisma db seed --schema prisma/schema/system/system.prisma && prisma db seed --schema prisma/schema/tenant/tenant.prisma",
+    "prisma:migrate": "prisma migrate dev --name 000 --schema prisma/schema/system/system.prisma && prisma migrate dev --name 000 --schema prisma/schema/tenant/tenant.prisma",
+    "prisma:generate:migrate": "npm run prisma:generate && npm run prisma:migrate"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -99,7 +99,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
-  "prisma": {
+  "prisma-xx": {
     "seed": "ts-node prisma/seed.ts"
   }
 }
