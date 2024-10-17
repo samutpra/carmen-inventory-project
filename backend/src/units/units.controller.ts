@@ -9,10 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UnitsService } from './units.service';
-import { CreateUnitDto } from './dto/create-unit.dto';
-import { UpdateUnitDto } from './dto/update-unit.dto';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { Prisma } from '@prisma-carmen-client/tenant';
 
 @Controller('api/v1/units')
 @ApiTags('units')
@@ -22,7 +21,7 @@ export class UnitsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() createUnitDto: CreateUnitDto) {
+  create(@Body() createUnitDto: Prisma.UnitCreateInput) {
     return this.unitsService.create(createUnitDto);
   }
 
@@ -40,7 +39,10 @@ export class UnitsController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updateUnitDto: UpdateUnitDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUnitDto: Prisma.UnitUpdateInput,
+  ) {
     return this.unitsService.update(id, updateUnitDto);
   }
 

@@ -1,53 +1,118 @@
-import { CreateDepartmentDto } from './dto/create-department.dto';
-import { DRIZZLE_SYSTEM, DRIZZLE_TENANT } from 'src/drizzle/drizzle.module';
-import { Department } from './entities/department.entity';
-import { DrizzleDB } from './../drizzle/types/drizzle.d';
-import { IAsyncService } from 'lib/interfaces/helper/IAsyncService';
-import { Inject, Injectable } from '@nestjs/common';
-import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { IResponseList } from 'lib/interfaces/helper/iResponse';
-import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
+import { Currency, Department, Prisma } from '@prisma-carmen-client/tenant';
+import {
+  IResponseId,
+  IResponseList,
+  ResponseId,
+  ResponseSingle,
+} from 'lib/helper/iResponse';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { DbSystemService } from 'src/db_system/db_system.service';
+import { DbTenantService } from 'src/db_tenant/db_tenant.service';
+import { Default_PerPage } from 'lib/helper/perpage.default';
+import { r } from '@faker-js/faker/dist/airline-C5Qwd7_q';
 
 @Injectable()
-export class DepartmentsService
-  implements
-    IAsyncService<Department, CreateDepartmentDto, UpdateDepartmentDto>
-{
+export class DepartmentsService {
   constructor(
-    @Inject(DRIZZLE_SYSTEM) private readonly db_system: DrizzleDB,
-    @Inject(DRIZZLE_TENANT) private readonly db_tenant: DrizzleDB,
+    private readonly db_system: DbSystemService,
+    private readonly db_tenant: DbTenantService,
   ) {}
 
-  async create(createDepartmentDto: CreateDepartmentDto) {
-    return 'This action adds a new department';
+  async create(
+    createDepartmentDto: Prisma.DepartmentCreateInput,
+  ): Promise<IResponseId<string>> {
+    const oneObj = await this.db_tenant.department.findUnique({
+      where: {
+        name: createDepartmentDto.name,
+      },
+    });
+
+    if (oneObj) {
+      throw new Error('Department already exists');
+    }
+
+    const createObj = await this.db_tenant.department.create({
+      data: createDepartmentDto,
+    });
+
+    const res: IResponseId<string> = { id: createObj.id };
+    return res;
   }
 
-  async getAll(tenantId: string): Promise<IResponseList<Department>> {
-    const r = await this.db_tenant.query.departments.findMany();
+  async findAll(tenantId: string): Promise<IResponseList<Department>> {
+    const max = await this.db_tenant.department.count({});
+    const listObj = await this.db_tenant.department.findMany();
 
     const res: IResponseList<Department> = {
-      data: r,
+      data: listObj,
       pagination: {
-        total: r.length,
+        total: max,
         page: 1,
         perPage: Default_PerPage,
-        pages: Math.ceil(r.length / Default_PerPage),
+        pages: Math.ceil(max / Default_PerPage),
       },
     };
 
     return res;
   }
 
-  async get(id: string) {
-    return `This action returns a #${id} department`;
+  async findOne(id: string): Promise<ResponseSingle<Department>> {
+    const oneObj = await this.db_tenant.department.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
+      throw new NotFoundException('Currency not found');
+    }
+    const res: ResponseSingle<Department> = {
+      data: oneObj,
+    };
+    return res;
   }
 
-  async update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
-    return `This action updates a #${id} department`;
+  async update(id: string, updateDepartmentDto: Prisma.DepartmentUpdateInput) {
+    const oneObj = await this.db_tenant.department.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
+      throw new NotFoundException('Department not found');
+    }
+
+    const updateObj = await this.db_tenant.department.update({
+      where: {
+        id,
+      },
+      data: updateDepartmentDto,
+    });
+
+    const res: ResponseId<string> = {
+      id: updateObj.id,
+    };
+
+    return res;
   }
 
   async delete(id: string) {
-    return `This action removes a #${id} department`;
+    const oneObj = await this.db_tenant.department.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
+      throw new NotFoundException('Department not found');
+    }
+
+    await this.db_tenant.department.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

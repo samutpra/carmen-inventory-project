@@ -9,11 +9,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { StoreLocationsService } from './storelocations.service';
-import { CreateStoreLocationDto } from './dto/create-storelocation.dto';
-import { UpdateStoreLocationDto } from './dto/update-storelocation.dto';
 import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { Prisma } from '@prisma-carmen-client/tenant';
 
 @Controller('api/v1/storelocations')
 @ApiTags('storelocations')
@@ -24,11 +23,11 @@ export class StoreLocationsController {
   @Post()
   @ApiBody({
     description: 'Create a new storelocation',
-    type: CreateStoreLocationDto,
+    // type: CreateStoreLocationDto,
     required: true,
   })
   @UseGuards(JwtAuthGuard)
-  create(@Body() createLocationDto: CreateStoreLocationDto) {
+  create(@Body() createLocationDto: Prisma.LocationCreateInput) {
     return this.storelocationsService.create(createLocationDto);
   }
 
@@ -41,14 +40,14 @@ export class StoreLocationsController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   get(@Param('id') id: string) {
-    return this.storelocationsService.get(id);
+    return this.storelocationsService.findOne(id);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: string,
-    @Body() updateLocationDto: UpdateStoreLocationDto,
+    @Body() updateLocationDto: Prisma.LocationUpdateInput,
   ) {
     return this.storelocationsService.update(id, updateLocationDto);
   }

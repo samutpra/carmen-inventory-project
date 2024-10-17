@@ -1,0 +1,160 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+  output          = "../../../node_modules/@prisma-carmen-client/system"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_SYSTEM")
+}
+
+/// region System
+
+model User {
+  id        String   @id @default(uuid())
+  username  String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String? // Self-relation for User creator, now UUID
+  createdBy   User?   @relation("UserCreatedBy", fields: [createdById], references: [id])
+
+  updatedById String? // Self-relation for User updater, now UUID
+  updatedBy   User?   @relation("UserUpdatedBy", fields: [updatedById], references: [id])
+
+  createdUsers User[] @relation("UserCreatedBy")
+  updatedUsers User[] @relation("UserUpdatedBy")
+
+  BusinessId String? // Foreign key changed to UUID type
+  Business   Business? @relation(fields: [BusinessId], references: [id])
+
+  BusinessCreated Business[] @relation("BusinessCreatedBy")
+  BusinessUpdated Business[] @relation("BusinessUpdatedBy")
+  Password        Password[]
+
+  @@map("user") // optional: maps to a custom table name in the DB
+}
+
+model Business {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdById String? // Foreign key to User changed to UUID type
+  createdBy   User?   @relation("BusinessCreatedBy", fields: [createdById], references: [id])
+
+  updatedById String? // Foreign key to User changed to UUID type
+  updatedBy   User?   @relation("BusinessUpdatedBy", fields: [updatedById], references: [id])
+
+  users User[] // Relation to User
+
+  @@map("Business") // optional: maps to a custom table name in the DB
+}
+
+model Tenant {
+  id   String @id @default(uuid())
+  name String @unique
+
+  @@map("tenant") // optional: maps to a custom table name in the DB
+}
+
+model Password {
+  id   String @id @default(uuid())
+  hash String
+
+  userId String // Foreign key to User changed to UUID type
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("password") // optional: maps to a custom table name in the DB
+}
+
+// model Permission {
+//   id        String   @id @default(uuid())
+//   name      String   @unique
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   users User[] // Relation to User
+
+//   @@map("permission") // optional: maps to a custom table name in the DB
+// }
+
+// model Role {
+//   id        String   @id @default(uuid())
+//   name      String   @unique
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   permissions Permission[] // Relation to Permission
+
+//   @@map("role") // optional: maps to a custom table name in the DB
+// }
+
+// model UserPermission {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   userId String // Foreign key to User changed to UUID type
+//   user   User   @relation(fields: [userId], references: [id])
+
+//   permissionId String // Foreign key to Permission changed to UUID type
+// }
+
+// model UserRole {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   userId String // Foreign key to User changed to UUID type
+//   user   User   @relation(fields: [userId], references: [id])
+
+//   roleId String // Foreign key to Role changed to UUID type
+// }
+
+// model TenantUser {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   userId String // Foreign key to User changed to UUID type
+//   user   User   @relation(fields: [userId], references: [id])
+
+//   tenantId String // Foreign key to Tenant changed to UUID type
+//   tenant   Tenant @relation(fields: [tenantId], references: [id])
+// }
+
+// model TenantBusiness {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   businessId String // Foreign key to Business changed to UUID type
+//   business   Business @relation(fields: [businessId], references: [id])
+
+//   tenantId String // Foreign key to Tenant changed to UUID type
+//   tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+// }
+
+// model UserInfo {
+//   id        String   @id @default(uuid())
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   userId String // Foreign key to User changed to UUID type
+//   user   User   @relation(fields: [userId], references: [id])
+
+//   bio  Json?
+//   avatar String?
+//   image String?
+// }

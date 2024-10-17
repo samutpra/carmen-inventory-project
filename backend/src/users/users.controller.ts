@@ -9,10 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { Prisma } from '@Prisma-Carmen-Client/system';
 
 @Controller('api/v1/users')
 @ApiTags('users')
@@ -34,13 +33,16 @@ export class UsersController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: Prisma.UserCreateInput) {
     return this.usersService.create(createUserDto);
   }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: Prisma.UserUpdateInput,
+  ) {
     return this.usersService.update(id, updateUserDto);
   }
 

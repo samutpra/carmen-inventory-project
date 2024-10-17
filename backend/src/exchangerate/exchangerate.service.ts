@@ -1,100 +1,121 @@
-import { Currency, ExchangeRate } from 'lib/entities';
+import { ExchangeRate, Prisma } from '@prisma-carmen-client/tenant';
+import {
+  IResponseId,
+  ResponseList,
+  ResponseSingle,
+} from 'lib/helper/iResponse';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ResponseList, ResponseSingle } from 'lib/interfaces/helper/iResponse';
 
-import { CreateExchangerateDto } from './dto/create-exchangerate.dto';
-import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
+import { DbSystemService } from 'src/db_system/db_system.service';
+import { DbTenantService } from 'src/db_tenant/db_tenant.service';
+import { Default_PerPage } from 'lib/helper/perpage.default';
 import { DuplicateException } from 'lib/utils';
-import { Mock_ExchangeRate } from 'lib/mocks';
-import { ResponseId } from 'lib/interfaces/helper/iResponse';
-import { UpdateExchangerateDto } from './dto/update-exchangerate.dto';
-import { ulid } from 'ulid';
+import { ResponseId } from 'lib/helper/iResponse';
 
 @Injectable()
 export class ExchangerateService {
-  async create(
-    createExchangerateDto: CreateExchangerateDto,
-  ): Promise<ResponseId<string>> {
-    const found = Mock_ExchangeRate.find(
-      (exchangerate) =>
-        exchangerate.currencyId === createExchangerateDto.currencyId &&
-        exchangerate.atDate === createExchangerateDto.atDate,
-    );
+  constructor(
+    private readonly db_system: DbSystemService,
+    private readonly db_tenant: DbTenantService,
+  ) {}
 
-    if (found) {
+  async create(
+    createExchangerateDto: Prisma.ExchangeRateCreateInput,
+  ): Promise<ResponseId<string>> {
+    const oneObj = await this.db_tenant.exchangeRate.findUnique({
+      where: {
+        code: createExchangerateDto.code,
+      },
+    });
+
+    if (oneObj) {
       throw new DuplicateException('Exchangerate already exists');
     }
 
-    const newExchangerate: ExchangeRate = {
-      ...createExchangerateDto,
-      id: ulid(),
-      createdAt: new Date(),
-      createdBy: 'USER-01',
-      updatedAt: new Date(),
-      updatedBy: 'USER-01',
-    };
-    Mock_ExchangeRate.push(newExchangerate);
-
+    const newExchangerate = await this.db_tenant.exchangeRate.create({
+      data: createExchangerateDto,
+    });
     const res: ResponseId<string> = {
       id: newExchangerate.id,
     };
-
     return res;
   }
 
   async findAll(): Promise<ResponseList<ExchangeRate>> {
-    const exchangerates = Mock_ExchangeRate;
+    const max = await this.db_tenant.exchangeRate.count({});
+    const listObj = await this.db_tenant.exchangeRate.findMany();
     const res: ResponseList<ExchangeRate> = {
-      data: exchangerates,
+      data: listObj,
       pagination: {
-        total: exchangerates.length,
+        total: max,
         page: 1,
         perPage: Default_PerPage,
-        pages: Math.ceil(exchangerates.length / Default_PerPage),
+        pages: Math.ceil(max / Default_PerPage),
       },
     };
     return res;
   }
 
   async findOne(id: string): Promise<ResponseSingle<ExchangeRate>> {
-    const found = Mock_ExchangeRate.find(
-      (exchangerate) => exchangerate.id === id,
-    );
-    if (!found) {
+    const oneObj = await this.db_tenant.exchangeRate.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
       throw new NotFoundException('Exchangerate not found');
     }
+
     const res: ResponseSingle<ExchangeRate> = {
-      data: found,
+      data: oneObj,
     };
     return res;
   }
 
-  update(id: string, updateExchangerateDto: UpdateExchangerateDto) {
-    const index = Mock_ExchangeRate.findIndex(
-      (exchangerate) => exchangerate.id === id,
-    );
-    if (index === -1) {
+  async update(
+    id: string,
+    updateExchangerateDto: Prisma.ExchangeRateUpdateInput,
+  ): Promise<ResponseId<string>> {
+    const oneObj = await this.db_tenant.exchangeRate.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
       throw new NotFoundException('Exchangerate not found');
     }
 
-    if (index !== -1) {
-      Mock_ExchangeRate[index] = {
-        ...Mock_ExchangeRate[index],
-        ...updateExchangerateDto,
-      };
-    }
+    const updateObj = await this.db_tenant.exchangeRate.update({
+      where: {
+        id,
+      },
+      data: updateExchangerateDto,
+    });
+
+    const res: ResponseId<string> = {
+      id: updateObj.id,
+    };
+
+    return res;
   }
 
-  remove(id: string) {
-    const index = Mock_ExchangeRate.findIndex(
-      (exchangerate) => exchangerate.id === id,
-    );
-    if (index === -1) {
+  async delete(id: string) {
+    const oneObj = await this.db_tenant.exchangeRate.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
       throw new NotFoundException('Exchangerate not found');
     }
 
-    if (index !== -1) {
-      Mock_ExchangeRate.splice(index, 1);
-    }
+    await this.db_tenant.exchangeRate.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

@@ -1,10 +1,16 @@
-import { CreateUnitDto } from './dto/create-unit.dto';
+import { DbSystemService } from 'src/db_system/db_system.service';
+import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Injectable } from '@nestjs/common';
-import { UpdateUnitDto } from './dto/update-unit.dto';
+import { Prisma } from '@prisma-carmen-client/tenant';
 
 @Injectable()
 export class UnitsService {
-  create(createUnitDto: CreateUnitDto) {
+  constructor(
+    private readonly db_system: DbSystemService,
+    private readonly db_tenant: DbTenantService,
+  ) {}
+
+  create(createUnitDto: Prisma.UnitCreateInput) {
     return 'This action adds a new unit';
   }
 
@@ -16,7 +22,7 @@ export class UnitsService {
     return `This action returns a #${id} unit`;
   }
 
-  update(id: string, updateUnitDto: UpdateUnitDto) {
+  update(id: string, updateUnitDto: Prisma.UnitUpdateInput) {
     return `This action updates a #${id} unit`;
   }
 

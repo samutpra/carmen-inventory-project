@@ -8,32 +8,31 @@ import {
   Delete,
 } from '@nestjs/common';
 import { DepartmentsService } from './departments.service';
-import { CreateDepartmentDto } from './dto/create-department.dto';
-import { UpdateDepartmentDto } from './dto/update-department.dto';
+import { Prisma } from '@prisma-carmen-client/tenant';
 
 @Controller('api/v1/departments')
 export class DepartmentsController {
   constructor(private readonly departmentsService: DepartmentsService) {}
 
   @Post()
-  create(@Body() createDepartmentDto: CreateDepartmentDto) {
+  create(@Body() createDepartmentDto: Prisma.DepartmentCreateInput) {
     return this.departmentsService.create(createDepartmentDto);
   }
 
   @Get()
-  getAll(@Param('tenant') tenantId: string) {
-    return this.departmentsService.getAll(tenantId);
+  findAll(@Param('tenant') tenantId: string) {
+    return this.departmentsService.findAll(tenantId);
   }
 
   @Get(':id')
-  get(@Param('id') id: string) {
-    return this.departmentsService.get(id);
+  fineOne(@Param('id') id: string) {
+    return this.departmentsService.findOne(id);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateDepartmentDto: UpdateDepartmentDto,
+    @Body() updateDepartmentDto: Prisma.DepartmentUpdateInput,
   ) {
     return this.departmentsService.update(id, updateDepartmentDto);
   }

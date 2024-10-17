@@ -9,12 +9,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiBody, ApiResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { products } from 'src/drizzle/schema/tenant/products.schema';
-import { IResponseList } from 'lib/interfaces/helper/iResponse';
+import {
+  IResponseList,
+  ResponseList,
+  ResponseSingle,
+} from 'lib/helper/iResponse';
+import { Prisma, Product } from '@prisma-carmen-client/tenant';
 
 @Controller('api/v1/products')
 @ApiTags('products')
@@ -24,7 +26,7 @@ export class ProductsController {
 
   @Get()
   @ApiBody({
-    type: CreateProductDto,
+    // type: CreateProductDto,
     description: 'Get all products',
   })
   @ApiResponse({
@@ -36,13 +38,13 @@ export class ProductsController {
     description: 'Bad request',
   })
   @UseGuards(JwtAuthGuard)
-  async findAll(): Promise<IResponseList<typeof products>> {
+  async findAll(): Promise<ResponseList<Product>> {
     return this.productsService.findAll();
   }
 
   @Get(':id')
   @ApiBody({
-    type: CreateProductDto,
+    // type: CreateProductDto,
     description: 'Get a product by id',
   })
   @ApiResponse({
@@ -58,14 +60,14 @@ export class ProductsController {
     description: 'Product not found',
   })
   @UseGuards(JwtAuthGuard)
-  async findOne(@Param('id') id: string): Promise<typeof products> {
+  async findOne(@Param('id') id: string): Promise<ResponseSingle<Product>> {
     return this.productsService.findOne(id);
   }
 
   @Post()
   @ApiBody({
     description: 'Create a new product',
-    type: CreateProductDto,
+    // type: CreateProductDto,
     required: true,
   })
   @ApiResponse({
@@ -81,13 +83,13 @@ export class ProductsController {
     description: 'Conflict',
   })
   @UseGuards(JwtAuthGuard)
-  create(@Body() createProductDto: CreateProductDto) {
+  create(@Body() createProductDto: Prisma.ProductCreateInput) {
     return this.productsService.create(createProductDto);
   }
 
   @Patch(':id')
   @ApiBody({
-    type: UpdateProductDto,
+    // type: UpdateProductDto,
     description: 'Update a product',
   })
   @ApiResponse({
@@ -103,13 +105,16 @@ export class ProductsController {
     description: 'Product not found',
   })
   @UseGuards(JwtAuthGuard)
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateProductDto: Prisma.ProductUpdateInput,
+  ) {
     return this.productsService.update(id, updateProductDto);
   }
 
   @Delete(':id')
   @ApiBody({
-    type: CreateProductDto,
+    // type: CreateProductDto,
     description: 'Delete a product',
   })
   @ApiResponse({

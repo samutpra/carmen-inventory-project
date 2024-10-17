@@ -1,44 +1,39 @@
+import { Currency, Prisma } from '@prisma-carmen-client/tenant';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  ResponseId,
-  ResponseList,
-  ResponseSingle,
-} from 'lib/interfaces/helper/iResponse';
+import { ResponseId, ResponseList, ResponseSingle } from 'lib/helper/iResponse';
 
-import { CreateCurrencyDto } from './dto/create-currency.dto';
-import { Currency } from 'lib/entities';
-import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
+import { DbSystemService } from 'src/db_system/db_system.service';
+import { DbTenantService } from 'src/db_tenant/db_tenant.service';
+import { Default_PerPage } from 'lib/helper/perpage.default';
 import { DuplicateException } from 'lib/utils/exceptions';
-import { Mock_Currency } from 'lib/mocks';
-import { UpdateCurrencyDto } from './dto/update-currency.dto';
-import { ulid } from 'ulid';
 
 @Injectable()
 export class CurrenciesService {
+  constructor(
+    private readonly db_system: DbSystemService,
+    private readonly db_tenant: DbTenantService,
+  ) {}
+
   //#region CREATE
   async create(
-    createCurrencyDto: CreateCurrencyDto,
+    createCurrencyDto: Prisma.CurrencyCreateInput,
   ): Promise<ResponseId<string>> {
-    const found = Mock_Currency.find(
-      (currency) => currency.code === createCurrencyDto.code,
-    );
+    // Check if currency already exists
+    const found = await this.db_tenant.currency.findUnique({
+      where: {
+        name: createCurrencyDto.name,
+      },
+    });
+
     if (found) {
       throw new DuplicateException('Currency already exists');
     }
 
-    const newCurrency: Currency = {
-      ...createCurrencyDto,
-      id: ulid(),
-      createdAt: new Date(),
-      createdBy: 'USER-01',
-      updatedAt: new Date(),
-      updatedBy: 'USER-01',
-    };
-    Mock_Currency.push(newCurrency);
+    const createObj = await this.db_tenant.currency.create({
+      data: createCurrencyDto,
+    });
 
-    const res: ResponseId<string> = {
-      id: newCurrency.id,
-    };
+    const res: ResponseId<string> = { id: createObj.id };
 
     return res;
   }
@@ -46,14 +41,15 @@ export class CurrenciesService {
 
   //#region GET ALL
   async findAll(): Promise<ResponseList<Currency>> {
-    const currencies = Mock_Currency;
+    const max = await this.db_tenant.currency.count({});
+    const listObj = await this.db_tenant.currency.findMany();
     const res: ResponseList<Currency> = {
-      data: currencies,
+      data: listObj,
       pagination: {
-        total: currencies.length,
+        total: max,
         page: 1,
         perPage: Default_PerPage,
-        pages: Math.ceil(currencies.length / Default_PerPage),
+        pages: Math.ceil(max / Default_PerPage),
       },
     };
     return res;
@@ -62,12 +58,17 @@ export class CurrenciesService {
 
   //#region GET ONE
   async findOne(id: string): Promise<ResponseSingle<Currency>> {
-    const currency = Mock_Currency.find((currency) => currency.id === id);
-    if (!currency) {
+    const oneObj = await this.db_tenant.currency.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
       throw new NotFoundException('Currency not found');
     }
     const res: ResponseSingle<Currency> = {
-      data: currency,
+      data: oneObj,
     };
     return res;
   }
@@ -76,19 +77,27 @@ export class CurrenciesService {
   //#region UPDATE
   async update(
     id: string,
-    updateCurrencyDto: UpdateCurrencyDto,
+    updateCurrencyDto: Prisma.CurrencyUpdateInput,
   ): Promise<ResponseId<string>> {
-    const index = Mock_Currency.findIndex((currency) => currency.id === id);
-    if (index === -1) {
+    const oneObj = await this.db_tenant.currency.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
       throw new NotFoundException('Currency not found');
     }
 
-    if (index !== -1) {
-      Mock_Currency[index] = { ...Mock_Currency[index], ...updateCurrencyDto };
-    }
+    const updateObj = await this.db_tenant.currency.update({
+      where: {
+        id,
+      },
+      data: updateCurrencyDto,
+    });
 
     const res: ResponseId<string> = {
-      id: Mock_Currency[index].id,
+      id: updateObj.id,
     };
 
     return res;
@@ -96,15 +105,22 @@ export class CurrenciesService {
   //#endregion UPDATE
 
   //#region DELETE
-  remove(id: string) {
-    const index = Mock_Currency.findIndex((currency) => currency.id === id);
-    if (index === -1) {
+  async delete(id: string) {
+    const oneObj = await this.db_tenant.currency.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
       throw new NotFoundException('Currency not found');
     }
 
-    if (index !== -1) {
-      Mock_Currency.splice(index, 1);
-    }
+    await this.db_tenant.currency.delete({
+      where: {
+        id,
+      },
+    });
   }
   //#endregion DELETE
 }

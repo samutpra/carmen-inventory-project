@@ -1,61 +1,112 @@
+import {
+  IResponseList,
+  ResponseId,
+  ResponseList,
+  ResponseSingle,
+} from 'lib/helper/iResponse';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma, Product } from '@prisma-carmen-client/tenant';
 
-import { CreateProductDto } from './dto/create-product.dto';
-import { DuplicateException } from 'lib/utils';
-import { Mock_Product } from 'lib/mocks';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { ulid } from 'ulid';
-import { DRIZZLE_SYSTEM, DRIZZLE_TENANT } from 'src/drizzle/drizzle.module';
-import { DrizzleDB } from 'src/drizzle/types/drizzle';
-import { products } from 'src/drizzle/schema/tenant/products.schema';
-import { IResponseList } from 'lib/interfaces/helper/iResponse';
-import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
+import { DbSystemService } from 'src/db_system/db_system.service';
+import { DbTenantService } from 'src/db_tenant/db_tenant.service';
+import { Default_PerPage } from 'lib/helper/perpage.default';
+import { r } from '@faker-js/faker/dist/airline-C5Qwd7_q';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @Inject(DRIZZLE_SYSTEM) private readonly db_system: DrizzleDB,
-    @Inject(DRIZZLE_TENANT) private readonly db_tenant: DrizzleDB,
+    private readonly db_system: DbSystemService,
+    private readonly db_tenant: DbTenantService,
   ) {}
 
-  create(createProductDto: CreateProductDto) {
-    // const create_By = ulid();
-    // const product: typeof products.$inferInsert = {
-    //   ...createProductDto,
-    // };
-    // this.db.insert(products).values(product).execute();
-    // return product;
+  async create(
+    createProductDto: Prisma.ProductCreateInput,
+  ): Promise<ResponseId<string>> {
+    const createOne = await this.db_tenant.product.create({
+      data: createProductDto,
+    });
 
-    return 'This action adds a new product';
+    const res: ResponseId<string> = {
+      id: createOne.id,
+    };
+
+    return res;
   }
 
-  async findAll() {
+  async findAll(): Promise<ResponseList<Product>> {
+    const max = await this.db_tenant.product.count({});
+    const listObj = await this.db_tenant.product.findMany();
+
     //const products = Mock_Product;
-    const r = await this.db_tenant.query.products.findMany();
-    const res: IResponseList<typeof products> = {
-      data: r,
+    const res: ResponseList<Product> = {
+      data: listObj,
       pagination: {
-        total: r.length,
+        total: max,
         page: 1,
         perPage: Default_PerPage,
-        pages: Math.ceil(r.length / Default_PerPage),
+        pages: Math.ceil(max / Default_PerPage),
       },
     };
     return res;
   }
 
-  async findOne(id: string) {
-    const r = await this.db_tenant.query.products.findUnique(
-      (o) => o.id === id,
-    );
-    return r;
+  async findOne(id: string): Promise<ResponseSingle<Product>> {
+    const oneObj = await this.db_tenant.product.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
+      throw new NotFoundException('Product not found');
+    }
+
+    const res: ResponseSingle<Product> = {
+      data: oneObj,
+    };
+    return res;
   }
 
-  update(id: string, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: Prisma.ProductUpdateInput) {
+    const oneObj = await this.db_tenant.product.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
+      throw new NotFoundException('Product not found');
+    }
+
+    const updateObj = await this.db_tenant.product.update({
+      where: {
+        id,
+      },
+      data: updateProductDto,
+    });
+
+    const res: ResponseId<string> = {
+      id: updateObj.id,
+    };
+
+    return res;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    const oneObj = await this.db_tenant.product.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
+      throw new NotFoundException('Product not found');
+    }
+
+    const deleteObj = await this.db_tenant.product.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

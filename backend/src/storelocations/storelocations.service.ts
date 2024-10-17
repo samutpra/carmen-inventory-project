@@ -1,90 +1,127 @@
 import {
+  IResponseId,
   IResponseList,
   IResponseSingle,
-} from 'lib/interfaces/helper/iResponse';
+  ResponseId,
+  ResponseList,
+  ResponseSingle,
+} from 'lib/helper/iResponse';
 
-import { CreateStoreLocationDto } from './dto/create-storelocation.dto';
-import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
-import { IAsyncService } from 'lib/interfaces/helper/IAsyncService';
-import { IStoreLocation } from 'lib/interfaces';
+import { DbSystemService } from 'src/db_system/db_system.service';
+import { DbTenantService } from 'src/db_tenant/db_tenant.service';
+import { Default_PerPage } from 'lib/helper/perpage.default';
 import { Injectable } from '@nestjs/common';
-import { Mock_StoreLocation } from 'lib/mocks';
-import { StoreLocation } from 'lib/entities';
-import { UpdateStoreLocationDto } from './dto/update-storelocation.dto';
+import { Location } from '@prisma-carmen-client/tenant';
+import { Prisma } from '@prisma-carmen-client/tenant';
 
 @Injectable()
-export class StoreLocationsService
-  implements
-    IAsyncService<
-      StoreLocation,
-      CreateStoreLocationDto,
-      UpdateStoreLocationDto
-    >
-{
+export class StoreLocationsService {
+  constructor(
+    private readonly db_system: DbSystemService,
+    private readonly db_tenant: DbTenantService,
+  ) {}
+
   async create(
-    createStoreLocationDto: CreateStoreLocationDto,
-  ): Promise<IResponseSingle<StoreLocation>> {
-    return new Promise((resolve) =>
-      resolve({
-        data: {
-          ...createStoreLocationDto,
-          id: '1', // Mock ID
-          createdAt: new Date(),
-          createdBy: '1',
-          updatedAt: new Date(),
-          updatedBy: '1',
-        },
-      }),
-    );
+    createStoreLocationDto: Prisma.LocationCreateInput,
+  ): Promise<ResponseSingle<Location>> {
+    const oneObj = await this.db_tenant.location.findUnique({
+      where: {
+        name: createStoreLocationDto.name,
+      },
+    });
+
+    if (oneObj) {
+      throw new Error('Location already exists');
+    }
+
+    const createObj = await this.db_tenant.location.create({
+      data: createStoreLocationDto,
+    });
+
+    const res: ResponseSingle<Location> = {
+      data: createObj,
+    };
+
+    return res;
   }
 
-  async getAll(): Promise<IResponseList<IStoreLocation>> {
-    const storeLocations = Mock_StoreLocation;
-    const res: IResponseList<IStoreLocation> = {
-      data: storeLocations,
+  async getAll(): Promise<ResponseList<Location>> {
+    const max = await this.db_tenant.location.count({});
+    const listObj = await this.db_tenant.location.findMany();
+
+    const res: ResponseList<Location> = {
+      data: listObj,
       pagination: {
-        total: storeLocations.length,
+        total: max,
         page: 1,
         perPage: Default_PerPage,
-        pages: Math.ceil(storeLocations.length / Default_PerPage),
+        pages: Math.ceil(max / Default_PerPage),
       },
     };
     return new Promise((resolve) => resolve(res));
   }
 
-  async get(id: string): Promise<IResponseSingle<IStoreLocation>> {
-    const storeLocation = Mock_StoreLocation.find(
-      (storeLocation) => storeLocation.id === id,
-    );
-    const res: IResponseSingle<IStoreLocation> = {
-      data: storeLocation,
+  async findOne(id: string): Promise<ResponseSingle<Location>> {
+    const oneObj = await this.db_tenant.location.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
+      throw new Error('Location not found');
+    }
+
+    const res: ResponseSingle<Location> = {
+      data: oneObj,
     };
-    return new Promise((resolve) => resolve(res));
+
+    return res;
   }
 
   async update(
     id: string,
-    updateLocationDto: UpdateStoreLocationDto,
-  ): Promise<IResponseSingle<IStoreLocation>> {
-    const storeLocation = Mock_StoreLocation.find(
-      (storeLocation) => storeLocation.id === id,
-    );
-    const res: IResponseSingle<IStoreLocation> = {
-      data: { ...updateLocationDto, ...storeLocation },
+    updateLocationDto: Prisma.LocationUpdateInput,
+  ): Promise<ResponseSingle<Location>> {
+    const oneObj = await this.db_tenant.location.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!oneObj) {
+      throw new Error('Location not found');
+    }
+
+    const updateObj = await this.db_tenant.location.update({
+      where: {
+        id,
+      },
+      data: updateLocationDto,
+    });
+
+    const res: ResponseSingle<Location> = {
+      data: updateObj,
     };
-    return new Promise((resolve) => resolve(res));
+
+    return res;
   }
 
-  async delete(id: string): Promise<IResponseSingle<StoreLocation>> {
-    const storeLocation = Mock_StoreLocation.find(
-      (storeLocation) => storeLocation.id === id,
-    );
-    const res: IResponseSingle<StoreLocation> = {
-      data: storeLocation,
-    };
+  async delete(id: string) {
+    const oneObj = await this.db_tenant.location.findUnique({
+      where: {
+        id,
+      },
+    });
 
-    Mock_StoreLocation.splice(Mock_StoreLocation.indexOf(storeLocation), 1); // Mock Delete
+    if (!oneObj) {
+      throw new Error('Location not found');
+    }
 
-    return new Promise((resolve) => resolve(res));
+    await this.db_tenant.location.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

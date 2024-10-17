@@ -1,75 +1,121 @@
+import {
+  IResponseList,
+  ResponseId,
+  ResponseList,
+  ResponseSingle,
+} from 'lib/helper/iResponse';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { CreateTenantDto } from './dto/create-tenant.dto';
-import { Default_PerPage } from 'lib/interfaces/helper/perpage.default';
+import { DbSystemService } from 'src/db_system/db_system.service';
+import { DbTenantService } from 'src/db_tenant/db_tenant.service';
+import { Default_PerPage } from 'lib/helper/perpage.default';
 import { DuplicateException } from 'lib/utils';
-import { IResponseList } from 'lib/interfaces/helper/iResponse';
-import { Mock_Tenant } from 'lib/mocks';
-import { Tenant } from 'lib/entities';
-import { UpdateTenantDto } from './dto/update-tenant.dto';
-import { ulid } from 'ulid';
+import { Prisma } from '@Prisma-Carmen-Client/system';
+import { Tenant } from '@Prisma-Carmen-Client/system';
 
 @Injectable()
 export class TenantsService {
-  create(createTenantDto: CreateTenantDto) {
-    const found = Mock_Tenant.find(
-      (tenant) => tenant.name === createTenantDto.name,
-    );
-    if (found) {
+  constructor(
+    private readonly db_system: DbSystemService,
+    private readonly db_tenant: DbTenantService,
+  ) {}
+
+  async create(
+    createTenantDto: Prisma.TenantCreateInput,
+  ): Promise<ResponseId<string>> {
+    const oneObj = await this.db_system.tenant.findUnique({
+      where: {
+        name: createTenantDto.name,
+      },
+    });
+
+    if (oneObj) {
       throw new DuplicateException('Tenant already exists');
     }
 
-    const newTenant: Tenant = {
-      ...createTenantDto,
-      id: ulid(),
-      createdAt: new Date(),
-      createdBy: 'USER-01',
-      updatedAt: new Date(),
-      updatedBy: 'USER-01',
+    const newTenant = await this.db_system.tenant.create({
+      data: createTenantDto,
+    });
+
+    const res: ResponseId<string> = {
+      id: newTenant.id,
     };
-    Mock_Tenant.push(newTenant);
+
+    return res;
   }
 
   async findAll(): Promise<IResponseList<Tenant>> {
-    const tenants = Mock_Tenant;
-    const res: IResponseList<Tenant> = {
-      data: tenants,
+    const max = await this.db_system.tenant.count({});
+    const listObj = await this.db_system.tenant.findMany();
+
+    const res: ResponseList<Tenant> = {
+      data: listObj,
       pagination: {
-        total: tenants.length,
+        total: max,
         page: 1,
         perPage: Default_PerPage,
-        pages: Math.ceil(tenants.length / Default_PerPage),
+        pages: Math.ceil(max / Default_PerPage),
       },
     };
     return res;
   }
 
-  async findOne(id: string): Promise<Tenant> {
-    const tenant = Mock_Tenant.find((tenant) => tenant.id === id);
-    return tenant;
+  async findOne(id: string): Promise<ResponseSingle<Tenant>> {
+    const oneObj = await this.db_system.tenant.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    const res: ResponseSingle<Tenant> = {
+      data: oneObj,
+    };
+
+    return res;
   }
 
-  update(id: string, updateTenantDto: UpdateTenantDto) {
-    const index = Mock_Tenant.findIndex((tenant) => tenant.id === id);
+  async update(
+    id: string,
+    updateTenantDto: Prisma.TenantUpdateInput,
+  ): Promise<ResponseId<string>> {
+    const oneObj = await this.db_system.tenant.findUnique({
+      where: {
+        id: id,
+      },
+    });
 
-    if (index === -1) {
+    if (!oneObj) {
       throw new NotFoundException('Tenant not found');
     }
 
-    if (index !== -1) {
-      Mock_Tenant[index] = { ...Mock_Tenant[index], ...updateTenantDto };
-    }
+    const updateObj = await this.db_system.tenant.update({
+      where: {
+        id: id,
+      },
+      data: updateTenantDto,
+    });
+    const res: ResponseId<string> = {
+      id: updateObj.id,
+    };
+
+    return res;
   }
 
-  remove(id: string) {
-    const index = Mock_Tenant.findIndex((tenant) => tenant.id === id);
+  async remove(id: string) {
+    const oneObj = await this.db_system.tenant.findUnique({
+      where: {
+        id: id,
+      },
+    });
 
-    if (index === -1) {
+    if (!oneObj) {
       throw new NotFoundException('Tenant not found');
     }
 
-    if (index !== -1) {
-      Mock_Tenant.splice(index, 1);
-    }
+    await this.db_system.tenant.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }

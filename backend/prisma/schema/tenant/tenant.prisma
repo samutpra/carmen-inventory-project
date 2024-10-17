@@ -1,0 +1,222 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = [ "multiSchema"]
+  output = "../../../node_modules/@prisma-carmen-client/tenant"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      =  env("DATABASE_URL_TENANT")
+}
+
+/// region Tenant
+model Currency {
+  id   String @id @default(uuid())
+  symbol String   @unique
+  name   String   @unique
+  rate   Float    @default(1)
+
+  exchangeRates ExchangeRate[]
+}
+
+model DeliveryPoint {
+  id   String @id @default(uuid())
+  name       String   @unique
+  address    String
+  city       String
+  postalCode String
+  country    String
+  latitude   Float
+  longitude  Float
+  phone      String
+  email      String
+  active     Boolean @default(true)
+}
+
+model Department {
+  id   String @id @default(uuid())
+  name       String   @unique
+  active     Boolean @default(true)
+}
+
+model ExchangeRate {
+  id   String @id @default(uuid())
+  code String   @unique
+  rate      Float    @default(1)
+  dateAt      DateTime @default(now())
+
+  currency  Currency @relation(fields: [currencyId], references: [id])
+  currencyId String
+}
+
+model Product {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  productInfo ProductInfo?
+  vendorProduct VendorProduct[]
+}
+
+model ProductInfo {
+  id   String @id @default(uuid())
+
+  price       Float
+
+  product     Product  @relation(fields: [productId], references: [id])
+  productId   String @unique
+}
+
+model ProductCategory {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  productSubCategory ProductSubCategory[]
+}
+
+model ProductSubCategory {
+  id   String @id @default(uuid())
+  name        String   @unique
+
+  description String
+  active      Boolean @default(true)
+
+  productCategory ProductCategory @relation(fields: [productCategoryId], references: [id])
+  productCategoryId String
+
+  productItemGroup ProductItemGroup[]
+
+}
+model ProductItemGroup {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  productSubCategory ProductSubCategory @relation(fields: [productSubCategoryId], references: [id])
+  productSubCategoryId String
+}
+
+model PRType {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  purchaseRequest PurchaseRequest[]
+}
+
+model PurchaseRequest {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  prType PRType @relation(fields: [prTypeId], references: [id])
+  prTypeId String
+
+  purchaseRequestItems PurchaseRequestItem[]
+}
+
+model PurchaseRequestItem {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  purchaseRequest PurchaseRequest @relation(fields: [purchaseRequestId], references: [id])
+  purchaseRequestId String
+}
+
+model PurchaseOrder {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  purchaseOrderItems PurchaseOrderItem[]
+}
+
+model PurchaseOrderItem {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  purchaseOrder PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  purchaseOrderId String
+}
+
+model Location {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+}
+
+model Unit {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+}
+
+model UnitConversion {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+}
+
+model Vendor{
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  vendorContact VendorContact[]
+  vendorAddress VendorAddress[]
+  vendorProduct VendorProduct[]
+}
+
+model VendorContact {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  vendor Vendor? @relation(fields: [vendorId], references: [id])
+  vendorId String?
+}
+
+model VendorAddress {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  vendor Vendor @relation(fields: [vendorId], references: [id])
+  vendorId String
+}
+
+model VendorProduct {
+  id   String @id @default(uuid())
+  name        String   @unique
+  description String
+  active      Boolean @default(true)
+
+  vendor Vendor @relation(fields: [vendorId], references: [id])
+  vendorId String
+
+  product Product @relation(fields: [productId], references: [id])
+  productId String
+}

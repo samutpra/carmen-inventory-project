@@ -9,9 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CurrenciesService } from './currencies.service';
-import { CreateCurrencyDto } from './dto/create-currency.dto';
-import { UpdateCurrencyDto } from './dto/update-currency.dto';
-import { Currency } from 'lib/entities';
+
 import {
   ApiBody,
   ApiResponse,
@@ -29,13 +27,11 @@ import {
   ApiBearerAuth,
 } from '@nestjs/swagger';
 
-import { Mock_Currency } from 'lib/mocks';
+// import { Mock_Currency } from 'lib/mocks';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import {
-  ResponseId,
-  ResponseList,
-  ResponseSingle,
-} from 'lib/interfaces/helper/iResponse';
+import { ResponseId, ResponseList, ResponseSingle } from 'lib/helper/iResponse';
+
+import { Currency, Prisma } from '@prisma-carmen-client/tenant';
 
 @Controller('api/v1/currencies')
 @ApiTags('currencies')
@@ -46,7 +42,7 @@ export class CurrenciesController {
   //#region CREATE
   @Post()
   @ApiBody({
-    type: CreateCurrencyDto,
+    // type: typeof Prisma.CurrencyCreateInput,
     description: 'Create a new currency',
     examples: {
       example1: {
@@ -165,7 +161,7 @@ export class CurrenciesController {
   })
   @UseGuards(JwtAuthGuard)
   async create(
-    @Body() createCurrencyDto: CreateCurrencyDto,
+    @Body() createCurrencyDto: Prisma.CurrencyCreateInput,
   ): Promise<ResponseId<string>> {
     return this.currenciesService.create(createCurrencyDto);
   }
@@ -178,9 +174,9 @@ export class CurrenciesController {
     description: 'Currencies retrieved successfully',
     type: Promise<ResponseList<Currency>>,
     example: {
-      data: Mock_Currency,
+      // data: Mock_Currency,
       pagination: {
-        total: Mock_Currency.length,
+        // total: Mock_Currency.length,
         page: 1,
         perPage: 10,
         pages: 1,
@@ -273,7 +269,7 @@ export class CurrenciesController {
     description: 'Currency retrieved successfully',
     type: ResponseSingle<Currency>,
     example: {
-      data: Mock_Currency[0],
+      // data: Mock_Currency[0],
     },
   })
   @ApiBadRequestResponse({
@@ -358,7 +354,7 @@ export class CurrenciesController {
   @Patch(':id')
   @ApiParam({ name: 'id', description: 'Currency id' })
   @ApiBody({
-    type: UpdateCurrencyDto,
+    // type: UpdateCurrencyDto,
     description: 'Update a currency by id',
   })
   @ApiResponse({
@@ -440,7 +436,7 @@ export class CurrenciesController {
   @UseGuards(JwtAuthGuard)
   async update(
     @Param('id') id: string,
-    @Body() updateCurrencyDto: UpdateCurrencyDto,
+    @Body() updateCurrencyDto: Prisma.CurrencyUpdateInput,
   ): Promise<ResponseId<string>> {
     return this.currenciesService.update(id, updateCurrencyDto);
   }
@@ -526,8 +522,8 @@ export class CurrenciesController {
     },
   })
   @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.currenciesService.remove(id);
+  delete(@Param('id') id: string) {
+    return this.currenciesService.delete(id);
   }
   //#endregion DELETE
 }

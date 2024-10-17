@@ -3,8 +3,9 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CurrenciesModule } from './currencies/currencies.module';
+import { DbSystemModule } from './db_system/db_system.module';
+import { DbTenantModule } from './db_tenant/db_tenant.module';
 import { DepartmentsModule } from './departments/departments.module';
-import { DrizzleModule } from './drizzle/drizzle.module';
 import { ExchangerateModule } from './exchangerate/exchangerate.module';
 import { Module } from '@nestjs/common';
 import { ProductsModule } from './products/products.module';
@@ -24,7 +25,8 @@ import { UserModule } from './users/users.module';
     ExchangerateModule,
     AuthModule,
     DepartmentsModule,
-    DrizzleModule,
+    DbSystemModule,
+    DbTenantModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),

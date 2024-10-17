@@ -9,8 +9,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ExchangerateService } from './exchangerate.service';
-import { CreateExchangerateDto } from './dto/create-exchangerate.dto';
-import { UpdateExchangerateDto } from './dto/update-exchangerate.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
@@ -27,14 +25,9 @@ import {
   ApiUnauthorizedResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { ExchangeRate } from 'lib/entities';
-import { Mock_ExchangeRate } from 'lib/mocks';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import {
-  ResponseId,
-  ResponseList,
-  ResponseSingle,
-} from 'lib/interfaces/helper/iResponse';
+import { ResponseId, ResponseList, ResponseSingle } from 'lib/helper/iResponse';
+import { ExchangeRate, Prisma } from '@prisma-carmen-client/tenant';
 
 @Controller('api/v1/exchangerate')
 @ApiTags('exchangerate')
@@ -49,9 +42,9 @@ export class ExchangerateController {
     description: 'Exchangerate created successfully',
     type: Promise<ResponseList<ExchangeRate>>,
     example: {
-      data: Mock_ExchangeRate,
+      // data: Mock_ExchangeRate,
       pagination: {
-        total: Mock_ExchangeRate.length,
+        total: 10, // Mock_ExchangeRate.length,
         page: 1,
         perPage: 10,
         pages: 1,
@@ -144,7 +137,7 @@ export class ExchangerateController {
     description: 'Exchangerate retrieved successfully',
     type: ResponseSingle<ExchangeRate>,
     example: {
-      data: Mock_ExchangeRate[0],
+      // data: Mock_ExchangeRate[0],
     },
   })
   @ApiBadRequestResponse({
@@ -230,7 +223,7 @@ export class ExchangerateController {
   //#region CREATE
   @Post()
   @ApiBody({
-    type: CreateExchangerateDto,
+    // type: Prisma.ExchangerateCreateInput,
     description: 'Create a new exchangerate',
     examples: {
       example1: {
@@ -323,7 +316,7 @@ export class ExchangerateController {
   })
   @UseGuards(JwtAuthGuard)
   async create(
-    @Body() createExchangerateDto: CreateExchangerateDto,
+    @Body() createExchangerateDto: Prisma.ExchangeRateCreateInput,
   ): Promise<ResponseId<string>> {
     return this.exchangerateService.create(createExchangerateDto);
   }
@@ -333,7 +326,7 @@ export class ExchangerateController {
   @Patch(':id')
   @ApiParam({ name: 'id', description: 'Exchangerate id' })
   @ApiBody({
-    type: CreateExchangerateDto,
+    // type: Prisma.ExchangeRateUpdateInput,
     description: 'Update a exchangerate by id',
   })
   @ApiResponse({
@@ -415,7 +408,7 @@ export class ExchangerateController {
   @UseGuards(JwtAuthGuard)
   update(
     @Param('id') id: string,
-    @Body() updateExchangerateDto: UpdateExchangerateDto,
+    @Body() updateExchangerateDto: Prisma.ExchangeRateUpdateInput,
   ) {
     return this.exchangerateService.update(id, updateExchangerateDto);
   }
@@ -501,8 +494,8 @@ export class ExchangerateController {
     },
   })
   @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.exchangerateService.remove(id);
+  delete(@Param('id') id: string) {
+    return this.exchangerateService.delete(id);
   }
   //#endregion DELETE
 }
