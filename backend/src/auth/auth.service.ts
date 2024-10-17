@@ -33,8 +33,8 @@ export class AuthService {
       const { password, passwordHash, ...user } = findUser;
       return {
         ...user,
-        accessToken: this.jwtService.sign(user),
-        refreshToken: this.jwtService.sign(user, { expiresIn: '7d' }),
+        access_token: this.jwtService.sign(user),
+        refresh_token: this.jwtService.sign(user, { expiresIn: '7d' }),
       };
     }
   }
@@ -45,7 +45,7 @@ export class AuthService {
       username: username,
     };
     return {
-      accessToken: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(payload),
     };
   }
 }

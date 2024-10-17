@@ -14,7 +14,7 @@ Content-Type: application/json
     "password": "password1"
 }
 
-# @access_token={{login.response.body.accessToken}}
+# @access_token={{login.response.body.access_token}}
 
 ### register
 POST {{host}}/api/v1/auth/register
