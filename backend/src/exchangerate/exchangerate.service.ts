@@ -6,6 +6,7 @@ import {
 } from 'lib/helper/iResponse';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
 import { DbSystemService } from 'src/db_system/db_system.service';
 import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Default_PerPage } from 'lib/helper/perpage.default';
@@ -17,11 +18,15 @@ export class ExchangerateService {
   constructor(
     private readonly db_system: DbSystemService,
     private readonly db_tenant: DbTenantService,
+    private readonly db_tenant_config: DBTenantConfigService,
   ) {}
+
+  private tenantId = '123';
 
   async create(
     createExchangerateDto: Prisma.ExchangeRateCreateInput,
   ): Promise<ResponseId<string>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.exchangeRate.findUnique({
       where: {
         code: createExchangerateDto.code,
@@ -42,6 +47,7 @@ export class ExchangerateService {
   }
 
   async findAll(): Promise<ResponseList<ExchangeRate>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const max = await this.db_tenant.exchangeRate.count({});
     const listObj = await this.db_tenant.exchangeRate.findMany();
     const res: ResponseList<ExchangeRate> = {
@@ -57,6 +63,7 @@ export class ExchangerateService {
   }
 
   async findOne(id: string): Promise<ResponseSingle<ExchangeRate>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.exchangeRate.findUnique({
       where: {
         id,
@@ -77,6 +84,7 @@ export class ExchangerateService {
     id: string,
     updateExchangerateDto: Prisma.ExchangeRateUpdateInput,
   ): Promise<ResponseId<string>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.exchangeRate.findUnique({
       where: {
         id,
@@ -102,6 +110,7 @@ export class ExchangerateService {
   }
 
   async delete(id: string) {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.exchangeRate.findUnique({
       where: {
         id,

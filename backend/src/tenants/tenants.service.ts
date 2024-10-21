@@ -6,6 +6,7 @@ import {
 } from 'lib/helper/iResponse';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
+import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
 import { DbSystemService } from 'src/db_system/db_system.service';
 import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Default_PerPage } from 'lib/helper/perpage.default';
@@ -18,11 +19,15 @@ export class TenantsService {
   constructor(
     private readonly db_system: DbSystemService,
     private readonly db_tenant: DbTenantService,
+    private readonly db_tenant_config: DBTenantConfigService,
   ) {}
+
+  private tenantId = '123';
 
   async create(
     createTenantDto: Prisma.TenantCreateInput,
   ): Promise<ResponseId<string>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_system.tenant.findUnique({
       where: {
         name: createTenantDto.name,
@@ -45,6 +50,7 @@ export class TenantsService {
   }
 
   async findAll(): Promise<IResponseList<Tenant>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const max = await this.db_system.tenant.count({});
     const listObj = await this.db_system.tenant.findMany();
 
@@ -61,6 +67,7 @@ export class TenantsService {
   }
 
   async findOne(id: string): Promise<ResponseSingle<Tenant>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_system.tenant.findUnique({
       where: {
         id: id,
@@ -102,6 +109,7 @@ export class TenantsService {
   }
 
   async remove(id: string) {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_system.tenant.findUnique({
       where: {
         id: id,
