@@ -510,12 +510,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         )}
 
         <aside
-          className={cn(
-            "fixed top-0 left-0 z-50 h-full max-w-[350px] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-lg transition-transform duration-300 ease-in-out",
-            isOpen || isLargeScreen
-              ? "translate-x-0 md:sticky"
-              : "-translate-x-full"
-          )}
+         className={cn(
+          "fixed top-0 left-0 z-50 h-full w-[280px] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-lg transition-transform duration-300 ease-in-out",
+          isOpen || isLargeScreen
+            ? "translate-x-0 md:sticky"
+            : "-translate-x-full"
+        )}
         >
           <div className="px-8 pt-6 w-fit">
             <Link
@@ -526,16 +526,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </Link>
           </div>
 
-          <ScrollArea className="h-[95vh]">
-            <div className="space-y-1">
+          <ScrollArea className="h-full">
+            <div className="space-y-1 py-4">
               {menuItems.map((item) => {
                 const IconComponent =
                   (LucideIcons as any)[item.icon] || LucideIcons.Circle;
                 return (
-                  <div key={item.title} className="px-3 pt-2">
+                  <div key={item.title} className="px-3 py-2">
                     <Button
                       variant="ghost"
-                      className="w-full justify-between text-base font-semibold"
+                      className="w-full justify-between text-base  text-gray-800 dark:text-gray-200"
                       onClick={() => toggleExpand(item.title, item.path)}
                     >
                       <span className="flex items-center">
@@ -554,7 +554,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     {item.subItems &&
                       item.subItems.length > 0 &&
                       expandedItems.includes(item.title) && (
-                        <div className="ml-4 space-y-1">
+                        <div className="ml-4 mt-2 space-y-1">
                           {item.subItems.map((subItem) => (
                             <Button
                               key={subItem.name}
@@ -568,7 +568,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                               )}
                               onClick={() => !isLargeScreen && onClose()}
                             >
-                              <Link href={subItem.path}>
+                              <Link href={subItem.path} className="text-gray-800 dark:text-gray-200">
                                 {subItem.name}
                               </Link>
                             </Button>
