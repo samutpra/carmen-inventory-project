@@ -466,6 +466,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
 
   const router = useRouter();
 
@@ -480,17 +482,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleIsOpen = () => {
-    isOpen = !isOpen;
-  };
 
   const toggleExpand = (title: string, path?: string) => {
     const menuItem = menuItems.find((item) => item.title === title);
     if (!menuItem?.subItems || menuItem.subItems.length === 0) {
-      // If there are no subitems, navigate to the path
       router.push(path || "/");
     } else {
-      // If there are subitems, toggle the expansion
       setExpandedItems((prev) =>
         prev.includes(title)
           ? prev.filter((item) => item !== title)
@@ -498,6 +495,24 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       );
     }
   };
+
+  const handleMouseEnter = () => {
+    if (!isPinned) {
+      setIsExpanded(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isPinned) {
+      setIsExpanded(false);
+    }
+  };
+
+  const togglePin = () => {
+    setIsPinned(!isPinned);
+    setIsExpanded(!isPinned);
+  };
+
 
   return (
     <>
@@ -510,48 +525,72 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         )}
 
         <aside
-         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-[280px] bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-lg transition-transform duration-300 ease-in-out",
-          isOpen || isLargeScreen
-            ? "translate-x-0 md:sticky"
-            : "-translate-x-full"
-        )}
+          className={cn(
+            "fixed top-0 left-0 z-50 h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-lg transition-all duration-300 ease-in-out",
+            isOpen || isLargeScreen
+              ? "translate-x-0 md:sticky"
+              : "-translate-x-full",
+            isExpanded ? "w-[280px]" : "w-[64px]"
+          )}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
-          <div className="px-8 pt-6 w-fit">
+          <div className="px-2 pt-6 w-full flex items-center justify-between">
             <Link
               href="/"
-              className="text-2xl text-center font-bold text-blue-900"
+              className="flex items-center justify-center"
             >
-              {m.sidebar_carmen()}
+              <div className="bg-blue-900 h-8 w-8 rounded-full flex items-center justify-center">
+                {isExpanded && (
+                  <span className="text-xl font-bold text-white">C</span>
+                )}
+              </div>
+              {isExpanded && (
+                <span className="ml-2 text-2xl font-bold text-blue-900">Carmen</span>
+              )}
             </Link>
+            {isExpanded && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={togglePin}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <LucideIcons.Pin className={cn("h-5 w-5", isPinned && "text-blue-500")} />
+              </Button>
+            )}
           </div>
 
           <ScrollArea className="h-full">
             <div className="space-y-1 py-4">
               {menuItems.map((item) => {
                 const IconComponent =
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   (LucideIcons as any)[item.icon] || LucideIcons.Circle;
                 return (
-                  <div key={item.title} className="px-3 py-2">
+                  <div key={item.title} className="px-2 py-2">
                     <Button
                       variant="ghost"
-                      className="w-full justify-between text-base  text-gray-800 dark:text-gray-200"
+                      className={cn(
+                        "w-full justify-center lg:justify-start text-base text-gray-800 dark:text-gray-200",
+                        isExpanded && "justify-between"
+                      )}
                       onClick={() => toggleExpand(item.title, item.path)}
                     >
                       <span className="flex items-center">
-                        <IconComponent className="mr-2 h-5 w-5" />
-                        {item.title}
+                        <IconComponent className="h-5 w-5" />
+                        {isExpanded && <span className="ml-2">{item.title}</span>}
                       </span>
-                      {item.subItems &&
-                        item.subItems.length > 0 &&
-                        (expandedItems.includes(item.title) ? (
-                          <ChevronDown className="h-4 w-4" />
+                      {isExpanded && item.subItems && item.subItems.length > 0 && (
+                        expandedItems.includes(item.title) ? (
+                          <LucideIcons.ChevronDown className="h-4 w-4" />
                         ) : (
-                          <ChevronRight className="h-4 w-4" />
-                        ))}
+                          <LucideIcons.ChevronRight className="h-4 w-4" />
+                        )
+                      )}
                     </Button>
 
-                    {item.subItems &&
+                    {isExpanded && item.subItems &&
                       item.subItems.length > 0 &&
                       expandedItems.includes(item.title) && (
                         <div className="ml-4 mt-2 space-y-1">

@@ -32,7 +32,7 @@ export default function LanguageSwitcher() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button variant='ghost' size='icon'>
+				<Button variant='ghost' size='icon' className='text-black'>
 					<Globe size={20} />
 				</Button>
 			</DropdownMenuTrigger>
