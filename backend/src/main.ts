@@ -5,17 +5,34 @@ import {
   SwaggerDocumentOptions,
   SwaggerModule,
 } from '@nestjs/swagger';
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { NextFunction, Request, Response } from 'express';
 
 import { AppModule } from './app.module';
+import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 
 dotenv.config();
 
+// @Injectable()
+// export class TenantMiddleware implements NestMiddleware {
+//   constructor(private readonly configService: DBTenantConfigService) {}
+
+//   use(req: Request, res: Response, next: NextFunction) {
+//     const tenantId = req.headers['x-tenant-id'] as string; // Get tenant ID from headers
+//     if (!tenantId) {
+//       return res.status(400).send('Tenant ID missing in headers');
+//     }
+//     this.configService.setTenantId(tenantId);
+//     next();
+//   }
+// }
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   const config = new DocumentBuilder()
     .setTitle('CARMEN INVENTORY API')

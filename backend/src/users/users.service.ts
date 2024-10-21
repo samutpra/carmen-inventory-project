@@ -1,3 +1,4 @@
+import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
 import { DbSystemService } from 'src/db_system/db_system.service';
 import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Injectable } from '@nestjs/common';
@@ -9,9 +10,13 @@ export class UsersService {
   constructor(
     private readonly db_system: DbSystemService,
     private readonly db_tenant: DbTenantService,
+    private readonly db_tenant_config: DBTenantConfigService,
   ) {}
 
+  private tenantId = '123';
+
   async create(createUserDto: Prisma.UserCreateInput): Promise<string> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     return new Promise((resolve) => resolve('This action adds a new user'));
   }
 

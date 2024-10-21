@@ -7,6 +7,7 @@ import {
   ResponseSingle,
 } from 'lib/helper/iResponse';
 
+import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
 import { DbSystemService } from 'src/db_system/db_system.service';
 import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Default_PerPage } from 'lib/helper/perpage.default';
@@ -19,11 +20,15 @@ export class StoreLocationsService {
   constructor(
     private readonly db_system: DbSystemService,
     private readonly db_tenant: DbTenantService,
+    private readonly db_tenant_config: DBTenantConfigService,
   ) {}
+
+  private tenantId = '123';
 
   async create(
     createStoreLocationDto: Prisma.LocationCreateInput,
   ): Promise<ResponseSingle<Location>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.location.findUnique({
       where: {
         name: createStoreLocationDto.name,
@@ -46,6 +51,7 @@ export class StoreLocationsService {
   }
 
   async getAll(): Promise<ResponseList<Location>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const max = await this.db_tenant.location.count({});
     const listObj = await this.db_tenant.location.findMany();
 
@@ -62,6 +68,7 @@ export class StoreLocationsService {
   }
 
   async findOne(id: string): Promise<ResponseSingle<Location>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.location.findUnique({
       where: {
         id,
@@ -83,6 +90,7 @@ export class StoreLocationsService {
     id: string,
     updateLocationDto: Prisma.LocationUpdateInput,
   ): Promise<ResponseSingle<Location>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.location.findUnique({
       where: {
         id,
@@ -108,6 +116,7 @@ export class StoreLocationsService {
   }
 
   async delete(id: string) {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.location.findUnique({
       where: {
         id,

@@ -2,6 +2,7 @@ import { Currency, Prisma } from '@prisma-carmen-client/tenant';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ResponseId, ResponseList, ResponseSingle } from 'lib/helper/iResponse';
 
+import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
 import { DbSystemService } from 'src/db_system/db_system.service';
 import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Default_PerPage } from 'lib/helper/perpage.default';
@@ -12,13 +13,17 @@ export class CurrenciesService {
   constructor(
     private readonly db_system: DbSystemService,
     private readonly db_tenant: DbTenantService,
+    private readonly db_tenant_config: DBTenantConfigService,
   ) {}
+
+  private tenantId = '123';
 
   //#region CREATE
   async create(
     createCurrencyDto: Prisma.CurrencyCreateInput,
   ): Promise<ResponseId<string>> {
     // Check if currency already exists
+    this.db_tenant_config.setTenantId(this.tenantId);
     const found = await this.db_tenant.currency.findUnique({
       where: {
         name: createCurrencyDto.name,
@@ -41,6 +46,7 @@ export class CurrenciesService {
 
   //#region GET ALL
   async findAll(): Promise<ResponseList<Currency>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const max = await this.db_tenant.currency.count({});
     const listObj = await this.db_tenant.currency.findMany();
     const res: ResponseList<Currency> = {
@@ -58,6 +64,7 @@ export class CurrenciesService {
 
   //#region GET ONE
   async findOne(id: string): Promise<ResponseSingle<Currency>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.currency.findUnique({
       where: {
         id,
@@ -79,6 +86,7 @@ export class CurrenciesService {
     id: string,
     updateCurrencyDto: Prisma.CurrencyUpdateInput,
   ): Promise<ResponseId<string>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.currency.findUnique({
       where: {
         id,
@@ -106,6 +114,7 @@ export class CurrenciesService {
 
   //#region DELETE
   async delete(id: string) {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.currency.findUnique({
       where: {
         id,

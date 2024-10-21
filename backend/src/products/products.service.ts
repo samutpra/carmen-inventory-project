@@ -7,6 +7,7 @@ import {
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Product } from '@prisma-carmen-client/tenant';
 
+import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
 import { DbSystemService } from 'src/db_system/db_system.service';
 import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Default_PerPage } from 'lib/helper/perpage.default';
@@ -17,11 +18,15 @@ export class ProductsService {
   constructor(
     private readonly db_system: DbSystemService,
     private readonly db_tenant: DbTenantService,
+    private readonly db_tenant_config: DBTenantConfigService,
   ) {}
+
+  private tenantId = '123';
 
   async create(
     createProductDto: Prisma.ProductCreateInput,
   ): Promise<ResponseId<string>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const createOne = await this.db_tenant.product.create({
       data: createProductDto,
     });
@@ -34,6 +39,7 @@ export class ProductsService {
   }
 
   async findAll(): Promise<ResponseList<Product>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const max = await this.db_tenant.product.count({});
     const listObj = await this.db_tenant.product.findMany();
 
@@ -51,6 +57,7 @@ export class ProductsService {
   }
 
   async findOne(id: string): Promise<ResponseSingle<Product>> {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.product.findUnique({
       where: {
         id,
@@ -68,6 +75,7 @@ export class ProductsService {
   }
 
   async update(id: string, updateProductDto: Prisma.ProductUpdateInput) {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.product.findUnique({
       where: {
         id,
@@ -93,6 +101,7 @@ export class ProductsService {
   }
 
   async remove(id: string) {
+    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.product.findUnique({
       where: {
         id,
