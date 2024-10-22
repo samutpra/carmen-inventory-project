@@ -16,7 +16,7 @@ import {
   ResponseList,
   ResponseSingle,
 } from 'lib/helper/iResponse';
-import { Prisma, Tenant } from '@Prisma-Carmen-Client/system';
+import { Prisma, Tenant } from '@prisma-carmen-client/system';
 
 @Controller('api/v1/tenants')
 @ApiTags('tenants')

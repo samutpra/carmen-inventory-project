@@ -5,30 +5,28 @@ import {
   ResponseSingle,
 } from 'lib/helper/iResponse';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Prisma,
+  Tenant,
+  PrismaClient as dbSystem,
+} from '@prisma-carmen-client/system';
 
-import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
-import { DbSystemService } from 'src/db_system/db_system.service';
-import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Default_PerPage } from 'lib/helper/perpage.default';
 import { DuplicateException } from 'lib/utils';
-import { Prisma } from '@Prisma-Carmen-Client/system';
-import { Tenant } from '@Prisma-Carmen-Client/system';
+import { PrismaClientManagerService } from 'src/prisma-client-manager/prisma-client-manager.service';
 
 @Injectable()
 export class TenantsService {
-  constructor(
-    private readonly db_system: DbSystemService,
-    private readonly db_tenant: DbTenantService,
-    private readonly db_tenant_config: DBTenantConfigService,
-  ) {}
+  private db_System: dbSystem;
 
-  private tenantId = '123';
+  constructor(private prismaClientMamager: PrismaClientManagerService) {
+    this.db_System = this.prismaClientMamager.getSystemDB();
+  }
 
   async create(
     createTenantDto: Prisma.TenantCreateInput,
   ): Promise<ResponseId<string>> {
-    this.db_tenant_config.setTenantId(this.tenantId);
-    const oneObj = await this.db_system.tenant.findUnique({
+    const oneObj = await this.db_System.tenant.findUnique({
       where: {
         name: createTenantDto.name,
       },
@@ -38,7 +36,7 @@ export class TenantsService {
       throw new DuplicateException('Tenant already exists');
     }
 
-    const newTenant = await this.db_system.tenant.create({
+    const newTenant = await this.db_System.tenant.create({
       data: createTenantDto,
     });
 
@@ -50,9 +48,8 @@ export class TenantsService {
   }
 
   async findAll(): Promise<IResponseList<Tenant>> {
-    this.db_tenant_config.setTenantId(this.tenantId);
-    const max = await this.db_system.tenant.count({});
-    const listObj = await this.db_system.tenant.findMany();
+    const max = await this.db_System.tenant.count({});
+    const listObj = await this.db_System.tenant.findMany();
 
     const res: ResponseList<Tenant> = {
       data: listObj,
@@ -67,8 +64,7 @@ export class TenantsService {
   }
 
   async findOne(id: string): Promise<ResponseSingle<Tenant>> {
-    this.db_tenant_config.setTenantId(this.tenantId);
-    const oneObj = await this.db_system.tenant.findUnique({
+    const oneObj = await this.db_System.tenant.findUnique({
       where: {
         id: id,
       },
@@ -85,7 +81,7 @@ export class TenantsService {
     id: string,
     updateTenantDto: Prisma.TenantUpdateInput,
   ): Promise<ResponseId<string>> {
-    const oneObj = await this.db_system.tenant.findUnique({
+    const oneObj = await this.db_System.tenant.findUnique({
       where: {
         id: id,
       },
@@ -95,7 +91,7 @@ export class TenantsService {
       throw new NotFoundException('Tenant not found');
     }
 
-    const updateObj = await this.db_system.tenant.update({
+    const updateObj = await this.db_System.tenant.update({
       where: {
         id: id,
       },
@@ -109,8 +105,7 @@ export class TenantsService {
   }
 
   async remove(id: string) {
-    this.db_tenant_config.setTenantId(this.tenantId);
-    const oneObj = await this.db_system.tenant.findUnique({
+    const oneObj = await this.db_System.tenant.findUnique({
       where: {
         id: id,
       },
@@ -120,7 +115,7 @@ export class TenantsService {
       throw new NotFoundException('Tenant not found');
     }
 
-    await this.db_system.tenant.delete({
+    await this.db_System.tenant.delete({
       where: {
         id: id,
       },

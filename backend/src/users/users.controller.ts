@@ -11,7 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { Prisma } from '@Prisma-Carmen-Client/system';
+import { Prisma } from '@prisma-carmen-client/system';
 
 @Controller('api/v1/users')
 @ApiTags('users')

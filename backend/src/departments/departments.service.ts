@@ -1,4 +1,8 @@
-import { Currency, Department, Prisma } from '@prisma-carmen-client/tenant';
+import {
+  Department,
+  Prisma,
+  PrismaClient as dbTenant,
+} from '@prisma-carmen-client/tenant';
 import {
   IResponseId,
   IResponseList,
@@ -7,25 +11,22 @@ import {
 } from 'lib/helper/iResponse';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
-import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
-import { DbSystemService } from 'src/db_system/db_system.service';
-import { DbTenantService } from 'src/db_tenant/db_tenant.service';
 import { Default_PerPage } from 'lib/helper/perpage.default';
-import { r } from '@faker-js/faker/dist/airline-C5Qwd7_q';
+import { PrismaClientManagerService } from 'src/prisma-client-manager/prisma-client-manager.service';
 
 @Injectable()
 export class DepartmentsService {
-  constructor(
-    private readonly db_system: DbSystemService,
-    private readonly db_tenant: DbTenantService,
-    private readonly db_tenant_config: DBTenantConfigService,
-  ) {}
+  private db_tenant: dbTenant;
+
+  constructor(private prismaClientMamager: PrismaClientManagerService) {
+    this.db_tenant = this.prismaClientMamager.getTenantDB(this.tenantId);
+  }
+
   private tenantId = '123';
 
   async create(
     createDepartmentDto: Prisma.DepartmentCreateInput,
   ): Promise<IResponseId<string>> {
-    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.department.findUnique({
       where: {
         name: createDepartmentDto.name,
@@ -45,7 +46,6 @@ export class DepartmentsService {
   }
 
   async findAll(tenantId: string): Promise<IResponseList<Department>> {
-    this.db_tenant_config.setTenantId(this.tenantId);
     const max = await this.db_tenant.department.count({});
     const listObj = await this.db_tenant.department.findMany();
 
@@ -63,7 +63,6 @@ export class DepartmentsService {
   }
 
   async findOne(id: string): Promise<ResponseSingle<Department>> {
-    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.department.findUnique({
       where: {
         id,
@@ -80,7 +79,6 @@ export class DepartmentsService {
   }
 
   async update(id: string, updateDepartmentDto: Prisma.DepartmentUpdateInput) {
-    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.department.findUnique({
       where: {
         id,
@@ -106,7 +104,6 @@ export class DepartmentsService {
   }
 
   async delete(id: string) {
-    this.db_tenant_config.setTenantId(this.tenantId);
     const oneObj = await this.db_tenant.department.findUnique({
       where: {
         id,

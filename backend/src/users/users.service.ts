@@ -1,22 +1,22 @@
-import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
-import { DbSystemService } from 'src/db_system/db_system.service';
-import { DbTenantService } from 'src/db_tenant/db_tenant.service';
+import {
+  Prisma,
+  Tenant,
+  User,
+  PrismaClient as dbSystem,
+} from '@prisma-carmen-client/system';
+
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@Prisma-Carmen-Client/system';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { PrismaClientManagerService } from 'src/prisma-client-manager/prisma-client-manager.service';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly db_system: DbSystemService,
-    private readonly db_tenant: DbTenantService,
-    private readonly db_tenant_config: DBTenantConfigService,
-  ) {}
+  private db_System: dbSystem;
 
-  private tenantId = '123';
+  constructor(private prismaClientMamager: PrismaClientManagerService) {
+    this.db_System = this.prismaClientMamager.getSystemDB();
+  }
 
   async create(createUserDto: Prisma.UserCreateInput): Promise<string> {
-    this.db_tenant_config.setTenantId(this.tenantId);
     return new Promise((resolve) => resolve('This action adds a new user'));
   }
 

@@ -1,21 +1,23 @@
-import { DBTenantConfigService } from 'src/db_tenant/db_tenant.config';
-import { DbSystemService } from 'src/db_system/db_system.service';
-import { DbTenantService } from 'src/db_tenant/db_tenant.service';
+import {
+  Prisma,
+  Unit,
+  PrismaClient as dbTenant,
+} from '@prisma-carmen-client/tenant';
+
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma-carmen-client/tenant';
+import { PrismaClientManagerService } from 'src/prisma-client-manager/prisma-client-manager.service';
 
 @Injectable()
 export class UnitsService {
-  constructor(
-    private readonly db_system: DbSystemService,
-    private readonly db_tenant: DbTenantService,
-    private readonly db_tenant_config: DBTenantConfigService,
-  ) {}
+  private db_tenant: dbTenant;
+
+  constructor(private prismaClientMamager: PrismaClientManagerService) {
+    this.db_tenant = this.prismaClientMamager.getTenantDB(this.tenantId);
+  }
 
   private tenantId = '123';
 
   create(createUnitDto: Prisma.UnitCreateInput) {
-    this.db_tenant_config.setTenantId(this.tenantId);
     return 'This action adds a new unit';
   }
 

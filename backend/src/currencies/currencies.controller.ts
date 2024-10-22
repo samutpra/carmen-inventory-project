@@ -42,7 +42,6 @@ export class CurrenciesController {
   //#region CREATE
   @Post()
   @ApiBody({
-    // type: typeof Prisma.CurrencyCreateInput,
     description: 'Create a new currency',
     examples: {
       example1: {
