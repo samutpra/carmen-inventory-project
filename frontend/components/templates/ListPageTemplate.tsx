@@ -16,14 +16,20 @@ const ListPageTemplate: React.FC<IProps> = ({
   bulkActions,
 }) => {
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold">{title}</h1>
-        {actionButtons && <div className="space-x-2">{actionButtons}</div>}
+    <div className="h-screen flex flex-col p-4">
+      <div className="bg-white shadow p-4 sticky top-0 z-10 rounded-lg">
+        <div className="md:flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold">{title}</h1>
+          {actionButtons && (
+            <div className="mt-4 md:mt-0">{actionButtons}</div>
+          )}
+        </div>
+        {filters && <div className="mb-4">{filters}</div>}
+        {bulkActions && <div className="mb-4">{bulkActions}</div>}
       </div>
-      {filters && <div className="mb-4">{filters}</div>}
-      {bulkActions && <div className="mb-4">{bulkActions}</div>}
-      <div className="bg-background rounded-lg shadow">{content}</div>
+      <div className="flex-1 overflow-y-auto bg-background mt-4">
+        {content}
+      </div>
     </div>
   );
 };
