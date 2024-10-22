@@ -3,53 +3,60 @@ import {
   Prisma,
   PrismaClient as dbTenant,
 } from '@prisma-carmen-client/tenant';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  Request,
+} from '@nestjs/common';
 import { ResponseId, ResponseList, ResponseSingle } from 'lib/helper/iResponse';
 
 import { Default_PerPage } from 'lib/helper/perpage.default';
 import { DuplicateException } from 'lib/utils/exceptions';
+import { ExtractReqService } from 'src/auth/extract-req/extract-req.service';
 import { PrismaClientManagerService } from 'src/prisma-client-manager/prisma-client-manager.service';
 
 @Injectable()
 export class CurrenciesService {
   private db_tenant: dbTenant;
 
-  constructor(private prismaClientMamager: PrismaClientManagerService) {
-    this.db_tenant = this.prismaClientMamager.getTenantDB(this.tenantId);
-  }
+  constructor(
+    private prismaClientMamager: PrismaClientManagerService,
+    private extractReqService: ExtractReqService,
+  ) {}
 
-  private tenantId = '123';
-
-  //#region CREATE
-  async create(
-    createCurrencyDto: Prisma.CurrencyCreateInput,
-  ): Promise<ResponseId<string>> {
-    // Check if currency already exists
-    const found = await this.db_tenant.currency.findUnique({
+  async _getOne(db_tenant: dbTenant, id: string): Promise<Currency> {
+    const res = await db_tenant.currency.findUnique({
       where: {
-        name: createCurrencyDto.name,
+        id: id,
       },
     });
-
-    if (found) {
-      throw new DuplicateException('Currency already exists');
-    }
-
-    const createObj = await this.db_tenant.currency.create({
-      data: createCurrencyDto,
-    });
-
-    const res: ResponseId<string> = { id: createObj.id };
-
     return res;
   }
-  //#endregion CREATE
+
+  //#region GET ONE
+  async findOne(req: Request, id: string): Promise<ResponseSingle<Currency>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
+
+    if (!oneObj) {
+      throw new NotFoundException('Currency not found');
+    }
+    const res: ResponseSingle<Currency> = {
+      data: oneObj,
+    };
+    return res;
+  }
+  //#endregion GET ONE
 
   //#region GET ALL
-  async findAll(): Promise<ResponseList<Currency>> {
-    this.db_tenant = this.prismaClientMamager.getTenantDB(this.tenantId);
+  async findAll(req: Request): Promise<ResponseList<Currency>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
     const max = await this.db_tenant.currency.count({});
     const listObj = await this.db_tenant.currency.findMany();
+
     const res: ResponseList<Currency> = {
       data: listObj,
       pagination: {
@@ -63,34 +70,48 @@ export class CurrenciesService {
   }
   //#endregion GET ALL
 
-  //#region GET ONE
-  async findOne(id: string): Promise<ResponseSingle<Currency>> {
-    const oneObj = await this.db_tenant.currency.findUnique({
+  //#region CREATE
+  async create(
+    req: Request,
+    createCurrencyDto: Prisma.CurrencyCreateInput,
+  ): Promise<ResponseId<string>> {
+    // Check if currency already exists
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+
+    const found = await this.db_tenant.currency.findUnique({
       where: {
-        id,
+        code: createCurrencyDto.code,
       },
     });
 
-    if (!oneObj) {
-      throw new NotFoundException('Currency not found');
+    if (found) {
+      throw new DuplicateException({
+        statusCode: HttpStatus.CONFLICT,
+        message: 'Currency already exists',
+        id: found.id,
+      });
     }
-    const res: ResponseSingle<Currency> = {
-      data: oneObj,
-    };
+
+    const createObj = await this.db_tenant.currency.create({
+      data: createCurrencyDto,
+    });
+
+    const res: ResponseId<string> = { id: createObj.id };
+
     return res;
   }
-  //#endregion GET ONE
+  //#endregion CREATE
 
   //#region UPDATE
   async update(
+    req: Request,
     id: string,
     updateCurrencyDto: Prisma.CurrencyUpdateInput,
   ): Promise<ResponseId<string>> {
-    const oneObj = await this.db_tenant.currency.findUnique({
-      where: {
-        id,
-      },
-    });
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
 
     if (!oneObj) {
       throw new NotFoundException('Currency not found');
@@ -112,12 +133,10 @@ export class CurrenciesService {
   //#endregion UPDATE
 
   //#region DELETE
-  async delete(id: string) {
-    const oneObj = await this.db_tenant.currency.findUnique({
-      where: {
-        id,
-      },
-    });
+  async delete(req: Request, id: string) {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
 
     if (!oneObj) {
       throw new NotFoundException('Currency not found');

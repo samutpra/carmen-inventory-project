@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CurrenciesModule } from './currencies/currencies.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { ExchangerateModule } from './exchangerate/exchangerate.module';
+import { ExtractReqModule } from './auth/extract-req/extract-req.module';
 import { Module } from '@nestjs/common';
 import { PrismaClientManagerModule } from './prisma-client-manager/prisma-client-manager.module';
 import { ProductsModule } from './products/products.module';
@@ -29,6 +30,7 @@ import { UserModule } from './users/users.module';
       isGlobal: true,
     }),
     PrismaClientManagerModule,
+    ExtractReqModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -7,53 +7,53 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { TenantsService } from './tenants.service';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import {
-  IResponseList,
-  ResponseList,
-  ResponseSingle,
-} from 'lib/helper/iResponse';
+import { ResponseList, ResponseSingle } from 'lib/helper/iResponse';
 import { Prisma, Tenant } from '@prisma-carmen-client/system';
 
 @Controller('api/v1/tenants')
 @ApiTags('tenants')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class TenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
 
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  async findAll(): Promise<ResponseList<Tenant>> {
-    return this.tenantsService.findAll();
+  @Get(':id')
+  async findOne(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<ResponseSingle<Tenant>> {
+    return this.tenantsService.findOne(req, id);
   }
 
-  @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  async findOne(@Param('id') id: string): Promise<ResponseSingle<Tenant>> {
-    return this.tenantsService.findOne(id);
+  @Get()
+  async findAll(@Req() req: Request): Promise<ResponseList<Tenant>> {
+    return this.tenantsService.findAll(req);
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  create(@Body() createTenantDto: Prisma.TenantCreateInput) {
-    return this.tenantsService.create(createTenantDto);
+  async create(
+    @Body() createTenantDto: Prisma.TenantCreateInput,
+    @Req() req: Request,
+  ) {
+    return this.tenantsService.create(req, createTenantDto);
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateTenantDto: Prisma.TenantUpdateInput,
+    @Req() req: Request,
   ) {
-    return this.tenantsService.update(id, updateTenantDto);
+    return this.tenantsService.update(req, id, updateTenantDto);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  remove(@Param('id') id: string) {
-    return this.tenantsService.remove(id);
+  async delete(@Param('id') id: string, @Req() req: Request) {
+    return this.tenantsService.delete(req, id);
   }
 }

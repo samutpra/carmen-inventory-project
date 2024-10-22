@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
@@ -16,39 +17,39 @@ import { Prisma } from '@prisma-carmen-client/system';
 @Controller('api/v1/users')
 @ApiTags('users')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  getAll() {
-    return this.usersService.getAll();
+  @Get(':id')
+  async getOne(@Param('id') id: string, @Req() req: Request) {
+    return this.usersService.findOne(req, id);
   }
 
-  @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  get(@Param('id') id: string) {
-    return this.usersService.get(id);
+  @Get()
+  async getAll(@Req() req: Request) {
+    return this.usersService.findAll(req);
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  create(@Body() createUserDto: Prisma.UserCreateInput) {
-    return this.usersService.create(createUserDto);
+  async create(
+    @Body() createUserDto: Prisma.UserCreateInput,
+    @Req() req: Request,
+  ) {
+    return this.usersService.create(req, createUserDto);
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateUserDto: Prisma.UserUpdateInput,
+    @Req() req: Request,
   ) {
-    return this.usersService.update(id, updateUserDto);
+    return this.usersService.update(req, id, updateUserDto);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  delete(@Param('id') id: string) {
-    return this.usersService.delete(id);
+  async delete(@Param('id') id: string, @Req() req: Request) {
+    return this.usersService.delete(req, id);
   }
 }

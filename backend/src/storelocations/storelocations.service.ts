@@ -1,77 +1,38 @@
-import {
-  IResponseId,
-  IResponseList,
-  IResponseSingle,
-  ResponseId,
-  ResponseList,
-  ResponseSingle,
-} from 'lib/helper/iResponse';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import {
   Location,
   Prisma,
   PrismaClient as dbTenant,
 } from '@prisma-carmen-client/tenant';
+import { ResponseId, ResponseList, ResponseSingle } from 'lib/helper/iResponse';
 
 import { Default_PerPage } from 'lib/helper/perpage.default';
-import { Injectable } from '@nestjs/common';
+import { DuplicateException } from 'lib/utils/exceptions';
+import { ExtractReqService } from 'src/auth/extract-req/extract-req.service';
 import { PrismaClientManagerService } from 'src/prisma-client-manager/prisma-client-manager.service';
 
 @Injectable()
 export class StoreLocationsService {
   private db_tenant: dbTenant;
 
-  constructor(private prismaClientMamager: PrismaClientManagerService) {
-    this.db_tenant = this.prismaClientMamager.getTenantDB(this.tenantId);
-  }
+  constructor(
+    private prismaClientMamager: PrismaClientManagerService,
+    private extractReqService: ExtractReqService,
+  ) {}
 
-  private tenantId = '123';
-
-  async create(
-    createStoreLocationDto: Prisma.LocationCreateInput,
-  ): Promise<ResponseSingle<Location>> {
-    const oneObj = await this.db_tenant.location.findUnique({
+  async _getOne(db_tenant: dbTenant, id: string): Promise<Location> {
+    const res = await db_tenant.location.findUnique({
       where: {
-        name: createStoreLocationDto.name,
+        id: id,
       },
     });
-
-    if (oneObj) {
-      throw new Error('Location already exists');
-    }
-
-    const createObj = await this.db_tenant.location.create({
-      data: createStoreLocationDto,
-    });
-
-    const res: ResponseSingle<Location> = {
-      data: createObj,
-    };
-
     return res;
   }
 
-  async getAll(): Promise<ResponseList<Location>> {
-    const max = await this.db_tenant.location.count({});
-    const listObj = await this.db_tenant.location.findMany();
-
-    const res: ResponseList<Location> = {
-      data: listObj,
-      pagination: {
-        total: max,
-        page: 1,
-        perPage: Default_PerPage,
-        pages: Math.ceil(max / Default_PerPage),
-      },
-    };
-    return new Promise((resolve) => resolve(res));
-  }
-
-  async findOne(id: string): Promise<ResponseSingle<Location>> {
-    const oneObj = await this.db_tenant.location.findUnique({
-      where: {
-        id,
-      },
-    });
+  async findOne(req: Request, id: string): Promise<ResponseSingle<Location>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
 
     if (!oneObj) {
       throw new Error('Location not found');
@@ -84,15 +45,66 @@ export class StoreLocationsService {
     return res;
   }
 
-  async update(
-    id: string,
-    updateLocationDto: Prisma.LocationUpdateInput,
-  ): Promise<ResponseSingle<Location>> {
-    const oneObj = await this.db_tenant.location.findUnique({
+  async findAll(req: Request): Promise<ResponseList<Location>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const max = await this.db_tenant.location.count({});
+    const listObj = await this.db_tenant.location.findMany();
+
+    const res: ResponseList<Location> = {
+      data: listObj,
+      pagination: {
+        total: max,
+        page: 1,
+        perPage: Default_PerPage,
+        pages: Math.ceil(max / Default_PerPage),
+      },
+    };
+    return res;
+  }
+
+  async create(
+    req: Request,
+    createStoreLocationDto: Prisma.LocationCreateInput,
+  ): Promise<ResponseId<string>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+
+    const found = await this.db_tenant.location.findUnique({
       where: {
-        id,
+        name: createStoreLocationDto.name,
       },
     });
+
+    if (found) {
+      throw new DuplicateException({
+        statusCode: HttpStatus.CONFLICT,
+        message: 'Location already exists',
+        id: found.id,
+      });
+    }
+
+    const createObj = await this.db_tenant.location.findUnique({
+      where: {
+        name: createStoreLocationDto.name,
+      },
+    });
+
+    const res: ResponseId<string> = {
+      id: createObj.id,
+    };
+
+    return res;
+  }
+
+  async update(
+    req: Request,
+    id: string,
+    updateLocationDto: Prisma.LocationUpdateInput,
+  ): Promise<ResponseId<string>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
 
     if (!oneObj) {
       throw new Error('Location not found');
@@ -105,19 +117,17 @@ export class StoreLocationsService {
       data: updateLocationDto,
     });
 
-    const res: ResponseSingle<Location> = {
-      data: updateObj,
+    const res: ResponseId<string> = {
+      id: updateObj.id,
     };
 
     return res;
   }
 
-  async delete(id: string) {
-    const oneObj = await this.db_tenant.location.findUnique({
-      where: {
-        id,
-      },
-    });
+  async delete(req: Request, id: string) {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
 
     if (!oneObj) {
       throw new Error('Location not found');

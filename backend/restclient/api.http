@@ -1,26 +1,25 @@
 @host=http://localhost:4000
 
-
-### Hello
-GET {{host}}
-
-### login
+### Login
 # @name login
 POST {{host}}/api/v1/auth/login
 Content-Type: application/json
 
+{"username": "test1","password": "password1"}
+
+### get token
+@access_token={{login.response.body.access_token}}
+
+### Get Users
+GET {{host}}/api/v1/users
+Authorization: Bearer {{access_token}}
+
+### Create user
+POST {{host}}/api/v1/users
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
 {
-    "username": "test1",
-    "password": "password1"
-}
-
-# @access_token={{login.response.body.access_token}}
-
-### register
-POST {{host}}/api/v1/auth/register
-content-type: application/json
-
-{
-    "email": "test@test.com",
-    "password": "test"
+    "username": "test2",
+    "password": "password2",
 }

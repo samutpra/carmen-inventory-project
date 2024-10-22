@@ -6,7 +6,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = [ "multiSchema"]
+  previewFeatures = ["multiSchema", "fullTextSearch", "fullTextIndex", "postgresqlExtensions"]
   output = "../../../node_modules/@prisma-carmen-client/tenant"
 }
 
@@ -18,8 +18,11 @@ datasource db {
 /// region Tenant
 model Currency {
   id   String @id @default(uuid())
-  symbol String   @unique
-  name   String   @unique
+  code String @unique
+  name   String
+  symbol String?
+  description String?
+  isActive     Boolean? @default(true)
   rate   Float    @default(1)
 
   exchangeRates ExchangeRate[]

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { StoreLocationsService } from './storelocations.service';
 import { ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
@@ -17,44 +18,39 @@ import { Prisma } from '@prisma-carmen-client/tenant';
 @Controller('api/v1/storelocations')
 @ApiTags('storelocations')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 export class StoreLocationsController {
   constructor(private readonly storelocationsService: StoreLocationsService) {}
 
-  @Post()
-  @ApiBody({
-    description: 'Create a new storelocation',
-    // type: CreateStoreLocationDto,
-    required: true,
-  })
-  @UseGuards(JwtAuthGuard)
-  create(@Body() createLocationDto: Prisma.LocationCreateInput) {
-    return this.storelocationsService.create(createLocationDto);
+  @Get(':id')
+  async get(@Param('id') id: string, @Req() req: Request) {
+    return this.storelocationsService.findOne(req, id);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  getAll() {
-    return this.storelocationsService.getAll();
+  async getAll(@Req() req: Request) {
+    return this.storelocationsService.findAll(req);
   }
 
-  @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  get(@Param('id') id: string) {
-    return this.storelocationsService.findOne(id);
+  @Post()
+  async create(
+    @Body() createLocationDto: Prisma.LocationCreateInput,
+    @Req() req: Request,
+  ) {
+    return this.storelocationsService.create(req, createLocationDto);
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateLocationDto: Prisma.LocationUpdateInput,
+    @Req() req: Request,
   ) {
-    return this.storelocationsService.update(id, updateLocationDto);
+    return this.storelocationsService.update(req, id, updateLocationDto);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  delete(@Param('id') id: string) {
-    return this.storelocationsService.delete(id);
+  async delete(@Param('id') id: string, @Req() req: Request) {
+    return this.storelocationsService.delete(req, id);
   }
 }

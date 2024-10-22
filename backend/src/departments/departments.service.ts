@@ -3,53 +3,53 @@ import {
   Prisma,
   PrismaClient as dbTenant,
 } from '@prisma-carmen-client/tenant';
-import {
-  IResponseId,
-  IResponseList,
-  ResponseId,
-  ResponseSingle,
-} from 'lib/helper/iResponse';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { ResponseId, ResponseList, ResponseSingle } from 'lib/helper/iResponse';
 
 import { Default_PerPage } from 'lib/helper/perpage.default';
+import { DuplicateException } from 'lib/utils/exceptions';
+import { ExtractReqService } from 'src/auth/extract-req/extract-req.service';
 import { PrismaClientManagerService } from 'src/prisma-client-manager/prisma-client-manager.service';
 
 @Injectable()
 export class DepartmentsService {
   private db_tenant: dbTenant;
 
-  constructor(private prismaClientMamager: PrismaClientManagerService) {
-    this.db_tenant = this.prismaClientMamager.getTenantDB(this.tenantId);
-  }
+  constructor(
+    private prismaClientMamager: PrismaClientManagerService,
+    private extractReqService: ExtractReqService,
+  ) {}
 
-  private tenantId = '123';
-
-  async create(
-    createDepartmentDto: Prisma.DepartmentCreateInput,
-  ): Promise<IResponseId<string>> {
-    const oneObj = await this.db_tenant.department.findUnique({
+  async _getOne(db_tenant: dbTenant, id: string): Promise<Department> {
+    const res = await db_tenant.department.findUnique({
       where: {
-        name: createDepartmentDto.name,
+        id: id,
       },
     });
-
-    if (oneObj) {
-      throw new Error('Department already exists');
-    }
-
-    const createObj = await this.db_tenant.department.create({
-      data: createDepartmentDto,
-    });
-
-    const res: IResponseId<string> = { id: createObj.id };
     return res;
   }
 
-  async findAll(tenantId: string): Promise<IResponseList<Department>> {
+  async findOne(req: Request, id: string): Promise<ResponseSingle<Department>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
+
+    if (!oneObj) {
+      throw new NotFoundException('Department not found');
+    }
+    const res: ResponseSingle<Department> = {
+      data: oneObj,
+    };
+    return res;
+  }
+
+  async findAll(req: Request): Promise<ResponseList<Department>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
     const max = await this.db_tenant.department.count({});
     const listObj = await this.db_tenant.department.findMany();
 
-    const res: IResponseList<Department> = {
+    const res: ResponseList<Department> = {
       data: listObj,
       pagination: {
         total: max,
@@ -62,28 +62,43 @@ export class DepartmentsService {
     return res;
   }
 
-  async findOne(id: string): Promise<ResponseSingle<Department>> {
-    const oneObj = await this.db_tenant.department.findUnique({
+  async create(
+    req: Request,
+    createDepartmentDto: Prisma.DepartmentCreateInput,
+  ): Promise<ResponseId<string>> {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+
+    const found = await this.db_tenant.department.findUnique({
       where: {
-        id,
+        name: createDepartmentDto.name,
       },
     });
 
-    if (!oneObj) {
-      throw new NotFoundException('Currency not found');
+    if (found) {
+      throw new DuplicateException({
+        statusCode: HttpStatus.CONFLICT,
+        message: 'Department already exists',
+        id: found.id,
+      });
     }
-    const res: ResponseSingle<Department> = {
-      data: oneObj,
-    };
+
+    const createObj = await this.db_tenant.department.create({
+      data: createDepartmentDto,
+    });
+
+    const res: ResponseId<string> = { id: createObj.id };
     return res;
   }
 
-  async update(id: string, updateDepartmentDto: Prisma.DepartmentUpdateInput) {
-    const oneObj = await this.db_tenant.department.findUnique({
-      where: {
-        id,
-      },
-    });
+  async update(
+    req: Request,
+    id: string,
+    updateDepartmentDto: Prisma.DepartmentUpdateInput,
+  ) {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
 
     if (!oneObj) {
       throw new NotFoundException('Department not found');
@@ -103,12 +118,10 @@ export class DepartmentsService {
     return res;
   }
 
-  async delete(id: string) {
-    const oneObj = await this.db_tenant.department.findUnique({
-      where: {
-        id,
-      },
-    });
+  async delete(req: Request, id: string) {
+    const { userId, tenantId } = this.extractReqService.getByReq(req);
+    this.db_tenant = this.prismaClientMamager.getTenantDB(tenantId);
+    const oneObj = await this._getOne(this.db_tenant, id);
 
     if (!oneObj) {
       throw new NotFoundException('Department not found');

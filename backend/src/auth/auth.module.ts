@@ -8,6 +8,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { RefreshJwtStrategy } from './strategies/refreshToken.strategy';
+import { ExtractReqModule } from './extract-req/extract-req.module';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ dotenv.config();
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
     }),
+    ExtractReqModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy, RefreshJwtStrategy],

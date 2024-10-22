@@ -6,7 +6,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  previewFeatures = ["multiSchema", "fullTextSearch", "fullTextIndex", "postgresqlExtensions"]
   output          = "../../../node_modules/@prisma-carmen-client/system"
 }
 
@@ -19,14 +19,14 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
-  username  String
-  email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  username  String @unique
+  email     String   
 
+  createdAt DateTime @default(now())
   createdById String? // Self-relation for User creator, now UUID
   createdBy   User?   @relation("UserCreatedBy", fields: [createdById], references: [id])
 
+  updatedAt DateTime @updatedAt
   updatedById String? // Self-relation for User updater, now UUID
   updatedBy   User?   @relation("UserUpdatedBy", fields: [updatedById], references: [id])
 
@@ -38,6 +38,14 @@ model User {
 
   BusinessCreated Business[] @relation("BusinessCreatedBy")
   BusinessUpdated Business[] @relation("BusinessUpdatedBy")
+
+  TenantCreated Tenant[] @relation("TenantCreatedBy")
+  TenantUpdated Tenant[] @relation("TenantUpdatedBy")
+
+  TenantUserCreated TenantUser[] @relation("TenantUserCreatedBy")
+  TenantUserUpdated TenantUser[] @relation("TenantUserUpdatedBy")
+
+  PasswordCreated Password[] @relation("PasswordCreatedBy")
   Password        Password[]
 
   @@map("user") // optional: maps to a custom table name in the DB
@@ -46,12 +54,12 @@ model User {
 model Business {
   id        String   @id @default(uuid())
   name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
+  createdAt DateTime @default(now())
   createdById String? // Foreign key to User changed to UUID type
   createdBy   User?   @relation("BusinessCreatedBy", fields: [createdById], references: [id])
 
+  updatedAt DateTime @updatedAt
   updatedById String? // Foreign key to User changed to UUID type
   updatedBy   User?   @relation("BusinessUpdatedBy", fields: [updatedById], references: [id])
 
@@ -64,12 +72,24 @@ model Tenant {
   id   String @id @default(uuid())
   name String @unique
 
+  createdAt DateTime @default(now())
+  createdById String? // Foreign key to User changed to UUID type
+  createdBy   User?   @relation("TenantCreatedBy", fields: [createdById], references: [id])
+
+  updatedAt DateTime @updatedAt
+  updatedById String? // Foreign key to User changed to UUID type
+  updatedBy   User?   @relation("TenantUpdatedBy", fields: [updatedById], references: [id])
+
   @@map("tenant") // optional: maps to a custom table name in the DB
 }
 
 model Password {
   id   String @id @default(uuid())
   hash String
+
+  createdAt DateTime @default(now())
+  createdById String? // Foreign key to User changed to UUID type
+  createdBy   User?   @relation("PasswordCreatedBy", fields: [createdById], references: [id])
 
   userId String // Foreign key to User changed to UUID type
   user   User   @relation(fields: [userId], references: [id])
@@ -121,17 +141,26 @@ model Password {
 //   roleId String // Foreign key to Role changed to UUID type
 // }
 
-// model TenantUser {
-//   id        String   @id @default(uuid())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+model TenantUser {
+  id        String   @id @default(uuid())
 
-//   userId String // Foreign key to User changed to UUID type
-//   user   User   @relation(fields: [userId], references: [id])
+  userId String // Foreign key to User changed to UUID type
+  // User   User   @relation(fields: [userId], references: [id])
 
-//   tenantId String // Foreign key to Tenant changed to UUID type
-//   tenant   Tenant @relation(fields: [tenantId], references: [id])
-// }
+  tenantId String // Foreign key to Tenant changed to UUID type
+  // Tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+
+  createdAt DateTime @default(now())
+  createdById String? // Foreign key to User changed to UUID type
+  createdBy   User?   @relation("TenantUserCreatedBy", fields: [createdById], references: [id])
+
+  updatedAt DateTime @updatedAt
+  updatedById String? // Foreign key to User changed to UUID type
+  updatedBy   User?   @relation("TenantUserUpdatedBy", fields: [updatedById], references: [id])
+
+  @@map("TenantUser")
+}
 
 // model TenantBusiness {
 //   id        String   @id @default(uuid())

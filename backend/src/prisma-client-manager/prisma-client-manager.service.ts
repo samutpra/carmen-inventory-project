@@ -35,9 +35,10 @@ export class PrismaClientManagerService implements OnModuleDestroy {
     let client = this.clients[tenantId];
 
     if (!client) {
-      const databaseUrl =
-        process.env.DATABASE_URL!.replace('public', tenantId) ||
-        process.env.DATABASE_URL_TENANT;
+      const databaseUrl = process.env.DATABASE_URL!.replace(
+        'public',
+        'tenant_' + tenantId,
+      );
 
       client = new prismaClientTenant({
         datasources: {
