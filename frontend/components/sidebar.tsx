@@ -6,10 +6,8 @@ import { usePathname } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronDown, ChevronRight } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { useRouter } from "@/lib/i18n";
-import * as m from "@/paraglide/messages.js";
 
 const menuItems = [
   {
