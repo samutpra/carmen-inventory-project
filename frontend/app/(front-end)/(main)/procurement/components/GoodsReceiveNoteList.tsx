@@ -2,9 +2,9 @@
 import React, { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Eye, Edit, Trash, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Plus, Filter, ArrowUpDown } from 'lucide-react'
+import { Eye, Edit, Trash, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Plus, Filter, ArrowUpDown, ChevronsUpDown, Check } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { GoodsReceiveNote, GoodsReceiveNoteMode } from '@/lib/types'
+import { GoodsReceiveNote } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import ListPageTemplate from '@/components/templates/ListPageTemplate'
@@ -20,21 +20,46 @@ import { FilterBuilder } from './FilterBuilder'
 import { useRouter } from '@/lib/i18n'
 import { BulkActions } from './tabs/BulkActions'
 import StatusBadge from '@/components/ui-custom/custom-status-badge'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
+import { cn } from '@/lib/utils'
+import { GoodsReceiveNoteType } from '../type/procurementType'
 
 
+const statusOptions = [
+    {
+        value: "all",
+        label: "All Statuses",
+    },
+    {
+        value: "draft",
+        label: "Draft",
+    },
+    {
+        value: "submitted",
+        label: "Submitted",
+    },
+    {
+        value: "approved",
+        label: "Approved",
+    },
+    {
+        value: "rejected",
+        label: "Rejected",
+    },
+]
 
 
 const GoodReceivedNoteList = () => {
-
     const router = useRouter()
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItems, setSelectedItems] = useState<string[]>([])
-    const [statusFilter, setStatusFilter] = useState('all')
     const [currentPage, setCurrentPage] = useState(1)
     const itemsPerPage = 10
     const [sortField, setSortField] = useState<string | null>(null)
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
-
+    const [open, setOpen] = useState(false)
+    const [statusFilter, setStatusFilter] = useState("all")
 
     const filteredGRNs = mockGoodsReceiveNotes.filter((grn: GoodsReceiveNote) => {
         const matchesSearch =
@@ -46,7 +71,6 @@ const GoodReceivedNoteList = () => {
 
         return matchesSearch && matchesStatus
     })
-
 
     const sortedAndFilteredGRNs = filteredGRNs.sort((a, b) => {
         const aValue = a[sortField as keyof GoodsReceiveNote]
@@ -62,6 +86,7 @@ const GoodReceivedNoteList = () => {
     })
 
     const totalPages = Math.ceil(sortedAndFilteredGRNs.length / itemsPerPage)
+
     const paginatedGRNs = sortedAndFilteredGRNs.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
@@ -89,19 +114,16 @@ const GoodReceivedNoteList = () => {
         return grn.items.reduce((total, item) => total + item.netAmount, 0)
     }
 
-    const handleGoodsReceiveNoteAction = (id: string, mode: GoodsReceiveNoteMode) => {
+    const handleGoodsReceiveNoteAction = (id: string, mode: GoodsReceiveNoteType) => {
         router.push(`/procurement/goods-received-note/${id}?mode=${mode}`)
     }
 
-    const handleAddNewGoodsReceiveNote = () => {
-        router.push('/procurement/goods-received-note/0?mode=create')
-    }
 
     const title = 'Goods Receive Notes'
 
     const actionButtons = (
-        <div className="flex flex-col gap-4 sm:flex-row sm:space-x-2 items-center">
-            <Button className="w-full sm:w-auto" onClick={handleAddNewGoodsReceiveNote}>
+        <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center">
+            <Button className="w-full sm:w-auto" onClick={() => handleGoodsReceiveNoteAction("0", GoodsReceiveNoteType.CREATE)}>
                 <Plus className="mr-2 h-4 w-4" /> New Goods Receive Note
             </Button>
             <Button variant="outline" className="w-full sm:w-auto">Export</Button>
@@ -129,8 +151,9 @@ const GoodReceivedNoteList = () => {
         </>
     )
 
+
     const filter = (
-        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
+        <div className="flex flex-col justify-start sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
             <div className="w-full sm:w-auto flex-grow">
                 <Input
                     placeholder="Search goods receive notes..."
@@ -138,72 +161,111 @@ const GoodReceivedNoteList = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <select
-                className="w-full sm:w-auto border rounded p-2"
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-            >
-                <option value="all">All Statuses</option>
-                <option value="draft">Draft</option>
-                <option value="submitted">Submitted</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-            </select>
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button variant="outline">
-                        <Filter className="mr-2 h-4 w-4" />
-                        More Filters
-                    </Button>
-                </DialogTrigger>
-                <DialogContent className='sm:w-[70vw] max-w-[60vw]'>
-                    <FilterBuilder
-                        fields={[
-                            { value: 'ref', label: 'Reference' },
-                            { value: 'vendor', label: 'Vendor' },
-                            { value: 'date', label: 'Date' },
-                            { value: 'invoiceNumber', label: 'Invoice Number' },
-                            { value: 'invoiceDate', label: 'Invoice Date' },
-                            { value: 'status', label: 'Status' },
-                        ]}
-                        onFilterChange={(filters) => {
-                            // Handle filter changes
-                            console.log(filters)
-                            // You'll need to implement the actual filtering logic
-                        }}
-                    />
-                </DialogContent>
-            </Dialog>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                        <ArrowUpDown className="mr-2 h-4 w-4" />
-                        Sort
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => {
-                        setSortField('date')
-                        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-                    }}>
-                        Date {sortField === 'date' && (sortDirection === 'asc' ? '↑' : '↓')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => {
-                        setSortField('vendor')
-                        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-                    }}>
-                        Vendor {sortField === 'vendor' && (sortDirection === 'asc' ? '↑' : '↓')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => {
-                        setSortField('status')
-                        setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-                    }}>
-                        Status {sortField === 'status' && (sortDirection === 'asc' ? '↑' : '↓')}
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+
+            <div className='flex items-center space-x-4'>
+                <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={open}
+                            className="w-[200px] justify-between"
+                        >
+                            {statusFilter
+                                ? statusOptions.find((option) => option.value === statusFilter)?.label
+                                : "Select status..."}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                            <CommandInput placeholder="Search status..." />
+                            <CommandList>
+                                <CommandEmpty>No status found.</CommandEmpty>
+                                <CommandGroup>
+                                    {statusOptions.map((option) => (
+                                        <CommandItem
+                                            key={option.value}
+                                            value={option.value}
+                                            onSelect={(currentValue) => {
+                                                setStatusFilter(currentValue === statusFilter ? "all" : currentValue)
+                                                setOpen(false)
+                                            }}
+                                        >
+                                            <Check
+                                                className={cn(
+                                                    "mr-2 h-4 w-4",
+                                                    statusFilter === option.value ? "opacity-100" : "opacity-0"
+                                                )}
+                                            />
+                                            {option.label}
+                                        </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                            </CommandList>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">
+                            <Filter className="mr-2 h-4 w-4" />
+                            More Filters
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className='sm:w-[70vw] max-w-[60vw] bg-white'>
+                        <FilterBuilder
+                            fields={[
+                                { value: 'ref', label: 'Reference' },
+                                { value: 'vendor', label: 'Vendor' },
+                                { value: 'date', label: 'Date' },
+                                { value: 'invoiceNumber', label: 'Invoice Number' },
+                                { value: 'invoiceDate', label: 'Invoice Date' },
+                                { value: 'status', label: 'Status' },
+                            ]}
+                            onFilterChange={(filters) => {
+                                // Handle filter changes
+                                console.log(filters)
+                                // You'll need to implement the actual filtering logic
+                            }}
+                        />
+                    </DialogContent>
+                </Dialog>
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline">
+                            <ArrowUpDown className="mr-2 h-4 w-4" />
+                            Sort
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuItem onClick={() => {
+                            setSortField('date')
+                            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+                        }}>
+                            Date {sortField === 'date' && (sortDirection === 'asc' ? '↑' : '↓')}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                            setSortField('vendor')
+                            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+                        }}>
+                            Vendor {sortField === 'vendor' && (sortDirection === 'asc' ? '↑' : '↓')}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => {
+                            setSortField('status')
+                            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+                        }}>
+                            Status {sortField === 'status' && (sortDirection === 'asc' ? '↑' : '↓')}
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
         </div>
     )
+
+
 
     const content = (
         <div className="space-y-2">
@@ -214,7 +276,8 @@ const GoodReceivedNoteList = () => {
                             <div className="flex items-center space-x-3 mb-2 sm:mb-0">
                                 <Checkbox
                                     checked={selectedItems.includes(grn.id)}
-                                    onCheckedChange={(checked) => toggleItemSelection(grn.id)}
+                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                    onCheckedChange={(checked: boolean) => toggleItemSelection(grn.id)}
                                 />
                                 <StatusBadge status={grn.status} />
                                 <h3 className="text-muted-foreground text-lg">{grn.ref}</h3>
@@ -227,7 +290,7 @@ const GoodReceivedNoteList = () => {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => handleGoodsReceiveNoteAction(grn.id, 'view')}
+                                                onClick={() => handleGoodsReceiveNoteAction(grn.id, GoodsReceiveNoteType.VIEW)}
                                             >
                                                 <Eye className="h-4 w-4" />
                                             </Button>
@@ -239,7 +302,7 @@ const GoodReceivedNoteList = () => {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => handleGoodsReceiveNoteAction(grn.id, 'edit')}
+                                                onClick={() => handleGoodsReceiveNoteAction(grn.id, GoodsReceiveNoteType.EDIT)}
                                             >
                                                 <Edit className="h-4 w-4" />
                                             </Button>
@@ -294,6 +357,8 @@ const GoodReceivedNoteList = () => {
                     </CardContent>
                 </Card>
             ))}
+
+
             <div className="flex justify-end items-center mt-4 space-x-4">
                 <span className="text-sm text-gray-500">
                     Page {currentPage} of {totalPages}
