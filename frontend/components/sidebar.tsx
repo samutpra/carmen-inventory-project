@@ -464,12 +464,12 @@ export interface SidebarProps {
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
 
-  const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -535,7 +535,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="px-2 pt-6 w-full flex items-center justify-between">
+          <div className="px-5 pt-6 w-full flex items-center justify-between">
             <Link
               href="/"
               className="flex items-center justify-center"
@@ -571,13 +571,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   <div key={item.title} className="px-2 py-2">
                     <Button
                       variant="ghost"
-                      className={cn(
-                        "w-full justify-center lg:justify-start text-base text-gray-800 dark:text-gray-200",
-                        isExpanded && "justify-between"
-                      )}
+                      // className={cn(
+                      //   "w-full justify-center lg:justify-start font-bold text-base text-blue-950 dark:text-gray-200",
+                      //   isExpanded && "justify-between"
+                      // )}
+                      className="w-full flex justify-between font-bold text-base text-blue-950"
                       onClick={() => toggleExpand(item.title, item.path)}
                     >
-                      <span className="flex items-center">
+                      <span className="flex items-center justify-between">
                         <IconComponent className="h-5 w-5" />
                         {isExpanded && <span className="ml-2">{item.title}</span>}
                       </span>
@@ -593,16 +594,16 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     {isExpanded && item.subItems &&
                       item.subItems.length > 0 &&
                       expandedItems.includes(item.title) && (
-                        <div className="ml-4 mt-2 space-y-1">
+                        <div className="mx-4 mt-2 space-y-1">
                           {item.subItems.map((subItem) => (
                             <Button
                               key={subItem.name}
                               variant="ghost"
                               asChild
                               className={cn(
-                                "w-full justify-start text-base",
+                                "w-full justify-start text-blue-950 font-thin text-sm",
                                 pathname === subItem.path
-                                  ? "bg-muted hover:bg-muted"
+                                  ? "bg-blue-950  *: hover:bg-blue-950 text-white hover:text-white"
                                   : "hover:bg-transparent hover:underline"
                               )}
                               onClick={() => !isLargeScreen && onClose()}

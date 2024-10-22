@@ -41,25 +41,16 @@ export default function Header({ onSidebarToggle, isSidebarOpen }: HeaderProps) 
 	return (
 		<header className='bg-white fixed top-0 left-0 right-0 z-40 shadow-sm border-gray-200'>
 			<div className='px-4 py-2 sm:px-6'>
-				<div className='flex justify-between items-center h-10'>
-					<div className='flex items-center'>
-						<Button variant='ghost' size='icon' className='block lg:hidden' onClick={onSidebarToggle}>
-							{isSidebarOpen ? <X className='h-6 w-6' /> : <Menu className='h-6 w-6' />}
-						</Button>
-						<Link href='/dashboard' className='text-2xl md:text-3xl font-bold text-blue-900'>
-							CARMEN
-						</Link>
-					</div>
-
+				<div className='flex justify-end h-10'>
 					<div className='flex items-center space-x-2 sm:space-x-4'>
 						<TenantList />
-						<Button variant='ghost' size='icon' className='hidden md:inline-flex text-black'>
+						<Button variant='ghost' size='icon' className='hidden md:inline-flex text-blue-950'>
 							<Bell size={20} />
 						</Button>
 						<LanguageSwitcher />
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button variant='ghost' className='relative h-8 w-8 rounded-full text-black'>
+								<Button variant='ghost' className='relative h-8 w-8 rounded-full text-blue-950'>
 									<Avatar className='h-8 w-8'>
 										<AvatarImage src='/placeholder.svg?height=32&width=32' alt='@johndoe' />
 										<AvatarFallback>JD</AvatarFallback>
