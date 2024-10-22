@@ -17,10 +17,22 @@ datasource db {
 
 /// region System
 
+// model User {
+//   id      Int      @id @default(autoincrement())
+//   email   String   @unique
+//   name    String?
+//   role    Role     @default(USER)
+//   posts   Post[]
+//   profile Profile?
+// }
+
+
 model User {
   id        String   @id @default(uuid())
   username  String @unique
-  email     String   
+  email     String
+
+  profile     Profile?
 
   createdAt DateTime @default(now())
   createdById String? // Self-relation for User creator, now UUID
@@ -49,6 +61,15 @@ model User {
   Password        Password[]
 
   @@map("user") // optional: maps to a custom table name in the DB
+}
+
+
+model Profile {
+  id        String   @id @default(uuid())
+  bio       Json
+
+  userId String    @unique
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Business {
@@ -160,6 +181,7 @@ model TenantUser {
   updatedBy   User?   @relation("TenantUserUpdatedBy", fields: [updatedById], references: [id])
 
   @@map("TenantUser")
+  @@unique([userId, tenantId])
 }
 
 // model TenantBusiness {

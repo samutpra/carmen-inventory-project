@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   Prisma,
-  Tenant,
+  TenantUser,
   User,
   PrismaClient as dbSystem,
 } from '@prisma-carmen-client/system';
@@ -13,7 +13,7 @@ import { ExtractReqService } from 'src/auth/extract-req/extract-req.service';
 import { PrismaClientManagerService } from 'src/prisma-client-manager/prisma-client-manager.service';
 
 @Injectable()
-export class UsersService {
+export class TenantUserService {
   private db_System: dbSystem;
 
   constructor(
@@ -21,8 +21,8 @@ export class UsersService {
     private extractReqService: ExtractReqService,
   ) {}
 
-  async _getOne(db_System: dbSystem, id: string): Promise<User> {
-    const res = await db_System.user.findUnique({
+  async _getOne(db_System: dbSystem, id: string): Promise<TenantUser> {
+    const res = await db_System.tenantUser.findUnique({
       where: {
         id: id,
       },
@@ -30,27 +30,27 @@ export class UsersService {
     return res;
   }
 
-  async findOne(req: Request, id: string): Promise<ResponseSingle<User>> {
+  async findOne(req: Request, id: string): Promise<ResponseSingle<TenantUser>> {
     const { userId, tenantId } = this.extractReqService.getByReq(req);
     this.db_System = this.prismaClientMamager.getSystemDB();
     const oneObj = await this._getOne(this.db_System, id);
 
     if (!oneObj) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Tenant-User not found');
     }
-    const res: ResponseSingle<User> = {
+    const res: ResponseSingle<TenantUser> = {
       data: oneObj,
     };
     return res;
   }
 
-  async findAll(req: Request): Promise<ResponseList<User>> {
+  async findAll(req: Request): Promise<ResponseList<TenantUser>> {
     const { userId, tenantId } = this.extractReqService.getByReq(req);
     this.db_System = this.prismaClientMamager.getSystemDB();
-    const max = await this.db_System.user.count({});
-    const listObj = await this.db_System.user.findMany();
+    const max = await this.db_System.tenantUser.count({});
+    const listObj = await this.db_System.tenantUser.findMany();
 
-    const res: ResponseList<User> = {
+    const res: ResponseList<TenantUser> = {
       data: listObj,
       pagination: {
         total: max,
@@ -64,22 +64,23 @@ export class UsersService {
 
   async create(
     req: Request,
-    createUserDto: Prisma.UserCreateInput,
+    createTenantUserDto: Prisma.TenantUserCreateInput,
   ): Promise<ResponseId<string>> {
     const { userId, tenantId } = this.extractReqService.getByReq(req);
     this.db_System = this.prismaClientMamager.getSystemDB();
-    const found = await this.db_System.user.findUnique({
+    const found = await this.db_System.tenantUser.findFirst({
       where: {
-        username: createUserDto.username,
+        tenantId: createTenantUserDto.tenantId,
+        userId: createTenantUserDto.userId,
       },
     });
 
     if (found) {
-      throw new DuplicateException('User already exists');
+      throw new DuplicateException('Tenant - User already exists');
     }
 
-    const createObj = await this.db_System.user.create({
-      data: createUserDto,
+    const createObj = await this.db_System.tenantUser.create({
+      data: createTenantUserDto,
     });
 
     const res: ResponseId<string> = {
@@ -92,21 +93,21 @@ export class UsersService {
   async update(
     req: Request,
     id: string,
-    updateUserDto: Prisma.UserUpdateInput,
+    updateTenantUserDto: Prisma.TenantUserUpdateInput,
   ): Promise<ResponseId<string>> {
     const { userId, tenantId } = this.extractReqService.getByReq(req);
     this.db_System = this.prismaClientMamager.getSystemDB();
     const oneObj = await this._getOne(this.db_System, id);
 
     if (!oneObj) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Tenant - User not found');
     }
 
-    const updateObj = await this.db_System.user.update({
+    const updateObj = await this.db_System.tenantUser.update({
       where: {
         id: id,
       },
-      data: updateUserDto,
+      data: updateTenantUserDto,
     });
 
     const res: ResponseId<string> = {
@@ -122,10 +123,10 @@ export class UsersService {
     const oneObj = await this._getOne(this.db_System, id);
 
     if (!oneObj) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Tenant - User not found');
     }
 
-    await this.db_System.user.delete({
+    await this.db_System.tenantUser.delete({
       where: {
         id: id,
       },

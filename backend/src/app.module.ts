@@ -13,6 +13,8 @@ import { StoreLocationsModule } from './storelocations/storelocations.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { UnitsModule } from './units/units.module';
 import { UserModule } from './users/users.module';
+import { UserTenantModule } from './user-tenant/user-tenant.module';
+import { TenantUserModule } from './tenant-user/tenant-user.module';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { UserModule } from './users/users.module';
     }),
     PrismaClientManagerModule,
     ExtractReqModule,
+    UserTenantModule,
+    TenantUserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
