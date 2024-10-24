@@ -1,5 +1,5 @@
 export enum GoodsReceiveNoteType {
-    CREATE = "create",
-    VIEW = "view",
+    CREATE = "new",
+    VIEW = "",
     EDIT = "edit"
 }

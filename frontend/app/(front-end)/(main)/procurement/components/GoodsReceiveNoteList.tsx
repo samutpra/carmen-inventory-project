@@ -114,8 +114,14 @@ const GoodReceivedNoteList = () => {
         return grn.items.reduce((total, item) => total + item.netAmount, 0)
     }
 
-    const handleGoodsReceiveNoteAction = (id: string, mode: GoodsReceiveNoteType) => {
-        router.push(`/procurement/goods-received-note/${id}?mode=${mode}`)
+    const handleGoodsReceiveNoteAction = (id?: string, mode?: GoodsReceiveNoteType) => {
+        let url = '/procurement/goods-received-note';
+        if (mode === GoodsReceiveNoteType.EDIT) {
+            url += `/${id}/edit`;
+        } else {
+            url += `${id ? `/${id}` : ''}${mode ? `?mode=${mode}` : ''}`;
+        }
+        router.push(url);
     }
 
 
@@ -123,7 +129,7 @@ const GoodReceivedNoteList = () => {
 
     const actionButtons = (
         <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center">
-            <Button className="w-full sm:w-auto" onClick={() => handleGoodsReceiveNoteAction("0", GoodsReceiveNoteType.CREATE)}>
+            <Button className="w-full sm:w-auto" onClick={() => handleGoodsReceiveNoteAction(GoodsReceiveNoteType.CREATE)}>
                 <Plus className="mr-2 h-4 w-4" /> New Goods Receive Note
             </Button>
             <Button variant="outline" className="w-full sm:w-auto">Export</Button>
@@ -282,7 +288,7 @@ const GoodReceivedNoteList = () => {
                                 <StatusBadge status={grn.status} />
                                 <h3 className="text-muted-foreground text-lg">{grn.ref}</h3>
                                 <h3 className="font-semibold text-lg">{grn.description}</h3>
-                            </div>
+                            </div>zz
                             <TooltipProvider>
                                 <div className="flex space-x-1">
                                     <Tooltip>
@@ -290,7 +296,7 @@ const GoodReceivedNoteList = () => {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => handleGoodsReceiveNoteAction(grn.id, GoodsReceiveNoteType.VIEW)}
+                                                onClick={() => handleGoodsReceiveNoteAction(grn.id)}
                                             >
                                                 <Eye className="h-4 w-4" />
                                             </Button>
@@ -400,7 +406,6 @@ const GoodReceivedNoteList = () => {
             </div>
         </div>
     )
-
 
     return (
         <ListPageTemplate
