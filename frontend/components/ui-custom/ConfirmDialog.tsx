@@ -1,4 +1,3 @@
-// components/AlertDialog.tsx
 import React from 'react';
 import {
     AlertDialog,

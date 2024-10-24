@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useRouter } from '@/lib/i18n';
-import { ArrowLeft, Edit, Save, Trash2, X } from 'lucide-react';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, CheckSquare, Edit, Printer, Save, Trash2, X } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import StatusBadge from '@/components/ui-custom/custom-status-badge';
 import ToggleSidebarButton from '@/components/ui-custom/ButtonToggleSidebar';
 import { GoodsReceiveNoteType } from '../type/procurementType';
 import ConfirmDialog from '@/components/ui-custom/ConfirmDialog';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { formSchema, FormValues } from '../type/type';
+import { submitForm } from '../lib/action';
 
 type Props = {
     id?: string;
@@ -18,6 +24,9 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode }) => {
     const [isSidebarVisible, setIsSidebarVisible] = useState(true);
     const [mode, setMode] = useState(grnMode);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [serverError, setServerError] = useState<string>('')
+
 
     const onBack = () => {
         router.push("/procurement/goods-received-note");
@@ -45,6 +54,41 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode }) => {
         setIsDialogOpen(false);
         router.push("/procurement/goods-received-note");
     };
+
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e);
+    };
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FormValues>({
+        resolver: zodResolver(formSchema),
+    })
+
+    const onSubmit = async (data: FormValues) => {
+        setIsSubmitting(true)
+        setServerError('')
+
+        try {
+            const result = await submitForm(data)
+
+            if (result.error) {
+                setServerError(result.error)
+            } else {
+                // Handle success
+                console.log('Form submitted successfully:', result.data)
+            }
+        } catch (error) {
+            console.log(error);
+            setServerError('An unexpected error occurred')
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
 
     return (
         <>
@@ -92,9 +136,47 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode }) => {
                                                 </Button>
                                             </>
                                         )}
+                                        <Button variant="outline" size="sm">
+                                            <Printer className="mr-2 h-4 w-4" />
+                                            Print
+                                        </Button>
+                                        <Button variant="outline" size="sm">
+                                            <CheckSquare className="mr-2 h-4 w-4" />
+                                            Commit
+                                        </Button>
                                     </div>
                                 </div>
                             </CardHeader>
+                            <CardContent>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="ref" className="text-sm font-medium">
+                                            GRN #
+                                        </Label>
+                                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                                            <div>
+                                                <Input
+                                                    id="ref"
+                                                    {...register('ref')}
+                                                    className="h-8 text-sm"
+                                                    disabled={isSubmitting}
+                                                />
+                                                {errors.ref && (
+                                                    <p className="text-red-500 text-sm mt-1">{errors.ref.message}</p>
+                                                )}
+                                            </div>
+
+                                            {serverError && (
+                                                <p className="text-red-500 text-sm">{serverError}</p>
+                                            )}
+
+                                            <Button type="submit" disabled={isSubmitting}>
+                                                {isSubmitting ? 'Submitting...' : 'Submit'}
+                                            </Button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </CardContent>
                         </Card>
                     </div>
                     <div className={`space-y-4 ${isSidebarVisible ? 'lg:w-1/4' : 'w-0 opacity-0 overflow-hidden'} transition-all duration-300`}>
