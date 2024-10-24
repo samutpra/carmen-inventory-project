@@ -12,8 +12,6 @@ export class ExtractReqService {
   constructor(private JwtService: JwtService) {}
 
   getByReq(req: Request): ResultHeader {
-    // console.log(req.headers);
-
     const access_token = req.headers['authorization']?.split(' ')[1];
     const decoded = this.JwtService.decode(access_token);
 
@@ -24,8 +22,6 @@ export class ExtractReqService {
       userId: userId,
       tenantId: tenantId,
     };
-
-    console.log(res);
 
     return res;
   }
