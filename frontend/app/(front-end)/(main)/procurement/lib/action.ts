@@ -2,9 +2,7 @@
 import { formSchema, FormValues } from "../type/type"
 
 export async function submitForm(formData: FormValues) {
-
     const result = formSchema.safeParse(formData)
-
     const API_BASE_URL = process.env.FRONTEND_URL || 'http://localhost:3500'
 
     if (!result.success) {
