@@ -91,3 +91,8 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+a {
+  color: #0000FF;
+  text-decoration: underline;
+}

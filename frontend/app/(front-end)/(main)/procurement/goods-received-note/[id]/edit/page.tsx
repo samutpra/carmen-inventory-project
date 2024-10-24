@@ -13,7 +13,7 @@ interface Props {
 const GoodsReceiveNoteEditPage: React.FC<Props> = ({ params }) => {
     const { id } = params;
     return (
-        <GoodsReceiveNoteComponent id={id} mode={GoodsReceiveNoteType.EDIT} />
+        <GoodsReceiveNoteComponent id={id} grnMode={GoodsReceiveNoteType.EDIT} />
     );
 }
 

@@ -114,14 +114,16 @@ const GoodReceivedNoteList = () => {
         return grn.items.reduce((total, item) => total + item.netAmount, 0)
     }
 
-    const handleGoodsReceiveNoteAction = (id?: string, mode?: GoodsReceiveNoteType) => {
-        let url = '/procurement/goods-received-note';
-        if (mode === GoodsReceiveNoteType.EDIT) {
-            url += `/${id}/edit`;
-        } else {
-            url += `${id ? `/${id}` : ''}${mode ? `?mode=${mode}` : ''}`;
-        }
-        router.push(url);
+    const handleNewGoodsReceiveNote = () => {
+        router.push(`/procurement/goods-received-note/${GoodsReceiveNoteType.CREATE}`)
+    }
+
+    const handleEditGoodsReceiveNote = (id: string) => {
+        router.push(`/procurement/goods-received-note/${id}/edit`)
+    }
+
+    const handleViewGoodsReceiveNote = (id: string) => {
+        router.push(`/procurement/goods-received-note/${id}`)
     }
 
 
@@ -129,7 +131,7 @@ const GoodReceivedNoteList = () => {
 
     const actionButtons = (
         <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center">
-            <Button className="w-full sm:w-auto" onClick={() => handleGoodsReceiveNoteAction(GoodsReceiveNoteType.CREATE)}>
+            <Button className="w-full sm:w-auto" onClick={handleNewGoodsReceiveNote}>
                 <Plus className="mr-2 h-4 w-4" /> New Goods Receive Note
             </Button>
             <Button variant="outline" className="w-full sm:w-auto">Export</Button>
@@ -296,7 +298,7 @@ const GoodReceivedNoteList = () => {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => handleGoodsReceiveNoteAction(grn.id)}
+                                                onClick={() => handleViewGoodsReceiveNote(grn.id)}
                                             >
                                                 <Eye className="h-4 w-4" />
                                             </Button>
@@ -308,7 +310,7 @@ const GoodReceivedNoteList = () => {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => handleGoodsReceiveNoteAction(grn.id, GoodsReceiveNoteType.EDIT)}
+                                                onClick={() => handleEditGoodsReceiveNote(grn.id)}
                                             >
                                                 <Edit className="h-4 w-4" />
                                             </Button>

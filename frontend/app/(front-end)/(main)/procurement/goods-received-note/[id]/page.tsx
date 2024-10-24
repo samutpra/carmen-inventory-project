@@ -1,17 +1,17 @@
 "use client";
 
 import React from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import GoodsReceiveNoteComponent from '../../components/GoodsReceiveNoteComponent';
+import { GoodsReceiveNoteType } from '../../type/procurementType';
 
 const GoodsReceivedNoteByIDPage = () => {
     const params = useParams();
-    const searchParams = useSearchParams();
     const id = params.id as string;
-    const mode = searchParams.get('mode');
+    const mode = id === GoodsReceiveNoteType.CREATE ? GoodsReceiveNoteType.CREATE : GoodsReceiveNoteType.VIEW;
 
     return (
-        <GoodsReceiveNoteComponent id={id} mode={mode} />
+        <GoodsReceiveNoteComponent id={id} grnMode={mode} />
     );
 };
 
