@@ -54,8 +54,8 @@ model User {
   TenantCreated Tenant[] @relation("TenantCreatedBy")
   TenantUpdated Tenant[] @relation("TenantUpdatedBy")
 
-  TenantUserCreated TenantUser[] @relation("TenantUserCreatedBy")
-  TenantUserUpdated TenantUser[] @relation("TenantUserUpdatedBy")
+  UserTenantCreated UserTenant[] @relation("UserTenantCreatedBy")
+  UserTenantUpdated UserTenant[] @relation("UserTenantUpdatedBy")
 
   PasswordCreated Password[] @relation("PasswordCreatedBy")
   Password        Password[]
@@ -162,7 +162,7 @@ model Password {
 //   roleId String // Foreign key to Role changed to UUID type
 // }
 
-model TenantUser {
+model UserTenant {
   id        String   @id @default(uuid())
 
   userId String // Foreign key to User changed to UUID type
@@ -174,13 +174,13 @@ model TenantUser {
 
   createdAt DateTime @default(now())
   createdById String? // Foreign key to User changed to UUID type
-  createdBy   User?   @relation("TenantUserCreatedBy", fields: [createdById], references: [id])
+  createdBy   User?   @relation("UserTenantCreatedBy", fields: [createdById], references: [id])
 
   updatedAt DateTime @updatedAt
   updatedById String? // Foreign key to User changed to UUID type
-  updatedBy   User?   @relation("TenantUserUpdatedBy", fields: [updatedById], references: [id])
+  updatedBy   User?   @relation("UserTenantUpdatedBy", fields: [updatedById], references: [id])
 
-  @@map("TenantUser")
+  @@map("UserTenant")
   @@unique([userId, tenantId])
 }
 
