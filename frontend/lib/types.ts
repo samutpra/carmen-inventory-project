@@ -366,7 +366,7 @@ export interface PurchaseRequestItem {
   taxIncluded: boolean;// adjustment: boolean;
   adjustments: {
     discount?: boolean;
-    tax: boolean; 
+    tax: boolean;
   };
   discountRate: number;
   taxRate: number;
@@ -405,10 +405,10 @@ export interface PurchaseRequestItem {
 }
 
 export type PurchaseRequestItemStatus =
- "Pending"|
- "Accepted"|
- "Rejected"|
- "Review";
+  "Pending" |
+  "Accepted" |
+  "Rejected" |
+  "Review";
 
 
 export interface WorkflowStep {
@@ -432,7 +432,7 @@ export interface GoodsReceiveNote {
   currency: string;
   exchangeRate: number;
   baseCurrency: string;
-  status: GoodsReceiveNoteStatus;
+  status: GoodsReceiveNoteStatus | string;
   isConsignment: boolean;
   isCash: boolean;
   cashBook?: string;
@@ -529,6 +529,8 @@ export interface StockMovement {
   cost: number;
   totalCost: number;
   currency: string;
+  itemDescription: string
+  lotNumber: number
 }
 
 export interface ExtraCost {
@@ -575,6 +577,7 @@ export interface FinancialSummary {
   jvReference: string;
   jvDetail?: JournalEntryDetail[];
   jvTotal: JournalEntryTotal;
+  sourceOfTransaction: string
 }
 
 export interface JournalEntryDetail {

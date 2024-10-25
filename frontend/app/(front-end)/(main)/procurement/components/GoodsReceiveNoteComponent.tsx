@@ -17,7 +17,91 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ItemDetailForm from './tabs/itemDetailForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog';
 import { BulkActions } from './tabs/BulkActions';
-import { GoodsReceiveNoteItem } from '@/lib/types';
+import { GoodsReceiveNote, GoodsReceiveNoteItem } from '@/lib/types';
+import { ExtraCostsTab } from './tabs/ExtraCostsTab';
+import { StockMovementTab } from './tabs/StockMovementTab';
+import { TaxTab } from './tabs/TaxTab';
+import { FinancialSummaryTab } from './tabs/FinancialSummaryTab';
+import SummaryTotal from './SummaryTotal';
+
+
+const initialData = {
+    id: '0',
+    ref: '',
+    date: new Date(),
+    invoiceDate: new Date(),
+    invoiceNumber: '',
+    taxInvoiceDate: undefined,
+    taxInvoiceNumber: '',
+    description: '',
+    receiver: '',
+    vendor: '',
+    vendorId: '',
+    location: '',
+    currency: '',
+    exchangeRate: 1,
+    baseCurrency: '',
+    status: 'Pending',
+    isConsignment: false,
+    isCash: false,
+    cashBook: '',
+    items: [],
+    selectedItems: [],
+    stockMovements: [],
+    extraCosts: [],
+    comments: [],
+    attachments: [],
+    activityLog: [],
+    baseSubTotalPrice: 0,
+    subTotalPrice: 0,
+    baseNetAmount: 0,
+    netAmount: 0,
+    baseDiscAmount: 0,
+    discountAmount: 0,
+    baseTaxAmount: 0,
+    taxAmount: 0,
+    baseTotalAmount: 0,
+    totalAmount: 0,
+
+}
+
+const emptyGoodsReceiveNote: GoodsReceiveNote = {
+    id: '',
+    ref: '',
+    selectedItems: [],
+    date: new Date(),
+    invoiceDate: new Date(),
+    invoiceNumber: '',
+    description: '',
+    receiver: '',
+    vendor: '',
+    vendorId: '',
+    location: '',
+    currency: '',
+    status: 'Pending',
+    cashBook: '',
+    items: [],
+    stockMovements: [],
+    isConsignment: false,
+    isCash: false,
+    extraCosts: [],
+    comments: [],
+    attachments: [],
+    activityLog: [],
+    financialSummary: null,
+    exchangeRate: 0,
+    baseCurrency: '',
+    baseSubTotalPrice: 0,
+    subTotalPrice: 0,
+    baseNetAmount: 0,
+    netAmount: 0,
+    baseDiscAmount: 0,
+    discountAmount: 0,
+    baseTaxAmount: 0,
+    taxAmount: 0,
+    baseTotalAmount: 0,
+    totalAmount: 0,
+};
 interface Props {
     id?: string;
     grnMode?: GoodsReceiveNoteType;
@@ -33,6 +117,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [formData, setFormData] = useState<GoodsReceiveNote>(initialData || emptyGoodsReceiveNote);
     const [formDataToSubmit, setFormDataToSubmit] = useState<FormValues | null>(null);
 
     const form = useForm<FormValues>({
@@ -114,24 +199,44 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
     };
 
     const handleAddItem = (newItem: GoodsReceiveNoteItem) => {
-        // setFormData((prev) => ({
-        //   ...prev,
-        //   items: [...prev.items, newItem],
-        // }));
+        setFormData((prev) => ({
+            ...prev,
+            items: [...prev.items, newItem],
+        }));
         setIsAddDialogOpen(false);
     };
 
     const handleBulkAction = (action: string) => {
         console.log(`Applying ${action} to items:`, selectedItems);
-        // if (action === "delete") {
-        //   setFormData((prev) => ({
-        //     ...prev,
-        //     items: prev.items.filter((item) => !selectedItems.includes(item.id)),
-        //   }));
-        // }
-        // Implement other actions as needed
+        if (action === "delete") {
+            setFormData((prev) => ({
+                ...prev,
+                items: prev.items.filter((item) => !selectedItems.includes(item.id)),
+            }));
+        }
         setSelectedItems([]);
     };
+
+    const calculateDocumentTotals = () => {
+        const netAmount = formData.items.reduce((sum, item) => sum + item.netAmount, 0);
+        const taxAmount = formData.items.reduce((sum, item) => sum + item.taxAmount, 0);
+        const totalAmount = netAmount + taxAmount;
+
+        return {
+            currency: {
+                netAmount,
+                taxAmount,
+                totalAmount,
+            },
+            baseCurrency: {
+                netAmount: netAmount * formData.exchangeRate,
+                taxAmount: taxAmount * formData.exchangeRate,
+                totalAmount: totalAmount * formData.exchangeRate,
+            },
+        };
+    };
+
+    const documentTotals = calculateDocumentTotals();
 
     return (
         <>
@@ -273,14 +378,14 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                             <div className="flex items-center justify-between">
                                                 <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
                                                     <DialogTrigger asChild>
-                                                        <Button>
-                                                            <Plus className="mr-2 h-4 w-4" />
+                                                        <Button size="sm">
+                                                            <Plus className="h-4 w-4" />
                                                             Add Item
                                                         </Button>
                                                     </DialogTrigger>
                                                     <DialogContent className="max-w-5xl">
                                                         <ItemDetailForm
-                                                            mode="add"
+                                                            mode={GoodsReceiveNoteType.CREATE}
                                                             item={null}
                                                             onSave={handleAddItem}
                                                             onClose={() => setIsAddDialogOpen(false)}
@@ -296,7 +401,57 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                             )}
                                         </div>
                                     </TabsContent>
+                                    <TabsContent value="extra-costs">
+                                        <ExtraCostsTab
+                                            mode={mode}
+                                            initialCosts={formData.extraCosts}
+                                            onCostsChange={(newCosts) => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    extraCosts: newCosts,
+                                                }));
+                                            }}
+                                        />
+                                    </TabsContent>
+                                    <TabsContent value="stock-movement">
+                                        <StockMovementTab
+                                            mode={mode}
+                                            movements={formData.stockMovements || []}
+                                        />
+                                    </TabsContent>
+
+                                    <TabsContent value="tax">
+                                        <TaxTab
+                                            mode={mode}
+                                            taxInvoiceNumber={formData.taxInvoiceNumber}
+                                            taxInvoiceDate={formData.taxInvoiceDate}
+                                            onTaxInvoiceChange={(field, value) => {
+                                                setFormData(prev => ({ ...prev, [field]: value }));
+                                            }}
+                                            documentTotals={documentTotals}
+                                            currency={formData.currency}
+                                            baseCurrency={formData.baseCurrency}
+                                        />
+                                    </TabsContent>
+                                    <TabsContent value="transaction-summary">
+                                        <FinancialSummaryTab
+                                            mode={mode}
+                                            summary={formData.financialSummary || null}
+                                            currency={formData.currency}
+                                            baseCurrency={formData.baseCurrency}
+                                        />
+                                    </TabsContent>
                                 </Tabs>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Summary Total</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <SummaryTotal poData={formData} />
+
                             </CardContent>
                         </Card>
                     </div>
