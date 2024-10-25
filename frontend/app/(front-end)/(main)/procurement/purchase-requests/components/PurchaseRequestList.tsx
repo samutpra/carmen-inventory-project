@@ -289,13 +289,13 @@ const PurchaseRequestList = () => {
     const actionButtons = (
         <>
             <div className="flex flex-wrap space-x-2">
-                <Button onClick={handleCreateNewPR} className="text-xs">
+                <Button onClick={handleCreateNewPR}>
                     <Plus className="h-4 w-4" /> New Purchase Request
                 </Button>
-                <Button variant="outline" className="text-xs">
+                <Button variant="outline">
                     <Download className="h-4 w-4" /> Export
                 </Button>
-                <Button variant="outline" className="text-xs">
+                <Button variant="outline">
                     <Printer className="h-4 w-4" /> Print
                 </Button>
             </div>
