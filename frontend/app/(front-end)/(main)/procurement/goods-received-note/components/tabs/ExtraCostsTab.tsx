@@ -23,7 +23,7 @@ import {
 } from "@/lib/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { GoodsReceiveNoteType } from "../../type/procurementType";
+import { GoodsReceiveNoteType } from "../../../type/procurementType";
 
 interface ExtraCostsTabProps {
   mode: GoodsReceiveNoteType;
@@ -92,7 +92,7 @@ export function ExtraCostsTab({
               <TableCell>{cost.type}</TableCell>
               <TableCell>{cost.amount.toFixed(2)}</TableCell>
               <TableCell>
-                {mode !== "view" && (
+                {mode !== GoodsReceiveNoteType.VIEW && (
                   <Button
                     variant="destructive"
                     size="sm"
@@ -104,7 +104,7 @@ export function ExtraCostsTab({
               </TableCell>
             </TableRow>
           ))}
-          {mode !== "view" && (
+          {mode !== GoodsReceiveNoteType.VIEW && (
             <TableRow>
               <TableCell>
                 <Select

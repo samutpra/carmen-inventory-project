@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import GoodsReceiveNoteComponent from '../../components/GoodsReceiveNoteComponent';
 import { GoodsReceiveNoteType } from '../../type/procurementType';
+import GoodsReceiveNoteComponent from '../components/GoodsReceiveNoteComponent';
 
 const GoodsReceivedNoteByIDPage = () => {
     const params = useParams();

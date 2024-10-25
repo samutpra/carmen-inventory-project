@@ -4,17 +4,14 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from '@/lib/i18n';
 import { ArrowLeft, CheckSquare, Edit, Plus, Printer, Save, Trash2, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { GoodsReceiveNoteType } from '../type/procurementType';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { formSchema, FormValues } from '../type/type';
-import { submitForm } from '../lib/action';
+
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import ToggleSidebarButton from '@/components/ui-custom/ButtonToggleSidebar';
 import StatusBadge from '@/components/ui-custom/custom-status-badge';
 import ConfirmDialog from '@/components/ui-custom/ConfirmDialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import ItemDetailForm from './tabs/itemDetailForm';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog';
 import { BulkActions } from './tabs/BulkActions';
 import { GoodsReceiveNote, GoodsReceiveNoteItem } from '@/lib/types';
@@ -23,6 +20,10 @@ import { StockMovementTab } from './tabs/StockMovementTab';
 import { TaxTab } from './tabs/TaxTab';
 import { FinancialSummaryTab } from './tabs/FinancialSummaryTab';
 import SummaryTotal from './SummaryTotal';
+import { GoodsReceiveNoteType } from '../../type/procurementType';
+import { formSchema, FormValues } from '../../type/type';
+import { submitForm } from '../../lib/action';
+import ItemDetailForm from './tabs/ItemDetailForm';
 
 
 const initialData = {

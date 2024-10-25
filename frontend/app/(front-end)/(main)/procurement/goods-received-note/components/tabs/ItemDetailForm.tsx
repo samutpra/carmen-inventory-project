@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import React from "react";
 import { DialogClose, DialogHeader, DialogTitle } from "@/components/ui-custom/dialog";
-import { GoodsReceiveNoteType } from "../../type/procurementType";
+import { GoodsReceiveNoteType } from "../../../type/procurementType";
 
 
 interface ItemDetailFormProps {

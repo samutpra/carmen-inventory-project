@@ -1,8 +1,8 @@
 'use client'
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import React, { useState } from 'react';
-import { Button } from '../../../../../components/ui/button';
-import { Input } from '../../../../../components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../../../../components/ui/select';
 
 const operators = [
   { value: '=', label: 'Equals' },
@@ -34,7 +34,7 @@ export function FilterBuilder({ fields, onFilterChange }: FilterBuilderProps) {
   const [filters, setFilters]: [Filter[], Dispatch<SetStateAction<Filter[]>>] = useState([{ field: '', operator: '=', value: '', conjunction: 'AND' }])
 
   const handleFilterChange = (index: number, key: keyof Filter, value: string) => {
-    const newFilters = filters.map((filter, i) => 
+    const newFilters = filters.map((filter, i) =>
       i === index ? { ...filter, [key]: value } : filter
     );
     setFilters(newFilters);

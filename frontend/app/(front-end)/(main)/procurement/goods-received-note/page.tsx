@@ -1,5 +1,5 @@
 import React from 'react'
-import GoodReceivedNoteList from '../components/GoodsReceiveNoteList'
+import GoodReceivedNoteList from './components/GoodsReceiveNoteList'
 
 
 const GoodsReceivedNotePage = () => {

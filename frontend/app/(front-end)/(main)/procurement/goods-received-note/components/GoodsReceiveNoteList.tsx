@@ -23,7 +23,7 @@ import StatusBadge from '@/components/ui-custom/custom-status-badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { cn } from '@/lib/utils'
-import { GoodsReceiveNoteType } from '../type/procurementType'
+import { GoodsReceiveNoteType } from '../../type/procurementType'
 
 
 const statusOptions = [

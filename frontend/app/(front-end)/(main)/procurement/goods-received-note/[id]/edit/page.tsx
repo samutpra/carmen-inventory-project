@@ -1,8 +1,8 @@
 "use client";
 
 import React from 'react';
-import GoodsReceiveNoteComponent from '../../../components/GoodsReceiveNoteComponent';
 import { GoodsReceiveNoteType } from '../../../type/procurementType';
+import GoodsReceiveNoteComponent from '../../components/GoodsReceiveNoteComponent';
 
 interface Props {
     params: {
