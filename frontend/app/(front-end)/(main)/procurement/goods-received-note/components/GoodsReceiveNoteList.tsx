@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Eye, Edit, Trash, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Plus, Filter, ArrowUpDown, ChevronsUpDown, Check } from 'lucide-react'
+import { Eye, Edit, Trash, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Plus, Filter, ArrowUpDown, ChevronsUpDown, Check, Search } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { GoodsReceiveNote } from '@/lib/types'
 import { Button } from '@/components/ui/button'
@@ -24,6 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { cn } from '@/lib/utils'
 import { GoodsReceiveNoteType } from '../../type/procurementType'
+import SearchInput from '@/components/ui-custom/SearchInput'
 
 
 const statusOptions = [
@@ -163,10 +164,12 @@ const GoodReceivedNoteList = () => {
     const filter = (
         <div className="flex flex-col justify-start sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
             <div className="w-full sm:w-auto flex-grow">
-                <Input
-                    placeholder="Search goods receive notes..."
+                <SearchInput
+                    placeholder="Search Purchase Requests..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    Icon={Search}
+                    variant="suffix"
                 />
             </div>
 
@@ -272,8 +275,6 @@ const GoodReceivedNoteList = () => {
             </div>
         </div>
     )
-
-
 
     const content = (
         <div className="space-y-2">

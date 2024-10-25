@@ -4,13 +4,60 @@ import { useRouter } from '@/lib/i18n';
 import { sampleData } from '../data/sampleData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Download, Edit, Eye, Filter, Plus, Printer, Search, Trash2 } from 'lucide-react';
+import { Check, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronsUpDown, Download, Edit, Eye, Filter, Plus, Printer, Search, Trash2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import StatusBadge from '@/components/ui-custom/custom-status-badge';
 import ListPageTemplate from '@/components/templates/ListPageTemplate';
+import SearchInput from '@/components/ui-custom/SearchInput';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
+
+
+const typeOptions = [
+    {
+        value: "All Types",
+        label: "All Types",
+    },
+    {
+        value: "General Purchase",
+        label: "General Purchase",
+    },
+    {
+        value: "Market List",
+        label: "Market List",
+    },
+    {
+        value: "Asset Purchase",
+        label: "Asset Purchase",
+    },
+]
+
+const statusOptions = [
+    {
+        value: "All Statuses",
+        label: "All Statuses",
+    },
+    {
+        value: "Draft",
+        label: "Draft",
+    },
+    {
+        value: "Submitted",
+        label: "Submitted",
+    },
+    {
+        value: "Approved",
+        label: "Approved",
+    },
+    {
+        value: "Rejected",
+        label: "Rejected",
+    },
+]
 
 
 const PurchaseRequestList = () => {
@@ -25,6 +72,8 @@ const PurchaseRequestList = () => {
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
     const itemsPerPage = 7;
     const [selectedPRs, setSelectedPRs] = useState<string[]>([]);
+    const [openTypeSearch, setOpenTypeSearch] = useState(false)
+    const [openStatusSearch, setOpenStatusSearch] = useState(false)
 
     const filteredData = useMemo(() => {
         return sampleData.filter((pr) => {
@@ -66,16 +115,6 @@ const PurchaseRequestList = () => {
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const handleTypeChange = (type: string) => {
-        setSelectedType(type);
-        setCurrentPage(1);
-    };
-
-    const handleStatusChange = (status: string) => {
-        setSelectedStatus(status);
         setCurrentPage(1);
     };
 
@@ -123,91 +162,111 @@ const PurchaseRequestList = () => {
             </div>
         ) : null;
 
-
     const filters = (
         <>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                 <div className="w-full sm:w-1/2 flex space-x-2">
-                    <Input
-                        placeholder="Search PRs..."
-                        className="w-full"
+                    <SearchInput
+                        placeholder="Search Purchase Requests..."
                         value={searchTerm}
                         onChange={handleSearch}
+                        Icon={Search}
+                        variant="suffix"
                     />
-                    <Button variant="secondary" size="icon">
-                        <Search className="h-4 w-4" />
-                    </Button>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">
-                                {selectedType}
-                                <ChevronDown className="ml-2 h-4 w-4" />
+
+                    <Popover open={openTypeSearch} onOpenChange={setOpenTypeSearch}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={open}
+                                className="w-[200px] justify-between text-xs"
+                            >
+                                {selectedType
+                                    ? typeOptions.find((option) => option.value === selectedType)?.label
+                                    : "Select status..."}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem onSelect={() => handleTypeChange("All Types")}>
-                                All Types
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onSelect={() => handleTypeChange("General Purchase")}
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search status..." />
+                                <CommandList>
+                                    <CommandEmpty>No status found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {typeOptions.map((option) => (
+                                            <CommandItem
+                                                key={option.value}
+                                                value={option.value}
+                                                onSelect={(currentValue) => {
+                                                    setSelectedType(currentValue === selectedType ? "All Types" : currentValue)
+                                                    setOpenTypeSearch(false)
+                                                }}
+                                            >
+                                                <Check
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        selectedType === option.value ? "opacity-100" : "opacity-0"
+                                                    )}
+                                                />
+                                                {option.label}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+
+
+                    <Popover open={openStatusSearch} onOpenChange={setOpenStatusSearch}>
+                        <PopoverTrigger asChild>
+                            <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={open}
+                                className="w-[200px] justify-between text-xs"
                             >
-                                General Purchase
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onSelect={() => handleTypeChange("Market List")}
-                            >
-                                Market List
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onSelect={() => handleTypeChange("Asset Purchase")}
-                            >
-                                Asset Purchase
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">
-                                {selectedStatus}
-                                <ChevronDown className="ml-2 h-4 w-4" />
+                                {selectedStatus
+                                    ? statusOptions.find((option) => option.value === selectedStatus)?.label
+                                    : "Select status..."}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem
-                                onSelect={() => handleStatusChange("All Statuses")}
-                            >
-                                All Statuses
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleStatusChange("Draft")}>
-                                <Badge variant="outline" className="mr-2">
-                                    Draft
-                                </Badge>{" "}
-                                Draft
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                onSelect={() => handleStatusChange("Submitted")}
-                            >
-                                <Badge className="mr-2">Submitted</Badge> Submitted
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleStatusChange("Approved")}>
-                                <Badge variant="secondary" className="mr-2">
-                                    Approved
-                                </Badge>{" "}
-                                Approved
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => handleStatusChange("Rejected")}>
-                                <Badge variant="destructive" className="mr-2">
-                                    Rejected
-                                </Badge>{" "}
-                                Rejected
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                                <CommandInput placeholder="Search status..." />
+                                <CommandList>
+                                    <CommandEmpty>No status found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {statusOptions.map((option) => (
+                                            <CommandItem
+                                                key={option.value}
+                                                value={option.value}
+                                                onSelect={(currentValue) => {
+                                                    setSelectedStatus(currentValue === selectedStatus ? "All Statuses" : currentValue)
+                                                    setOpenStatusSearch(false)
+                                                }}
+                                            >
+                                                <Check
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        selectedType === option.value ? "opacity-100" : "opacity-0"
+                                                    )}
+                                                />
+                                                {option.label}
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline">
+                            <Button variant="outline" className='text-xs'>
                                 <Filter className="mr-2 h-4 w-4" /> More Filters
                             </Button>
                         </DropdownMenuTrigger>
@@ -229,15 +288,15 @@ const PurchaseRequestList = () => {
 
     const actionButtons = (
         <>
-            <div className="flex flex-wrap gap-2">
-                <Button onClick={handleCreateNewPR} className="group">
-                    <Plus className="mr-2 h-4 w-4" /> New Purchase Request
+            <div className="flex flex-wrap space-x-2">
+                <Button onClick={handleCreateNewPR} className="text-xs">
+                    <Plus className="h-4 w-4" /> New Purchase Request
                 </Button>
-                <Button variant="outline" className="group">
-                    <Download className="mr-2 h-4 w-4" /> Export
+                <Button variant="outline" className="text-xs">
+                    <Download className="h-4 w-4" /> Export
                 </Button>
-                <Button variant="outline" className="group">
-                    <Printer className="mr-2 h-4 w-4" /> Print
+                <Button variant="outline" className="text-xs">
+                    <Printer className="h-4 w-4" /> Print
                 </Button>
             </div>
         </>
@@ -249,17 +308,17 @@ const PurchaseRequestList = () => {
                 {getCurrentPageData().map((pr) => (
                     <Card key={pr.id} className="overflow-hidden p-2 hover:bg-secondary dark:hover:bg-gray-700 bg-white dark:bg-gray-800">
                         <div className="py-2 px-4">
-                            <div className="flex justify-between items-center mb-0">
-                                <div className="flex items-center space-x-2">
+                            <div className="flex justify-between items-start">
+                                <div className="flex items-center space-x-2 mb-6">
                                     <Checkbox
                                         checked={selectedPRs.includes(pr.id)}
                                         onCheckedChange={() => handleSelectPR(pr.id)}
                                     />
                                     <StatusBadge status={pr.status} />
-                                    <span className="text-lg text-muted-foreground">
+                                    <span className="text-sm text-muted-foreground">
                                         {pr.id}
                                     </span>
-                                    <h3 className="text-lg md:text-lg font-semibold">
+                                    <h3 className="text-sm font-semibold">
                                         {pr.description}
                                     </h3>
                                 </div>
@@ -298,14 +357,14 @@ const PurchaseRequestList = () => {
                                     { label: "Amount", field: "amount" },
                                     { label: "Workflow Stage", field: "currentStage" },
                                 ].map(({ label, field }) => (
-                                    <div key={field}>
-                                        <p className="font-medium text-muted-foreground  text-sm">
+                                    <div key={field} className='space-y-1'>
+                                        <p className="  text-muted-foreground text-xs font-bold">
                                             {label}
                                         </p>
                                         {field === 'currentStage' ?
-                                            <p className="text-sm"><StatusBadge status={pr[field as keyof typeof pr] as string} /></p>
+                                            <p className="text-xs"><StatusBadge status={pr[field as keyof typeof pr] as string} /></p>
                                             :
-                                            <p className="text-sm">{pr[field as keyof typeof pr]}</p>
+                                            <p className="text-xs">{pr[field as keyof typeof pr]}</p>
                                         }
                                     </div>
                                 ))}
