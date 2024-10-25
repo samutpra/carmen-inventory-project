@@ -4,7 +4,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Header from "@/components/header";
-import Sidebar from "@/components/sidebar";
+import Sidebar from "@/components/Sidebar";
 
 export default function MainLayout({
   children,
@@ -44,6 +44,7 @@ export default function MainLayout({
         isOpen={isSidebarOpen || isLargeScreen}
         onClose={() => setIsSidebarOpen(false)}
       />
+
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header
           onSidebarToggle={handleSidebarToggle}
