@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
 import { useRouter } from '@/lib/i18n';
-import { ArrowLeft, CheckSquare, Edit, Printer, Save, Trash2, X } from 'lucide-react';
+import { ArrowLeft, CheckSquare, Edit, Plus, Printer, Save, Trash2, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { GoodsReceiveNoteType } from '../type/procurementType';
 import { useForm } from 'react-hook-form';
@@ -13,7 +13,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import ToggleSidebarButton from '@/components/ui-custom/ButtonToggleSidebar';
 import StatusBadge from '@/components/ui-custom/custom-status-badge';
 import ConfirmDialog from '@/components/ui-custom/ConfirmDialog';
-
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import ItemDetailForm from './tabs/itemDetailForm';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog';
+import { BulkActions } from './tabs/BulkActions';
+import { GoodsReceiveNoteItem } from '@/lib/types';
 interface Props {
     id?: string;
     grnMode?: GoodsReceiveNoteType;
@@ -25,6 +29,8 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
     const [mode, setMode] = useState(grnMode);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+    const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [formDataToSubmit, setFormDataToSubmit] = useState<FormValues | null>(null);
@@ -36,10 +42,10 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
         },
     });
 
-    const isEditMode = mode !== GoodsReceiveNoteType.VIEW;
+    const isEditable = mode !== GoodsReceiveNoteType.VIEW;
 
     const onBack = () => {
-        if (form.formState.isDirty && isEditMode) {
+        if (form.formState.isDirty && isEditable) {
             setIsDialogOpen(true);
             return;
         }
@@ -107,9 +113,29 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
         setIsDialogOpen(false);
     };
 
+    const handleAddItem = (newItem: GoodsReceiveNoteItem) => {
+        // setFormData((prev) => ({
+        //   ...prev,
+        //   items: [...prev.items, newItem],
+        // }));
+        setIsAddDialogOpen(false);
+    };
+
+    const handleBulkAction = (action: string) => {
+        console.log(`Applying ${action} to items:`, selectedItems);
+        // if (action === "delete") {
+        //   setFormData((prev) => ({
+        //     ...prev,
+        //     items: prev.items.filter((item) => !selectedItems.includes(item.id)),
+        //   }));
+        // }
+        // Implement other actions as needed
+        setSelectedItems([]);
+    };
+
     return (
         <>
-            <div className='flex flex-col space-y-4'>
+            <div className='flex flex-col space-y-4 p-4'>
                 <div className='flex justify-end'>
                     <ToggleSidebarButton
                         isSidebarVisible={isSidebarVisible}
@@ -120,10 +146,10 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                     <div className={`flex-grow space-y-4 ${isSidebarVisible ? 'lg:w-3/4' : 'w-full'}`}>
                         <Card>
                             <Form {...form}>
-                                <form onSubmit={form.handleSubmit(handleSaveClick)} className="space-y-4">
+                                <form onSubmit={form.handleSubmit(handleSaveClick)}>
                                     <CardHeader className="flex flex-col space-y-4 pb-6">
                                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
-                                            <div className="flex items-center space-x-2">
+                                            <div className="flex items-center">
                                                 <Button
                                                     type="button"
                                                     variant="ghost"
@@ -132,15 +158,14 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                     disabled={isSubmitting}
                                                 >
                                                     <ArrowLeft className="h-4 w-4" />
-                                                    <span className="sr-only">Go back</span>
                                                 </Button>
-                                                <CardTitle className="text-xl font-bold">
+                                                <CardTitle className="text-lg">
                                                     Goods Receive Note
                                                 </CardTitle>
                                             </div>
                                             <StatusBadge status="Pending" />
                                             <div className="flex flex-wrap gap-2 justify-start sm:justify-end">
-                                                {!isEditMode ? (
+                                                {!isEditable ? (
                                                     <>
                                                         <Button
                                                             type="button"
@@ -148,7 +173,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                             size="sm"
                                                             onClick={handleEdit}
                                                         >
-                                                            <Edit className="mr-2 h-4 w-4" />
+                                                            <Edit className="h-4 w-4" />
                                                             Edit
                                                         </Button>
                                                         <Button
@@ -156,7 +181,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                             variant="outline"
                                                             size="sm"
                                                         >
-                                                            <Trash2 className="mr-2 h-4 w-4" />
+                                                            <Trash2 className="h-4 w-4" />
                                                             Delete
                                                         </Button>
                                                     </>
@@ -168,7 +193,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                             size="sm"
                                                             disabled={!form.formState.isValid || isSubmitting}
                                                         >
-                                                            <Save className="mr-2 h-4 w-4" />
+                                                            <Save className="h-4 w-4" />
                                                             {isSubmitting ? 'Saving...' : 'Save'}
                                                         </Button>
                                                         <Button
@@ -178,7 +203,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                             onClick={handleCancel}
                                                             disabled={isSubmitting}
                                                         >
-                                                            <X className="mr-2 h-4 w-4" />
+                                                            <X className="h-4 w-4" />
                                                             Cancel
                                                         </Button>
                                                     </>
@@ -189,7 +214,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                     size="sm"
                                                     disabled={isSubmitting}
                                                 >
-                                                    <Printer className="mr-2 h-4 w-4" />
+                                                    <Printer className="h-4 w-4" />
                                                     Print
                                                 </Button>
                                                 <Button
@@ -198,7 +223,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                     size="sm"
                                                     disabled={isSubmitting}
                                                 >
-                                                    <CheckSquare className="mr-2 h-4 w-4" />
+                                                    <CheckSquare className="h-4 w-4" />
                                                     Commit
                                                 </Button>
                                             </div>
@@ -216,11 +241,11 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                 name="ref"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>GRN #</FormLabel>
+                                                        <FormLabel className='font-semibold text-xs'>GRN #</FormLabel>
                                                         <FormControl>
                                                             <Input
                                                                 {...field}
-                                                                disabled={!isEditMode || isSubmitting}
+                                                                disabled={!isEditable || isSubmitting}
                                                             />
                                                         </FormControl>
                                                         <FormMessage />
@@ -231,6 +256,48 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                     </CardContent>
                                 </form>
                             </Form>
+                        </Card>
+
+                        <Card>
+                            <CardContent>
+                                <Tabs defaultValue="items" className="w-full">
+                                    <TabsList className="w-full flex flex-wrap">
+                                        <TabsTrigger value="items" className="flex-1">Items</TabsTrigger>
+                                        <TabsTrigger value="extra-costs" className="flex-1">Extra Costs</TabsTrigger>
+                                        <TabsTrigger value="stock-movement" className="flex-1">Stock Movement</TabsTrigger>
+                                        <TabsTrigger value="tax" className="flex-1">Tax</TabsTrigger>
+                                        <TabsTrigger value="transaction-summary" className="flex-1">Transaction Summary</TabsTrigger>
+                                    </TabsList>
+                                    <TabsContent value="items">
+                                        <div className="mb-4 space-y-4">
+                                            <div className="flex items-center justify-between">
+                                                <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+                                                    <DialogTrigger asChild>
+                                                        <Button>
+                                                            <Plus className="mr-2 h-4 w-4" />
+                                                            Add Item
+                                                        </Button>
+                                                    </DialogTrigger>
+                                                    <DialogContent className="max-w-5xl">
+                                                        <ItemDetailForm
+                                                            mode="add"
+                                                            item={null}
+                                                            onSave={handleAddItem}
+                                                            onClose={() => setIsAddDialogOpen(false)}
+                                                        />
+                                                    </DialogContent>
+                                                </Dialog>
+                                            </div>
+                                            {isEditable && selectedItems.length > 0 && (
+                                                <BulkActions
+                                                    selectedItems={selectedItems}
+                                                    onAction={handleBulkAction}
+                                                />
+                                            )}
+                                        </div>
+                                    </TabsContent>
+                                </Tabs>
+                            </CardContent>
                         </Card>
                     </div>
                     <div className={`space-y-4 ${isSidebarVisible ? 'lg:w-1/4' : 'w-0 opacity-0 overflow-hidden'} transition-all duration-300`}>
