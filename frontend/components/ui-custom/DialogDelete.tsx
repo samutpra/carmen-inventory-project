@@ -1,20 +1,17 @@
 import React from 'react';
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 
-interface DialogDeleteProps {
+interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onConfirm: () => void;
-    idDelete: string
+    idDelete: string | null
 }
 
-const DialogDelete: React.FC<DialogDeleteProps> = ({ open, onOpenChange, onConfirm, idDelete }) => {
+const DialogDelete: React.FC<Props> = ({ open, onOpenChange, onConfirm, idDelete }) => {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogTrigger asChild>
-                <Button variant="outline">Delete</Button>
-            </DialogTrigger>
             <DialogContent className='bg-white'>
                 <DialogTitle>Confirm Delete</DialogTitle>
                 <DialogDescription>

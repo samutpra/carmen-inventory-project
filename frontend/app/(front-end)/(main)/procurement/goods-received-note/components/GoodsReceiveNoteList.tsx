@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Eye, Edit, Trash, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Plus, Filter, ArrowUpDown, ChevronsUpDown, Check, Search } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { GoodsReceiveNote } from '@/lib/types'
+import { FormAction, GoodsReceiveNote } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import ListPageTemplate from '@/components/templates/ListPageTemplate'
@@ -22,7 +22,6 @@ import StatusBadge from '@/components/ui-custom/custom-status-badge'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { cn } from '@/lib/utils'
-import { GoodsReceiveNoteType } from '../../type/procurementType'
 import SearchInput from '@/components/ui-custom/SearchInput'
 import DialogDelete from '@/components/ui-custom/DialogDelete'
 
@@ -118,7 +117,7 @@ const GoodReceivedNoteList = () => {
     }
 
     const handleNewGoodsReceiveNote = () => {
-        router.push(`/procurement/goods-received-note/${GoodsReceiveNoteType.CREATE}`)
+        router.push(`/procurement/goods-received-note/${FormAction.CREATE}`)
     }
 
     const handleEditGoodsReceiveNote = (id: string) => {
@@ -145,12 +144,14 @@ const GoodReceivedNoteList = () => {
     const title = 'Goods Receive Notes'
 
     const actionButtons = (
-        <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-center">
+        <div className="flex flex-col gap-2 lg:flex-row">
             <Button className="w-full sm:w-auto" onClick={handleNewGoodsReceiveNote}>
                 <Plus className="mr-2 h-4 w-4" /> New Goods Receive Note
             </Button>
-            <Button variant="outline" className="w-full sm:w-auto">Export</Button>
-            <Button variant="outline" className="w-full sm:w-auto">Print</Button>
+            <div className="flex gap-2 w-full lg:w-auto">
+                <Button variant="outline" className="w-full sm:w-auto">Export</Button>
+                <Button variant="outline" className="w-full sm:w-auto">Print</Button>
+            </div>
         </div>
     )
 
@@ -179,14 +180,13 @@ const GoodReceivedNoteList = () => {
         <div className="flex flex-col justify-start sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
             <div className="w-full sm:w-auto flex-grow">
                 <SearchInput
-                    placeholder="Search Purchase Requests..."
+                    placeholder="Search Good Recieved Note Requests..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     Icon={Search}
                     variant="suffix"
                 />
             </div>
-
             <div className='flex items-center space-x-4'>
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
@@ -194,7 +194,7 @@ const GoodReceivedNoteList = () => {
                             variant="outline"
                             role="combobox"
                             aria-expanded={open}
-                            className="w-[200px] justify-between"
+                            className="justify-between"
                         >
                             {statusFilter
                                 ? statusOptions.find((option) => option.value === statusFilter)?.label
@@ -291,7 +291,6 @@ const GoodReceivedNoteList = () => {
     )
 
     const content = (
-
         <>
             <div className="space-y-2">
                 {paginatedGRNs.map((grn) => (
@@ -307,7 +306,7 @@ const GoodReceivedNoteList = () => {
                                     <StatusBadge status={grn.status} />
                                     <h3 className="text-muted-foreground text-lg">{grn.ref}</h3>
                                     <h3 className="font-semibold text-lg">{grn.description}</h3>
-                                </div>zz
+                                </div>
                                 <TooltipProvider>
                                     <div className="flex space-x-1">
                                         <Tooltip>

@@ -970,3 +970,9 @@ export enum Status {
   Deleted = "Deleted",
   Received = "Received",
 }
+
+export enum FormAction {
+  CREATE = "new",
+  VIEW = "",
+  EDIT = "edit"
+}

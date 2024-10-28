@@ -241,8 +241,9 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
 
     return (
         <>
+
             <div className='flex flex-col space-y-4 p-4'>
-                <div className='flex justify-end'>
+                <div className='fixed right-0 top-1/2 transform -translate-y-1/2 z-50'>
                     <ToggleSidebarButton
                         isSidebarVisible={isSidebarVisible}
                         toggleSidebar={toggleSidebar}

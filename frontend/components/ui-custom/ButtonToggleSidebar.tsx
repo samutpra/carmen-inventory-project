@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from '../ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ListCollapse } from 'lucide-react';
 
 interface ToggleSidebarButtonProps {
     isSidebarVisible: boolean;
@@ -13,19 +13,16 @@ const ToggleSidebarButton: React.FC<ToggleSidebarButtonProps> = ({ isSidebarVisi
     return (
         <Button
             variant="outline"
-            size="sm"
             onClick={toggleSidebar}
-            className='bg-white'
+            className='bg-white rounded-full flex items-center justify-center w-14 h-14 shadow-lg border'
         >
             {isSidebarVisible ? (
                 <>
-                    <ChevronRight className="mr-2 h-4 w-4" />
-                    Hide Sidebar
+                    <ListCollapse />
                 </>
             ) : (
                 <>
-                    <ChevronLeft className="mr-2 h-4 w-4" />
-                    Show Sidebar
+                    <ListCollapse />
                 </>
             )}
         </Button>

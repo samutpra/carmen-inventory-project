@@ -20,7 +20,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(({
     className,
 }, ref) => {
     return (
-        <div className="relative flex items-center w-full">
+        <div className="relative flex items-center w-full lg:w-2/4">
             {variant === "prefix" && Icon && (
                 <div className="absolute left-3 flex items-center pointer-events-none">
                     <Icon className="h-4 w-4 text-muted-foreground" />

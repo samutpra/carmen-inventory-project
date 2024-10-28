@@ -3,10 +3,8 @@ import React, { useMemo, useState } from 'react'
 import { useRouter } from '@/lib/i18n';
 import { sampleData } from '../data/sampleData';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Check, ChevronDown, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronsUpDown, Download, Edit, Eye, Filter, Plus, Printer, Search, Trash2 } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronsUpDown, Download, Edit, Eye, Filter, Plus, Printer, Search, Trash, Trash2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import StatusBadge from '@/components/ui-custom/custom-status-badge';
@@ -15,7 +13,7 @@ import SearchInput from '@/components/ui-custom/SearchInput';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
-import { Status } from '@/lib/types';
+import DialogDelete from '@/components/ui-custom/DialogDelete';
 
 
 const typeOptions = [
@@ -75,6 +73,8 @@ const PurchaseRequestList = () => {
     const [selectedPRs, setSelectedPRs] = useState<string[]>([]);
     const [openTypeSearch, setOpenTypeSearch] = useState(false)
     const [openStatusSearch, setOpenStatusSearch] = useState(false)
+    const [openDialogDelete, setOpenDialogDelete] = useState<boolean>(false)
+    const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
     const filteredData = useMemo(() => {
         return sampleData.filter((pr) => {
@@ -154,6 +154,18 @@ const PurchaseRequestList = () => {
         }
     };
 
+    const handleDelete = (id: string) => {
+        setItemToDelete(id);
+        setOpenDialogDelete(true);
+    };
+
+    const confirmDelete = () => {
+        if (itemToDelete) {
+            console.log(`Deleting item with id: ${itemToDelete}`);
+            setItemToDelete(null);
+        }
+    };
+
     const bulkActions =
         selectedPRs.length > 0 ? (
             <div className="flex flex-wrap gap-2">
@@ -165,8 +177,8 @@ const PurchaseRequestList = () => {
 
     const filters = (
         <>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-                <div className="w-full sm:w-1/2 flex space-x-2">
+            <div className="flex flex-col justify-start sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
+                <div className="w-full sm:w-auto flex-grow">
                     <SearchInput
                         placeholder="Search Purchase Requests..."
                         value={searchTerm}
@@ -175,15 +187,13 @@ const PurchaseRequestList = () => {
                         variant="suffix"
                     />
                 </div>
-                <div className="flex flex-wrap gap-2">
-
+                <div className='flex items-center space-x-2'>
                     <Popover open={openTypeSearch} onOpenChange={setOpenTypeSearch}>
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
                                 role="combobox"
-                                // aria-expanded={open}
-                                className="w-[200px] justify-between text-xs"
+                                className="w-full md:w-1/2 lg:w-[200px] lg:flex justify-between"
                             >
                                 {selectedType
                                     ? typeOptions.find((option) => option.value === selectedType)?.label
@@ -221,14 +231,12 @@ const PurchaseRequestList = () => {
                         </PopoverContent>
                     </Popover>
 
-
                     <Popover open={openStatusSearch} onOpenChange={setOpenStatusSearch}>
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
                                 role="combobox"
-                                // aria-expanded={open}
-                                className="w-[200px] justify-between text-xs"
+                                className="w-full md:w-1/2 lg:w-[200px] lg:flex justify-between"
                             >
                                 {selectedStatus
                                     ? statusOptions.find((option) => option.value === selectedStatus)?.label
@@ -265,40 +273,44 @@ const PurchaseRequestList = () => {
                             </Command>
                         </PopoverContent>
                     </Popover>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className='text-xs'>
-                                <Filter className="mr-2 h-4 w-4" /> More Filters
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56">
-                            <DropdownMenuLabel>Filter Options</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuCheckboxItem>Date Range</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>Department</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>Requestor</DropdownMenuCheckboxItem>
-                            <DropdownMenuCheckboxItem>Amount Range</DropdownMenuCheckboxItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>Clear Filters</DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+
                 </div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className='text-xs'>
+                            <Filter className="mr-2 h-4 w-4" /> More Filters
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <DropdownMenuLabel>Filter Options</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuCheckboxItem>Date Range</DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem>Department</DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem>Requestor</DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem>Amount Range</DropdownMenuCheckboxItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>Clear Filters</DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </>
     );
 
     const actionButtons = (
         <>
-            <div className="flex flex-wrap space-x-2">
-                <Button onClick={handleCreateNewPR}>
+            <div className="flex flex-col gap-2 lg:flex-row">
+                <Button onClick={handleCreateNewPR} className="w-full">
                     <Plus className="h-4 w-4" /> New Purchase Request
                 </Button>
-                <Button variant="outline">
-                    <Download className="h-4 w-4" /> Export
-                </Button>
-                <Button variant="outline">
-                    <Printer className="h-4 w-4" /> Print
-                </Button>
+
+                <div className="flex gap-2 w-full lg:w-auto">
+                    <Button variant="outline" className="w-full lg:w-auto">
+                        <Download className="h-4 w-4" /> Export
+                    </Button>
+                    <Button variant="outline" className="w-full lg:w-auto">
+                        <Printer className="h-4 w-4" /> Print
+                    </Button>
+                </div>
             </div>
         </>
     );
@@ -346,8 +358,9 @@ const PurchaseRequestList = () => {
                                         variant="ghost"
                                         size="icon"
                                         aria-label="Delete purchase request"
+                                        onClick={() => handleDelete(pr.id)}
                                     >
-                                        <Trash2 className="h-4 w-4" />
+                                        <Trash className="h-4 w-4" />
                                     </Button>
                                 </div>
                             </div>
@@ -424,17 +437,25 @@ const PurchaseRequestList = () => {
                     </Button>
                 </div>
             </div>
+            <DialogDelete
+                open={openDialogDelete}
+                onOpenChange={setOpenDialogDelete}
+                onConfirm={confirmDelete}
+                idDelete={itemToDelete}
+            />
         </>
     );
 
     return (
-        <ListPageTemplate
-            title="Purchase Requests"
-            actionButtons={actionButtons}
-            filters={filters}
-            content={content}
-            bulkActions={bulkActions}
-        />
+        <>
+            <ListPageTemplate
+                title="Purchase Requests"
+                actionButtons={actionButtons}
+                filters={filters}
+                content={content}
+                bulkActions={bulkActions}
+            />
+        </>
     )
 }
 
