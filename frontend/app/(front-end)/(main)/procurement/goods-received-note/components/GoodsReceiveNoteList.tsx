@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react'
-import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Eye, Edit, Trash, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Plus, Filter, ArrowUpDown, ChevronsUpDown, Check, Search } from 'lucide-react'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -25,6 +24,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { cn } from '@/lib/utils'
 import { GoodsReceiveNoteType } from '../../type/procurementType'
 import SearchInput from '@/components/ui-custom/SearchInput'
+import DialogDelete from '@/components/ui-custom/DialogDelete'
 
 
 const statusOptions = [
@@ -59,7 +59,9 @@ const GoodReceivedNoteList = () => {
     const itemsPerPage = 10
     const [sortField, setSortField] = useState<string | null>(null)
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState<boolean>(false)
+    const [openDialogDelete, setOpenDialogDelete] = useState<boolean>(false)
+    const [itemToDelete, setItemToDelete] = useState<string | null>(null);
     const [statusFilter, setStatusFilter] = useState("all")
 
     const filteredGRNs = mockGoodsReceiveNotes.filter((grn: GoodsReceiveNote) => {
@@ -126,6 +128,18 @@ const GoodReceivedNoteList = () => {
     const handleViewGoodsReceiveNote = (id: string) => {
         router.push(`/procurement/goods-received-note/${id}`)
     }
+
+    const handleDeleteGoodsReceiveNote = (id: string) => {
+        setItemToDelete(id);
+        setOpenDialogDelete(true);
+    };
+
+    const confirmDelete = () => {
+        if (itemToDelete) {
+            console.log(`Deleting item with id: ${itemToDelete}`);
+            setItemToDelete(null);
+        }
+    };
 
 
     const title = 'Goods Receive Notes'
@@ -277,137 +291,147 @@ const GoodReceivedNoteList = () => {
     )
 
     const content = (
-        <div className="space-y-2">
-            {paginatedGRNs.map((grn) => (
-                <Card key={grn.id}>
-                    <CardContent className="p-3">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
-                            <div className="flex items-center space-x-3 mb-2 sm:mb-0">
-                                <Checkbox
-                                    checked={selectedItems.includes(grn.id)}
-                                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                                    onCheckedChange={(checked: boolean) => toggleItemSelection(grn.id)}
-                                />
-                                <StatusBadge status={grn.status} />
-                                <h3 className="text-muted-foreground text-lg">{grn.ref}</h3>
-                                <h3 className="font-semibold text-lg">{grn.description}</h3>
-                            </div>zz
-                            <TooltipProvider>
-                                <div className="flex space-x-1">
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => handleViewGoodsReceiveNote(grn.id)}
-                                            >
-                                                <Eye className="h-4 w-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>View</TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => handleEditGoodsReceiveNote(grn.id)}
-                                            >
-                                                <Edit className="h-4 w-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>Edit</TooltipContent>
-                                    </Tooltip>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <Button variant="ghost" size="icon">
-                                                <Trash className="h-4 w-4" />
-                                            </Button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>Delete</TooltipContent>
-                                    </Tooltip>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="ghost" size="icon">
-                                                <MoreHorizontal className="h-4 w-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuItem>Print</DropdownMenuItem>
-                                            <DropdownMenuItem>Export</DropdownMenuItem>
-                                            <DropdownMenuItem>Share</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+
+        <>
+            <div className="space-y-2">
+                {paginatedGRNs.map((grn) => (
+                    <Card key={grn.id}>
+                        <CardContent className="p-3">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                                <div className="flex items-center space-x-3 mb-2 sm:mb-0">
+                                    <Checkbox
+                                        checked={selectedItems.includes(grn.id)}
+                                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                                        onCheckedChange={(checked: boolean) => toggleItemSelection(grn.id)}
+                                    />
+                                    <StatusBadge status={grn.status} />
+                                    <h3 className="text-muted-foreground text-lg">{grn.ref}</h3>
+                                    <h3 className="font-semibold text-lg">{grn.description}</h3>
+                                </div>zz
+                                <TooltipProvider>
+                                    <div className="flex space-x-1">
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleViewGoodsReceiveNote(grn.id)}
+                                                >
+                                                    <Eye className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>View</TooltipContent>
+                                        </Tooltip>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleEditGoodsReceiveNote(grn.id)}
+                                                >
+                                                    <Edit className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>Edit</TooltipContent>
+                                        </Tooltip>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button variant="ghost" size="icon" onClick={() => handleDeleteGoodsReceiveNote(grn.id)}>
+                                                    <Trash className="h-4 w-4" />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>Delete</TooltipContent>
+                                        </Tooltip>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="icon">
+                                                    <MoreHorizontal className="h-4 w-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                                <DropdownMenuItem>Print</DropdownMenuItem>
+                                                <DropdownMenuItem>Export</DropdownMenuItem>
+                                                <DropdownMenuItem>Share</DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                </TooltipProvider>
+                            </div>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-sm">
+                                <div>
+                                    <p className="text-gray-500">Date</p>
+                                    <p>{grn.date.toLocaleDateString()}</p>
                                 </div>
-                            </TooltipProvider>
-                        </div>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-sm">
-                            <div>
-                                <p className="text-gray-500">Date</p>
-                                <p>{grn.date.toLocaleDateString()}</p>
+                                <div>
+                                    <p className="text-gray-500">Vendor</p>
+                                    <p>{grn.vendor}</p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500">Invoice #</p>
+                                    <p>{grn.invoiceNumber}</p>
+                                </div>
+                                <div>
+                                    <p className="text-gray-500">Invoice Date</p>
+                                    <p>{grn.invoiceDate.toLocaleDateString()}</p>
+                                </div>
+                                <div className="col-span-2 sm:col-span-1 text-right">
+                                    <p className="text-gray-500">Total Amount</p>
+                                    <p className="font-semibold ">{calculateTotalAmount(grn).toFixed(2)}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-gray-500">Vendor</p>
-                                <p>{grn.vendor}</p>
-                            </div>
-                            <div>
-                                <p className="text-gray-500">Invoice #</p>
-                                <p>{grn.invoiceNumber}</p>
-                            </div>
-                            <div>
-                                <p className="text-gray-500">Invoice Date</p>
-                                <p>{grn.invoiceDate.toLocaleDateString()}</p>
-                            </div>
-                            <div className="col-span-2 sm:col-span-1 text-right">
-                                <p className="text-gray-500">Total Amount</p>
-                                <p className="font-semibold ">{calculateTotalAmount(grn).toFixed(2)}</p>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            ))}
+                        </CardContent>
+                    </Card>
+                ))}
 
 
-            <div className="flex justify-end items-center mt-4 space-x-4">
-                <span className="text-sm text-gray-500">
-                    Page {currentPage} of {totalPages}
-                </span>
-                <div className="flex items-center space-x-2">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setCurrentPage(1)}
-                        disabled={currentPage === 1}
-                    >
-                        <ChevronsLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                        disabled={currentPage === 1}
-                    >
-                        <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                        disabled={currentPage === totalPages}
-                    >
-                        <ChevronRight className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setCurrentPage(totalPages)}
-                        disabled={currentPage === totalPages}
-                    >
-                        <ChevronsRight className="h-4 w-4" />
-                    </Button>
+                <div className="flex justify-end items-center mt-4 space-x-4">
+                    <span className="text-sm text-gray-500">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <div className="flex items-center space-x-2">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setCurrentPage(1)}
+                            disabled={currentPage === 1}
+                        >
+                            <ChevronsLeft className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                        >
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                        >
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={() => setCurrentPage(totalPages)}
+                            disabled={currentPage === totalPages}
+                        >
+                            <ChevronsRight className="h-4 w-4" />
+                        </Button>
+                    </div>
                 </div>
             </div>
-        </div>
+            <DialogDelete
+                open={openDialogDelete}
+                onOpenChange={setOpenDialogDelete}
+                onConfirm={confirmDelete}
+                idDelete={itemToDelete}
+            />
+        </>
+
     )
 
     return (
