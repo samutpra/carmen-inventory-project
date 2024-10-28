@@ -15,6 +15,7 @@ import SearchInput from '@/components/ui-custom/SearchInput';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
+import { Status } from '@/lib/types';
 
 
 const typeOptions = [
@@ -181,7 +182,7 @@ const PurchaseRequestList = () => {
                             <Button
                                 variant="outline"
                                 role="combobox"
-                                aria-expanded={open}
+                                // aria-expanded={open}
                                 className="w-[200px] justify-between text-xs"
                             >
                                 {selectedType
@@ -226,7 +227,7 @@ const PurchaseRequestList = () => {
                             <Button
                                 variant="outline"
                                 role="combobox"
-                                aria-expanded={open}
+                                // aria-expanded={open}
                                 className="w-[200px] justify-between text-xs"
                             >
                                 {selectedStatus
@@ -302,6 +303,7 @@ const PurchaseRequestList = () => {
         </>
     );
 
+
     const content = (
         <>
             <div className="space-y-2" >
@@ -315,6 +317,7 @@ const PurchaseRequestList = () => {
                                         onCheckedChange={() => handleSelectPR(pr.id)}
                                     />
                                     <StatusBadge status={pr.status} />
+
                                     <span className="text-sm text-muted-foreground">
                                         {pr.id}
                                     </span>
@@ -362,7 +365,7 @@ const PurchaseRequestList = () => {
                                             {label}
                                         </p>
                                         {field === 'currentStage' ?
-                                            <p className="text-xs"><StatusBadge status={pr[field as keyof typeof pr] as string} /></p>
+                                            <StatusBadge status={pr[field as keyof typeof pr] as string} />
                                             :
                                             <p className="text-xs">{pr[field as keyof typeof pr]}</p>
                                         }
