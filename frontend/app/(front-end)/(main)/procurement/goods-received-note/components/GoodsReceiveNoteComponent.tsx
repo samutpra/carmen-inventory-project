@@ -11,7 +11,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import ToggleSidebarButton from '@/components/ui-custom/ButtonToggleSidebar';
 import StatusBadge from '@/components/ui-custom/custom-status-badge';
 import ConfirmDialog from '@/components/ui-custom/ConfirmDialog';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog';
 import { BulkActions } from './tabs/BulkActions';
 import { FormAction, GoodsReceiveNote, GoodsReceiveNoteItem } from '@/lib/types';
@@ -23,6 +22,9 @@ import SummaryTotal from './SummaryTotal';
 import { formSchema, FormValues } from '../../type/type';
 import { submitForm } from '../../lib/action';
 import ItemDetailForm from './tabs/ItemDetailForm';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui-custom/CustomTabs';
+import RippleButton from '@/components/ui-custom/RippleButton';
+import { CustomButton } from '@/components/ui-custom/CustomButton';
 
 
 const initialData = {
@@ -240,12 +242,17 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = FormAction.V
 
     return (
         <>
-
+            <div className="p-4">
+                <CustomButton variant="default" size="lg" onClick={() => console.log("Ripple Button Clicked!")}>
+                    Ripple Button
+                </CustomButton>
+            </div>
             <div className='flex flex-col space-y-4 p-4'>
-                <div className='fixed right-0 top-1/2 transform -translate-y-1/2 z-50'>
+
+                <div className='fixed right-0 top-[30rem] transform -translate-y-1/2 z-50'>
                     <ToggleSidebarButton
-                        isSidebarVisible={isSidebarVisible}
                         toggleSidebar={toggleSidebar}
+                        label='Comment & Activity Log'
                     />
                 </div>
                 <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4">
@@ -367,12 +374,12 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = FormAction.V
                         <Card>
                             <CardContent>
                                 <Tabs defaultValue="items" className="w-full">
-                                    <TabsList className="w-full flex flex-wrap">
-                                        <TabsTrigger value="items" className="flex-1">Items</TabsTrigger>
-                                        <TabsTrigger value="extra-costs" className="flex-1">Extra Costs</TabsTrigger>
-                                        <TabsTrigger value="stock-movement" className="flex-1">Stock Movement</TabsTrigger>
-                                        <TabsTrigger value="tax" className="flex-1">Tax</TabsTrigger>
-                                        <TabsTrigger value="transaction-summary" className="flex-1">Transaction Summary</TabsTrigger>
+                                    <TabsList>
+                                        <TabsTrigger value="items">Items</TabsTrigger>
+                                        <TabsTrigger disabled value="extra-costs">Extra Costs</TabsTrigger>
+                                        <TabsTrigger value="stock-movement">Stock Movement</TabsTrigger>
+                                        <TabsTrigger value="tax">Tax</TabsTrigger>
+                                        <TabsTrigger value="transaction-summary">Transaction Summary</TabsTrigger>
                                     </TabsList>
                                     <TabsContent value="items">
                                         <div className="mb-4 space-y-4">

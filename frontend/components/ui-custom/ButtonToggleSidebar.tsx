@@ -2,29 +2,24 @@
 
 import React from 'react';
 import { Button } from '../ui/button';
-import { ListCollapse } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 
 interface ToggleSidebarButtonProps {
-    isSidebarVisible: boolean;
     toggleSidebar: () => void;
+    label: string
 }
 
-const ToggleSidebarButton: React.FC<ToggleSidebarButtonProps> = ({ isSidebarVisible, toggleSidebar }) => {
+const ToggleSidebarButton: React.FC<ToggleSidebarButtonProps> = ({ toggleSidebar, label }) => {
     return (
         <Button
             variant="outline"
             onClick={toggleSidebar}
-            className='bg-white rounded-full flex items-center justify-center w-14 h-14 shadow-lg border'
+            className='bg-sky-300 hover:bg-sky-200 rounded-xl flex items-center justify-center w-fit px-4 h-10 shadow-lg border group'
         >
-            {isSidebarVisible ? (
-                <>
-                    <ListCollapse />
-                </>
-            ) : (
-                <>
-                    <ListCollapse />
-                </>
-            )}
+            <MessageCircle color='black' />
+            <div className='group-hover:block hidden transition-all duration-300 ttext-sky-900'>
+                {label}
+            </div>
         </Button>
     );
 };
