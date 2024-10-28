@@ -470,7 +470,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                     </div>
                 </div>
             </div>
-            {/* Cancel Confirmation Dialog */}
+
             <ConfirmDialog
                 isOpen={isDialogOpen}
                 onOpenChange={setIsDialogOpen}
@@ -482,7 +482,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                 cancelText="Continue Editing"
                 confirmVariant="destructive"
             />
-            {/* Save Confirmation Dialog */}
+
             <ConfirmDialog
                 isOpen={isSaveDialogOpen}
                 onOpenChange={setIsSaveDialogOpen}
