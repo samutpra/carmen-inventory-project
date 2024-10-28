@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import { GoodsReceiveNoteType } from '../../type/procurementType';
 import GoodsReceiveNoteComponent from '../components/GoodsReceiveNoteComponent';
+import { FormAction } from '@/lib/types';
 
 const GoodsReceivedNoteByIDPage = () => {
     const params = useParams();
     const id = params.id as string;
-    const mode = id === GoodsReceiveNoteType.CREATE ? GoodsReceiveNoteType.CREATE : GoodsReceiveNoteType.VIEW;
+    const mode = id === FormAction.CREATE ? FormAction.CREATE : FormAction.VIEW;
 
     return (
         <GoodsReceiveNoteComponent id={id} grnMode={mode} />

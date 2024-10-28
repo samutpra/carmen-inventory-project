@@ -1,13 +1,17 @@
 import React from 'react'
+import PurchaseRequestComponent from '../../components/PurchaseRequestComponent';
+import { FormAction } from '@/lib/types';
 
 interface Props {
     params: {
         id: string;
     };
 }
+
 const PurchaseRequestEditPage: React.FC<Props> = ({ params }) => {
+    const { id } = params;
     return (
-        <div>asdasdsa</div>
+        <PurchaseRequestComponent id={id} prMode={FormAction.EDIT} />
     )
 }
 
