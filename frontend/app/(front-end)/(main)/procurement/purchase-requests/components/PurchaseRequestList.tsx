@@ -14,6 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import DialogDelete from '@/components/ui-custom/DialogDelete';
+import { FormAction } from '@/lib/types';
 
 
 const typeOptions = [
@@ -129,15 +130,15 @@ const PurchaseRequestList = () => {
     };
 
     const handleCreateNewPR = () => {
-        router.push("/procurement/purchase-requests/new?mode=add");
+        router.push(`/procurement/purchase-requests/${FormAction.CREATE}`)
     };
 
     const handleViewPR = (id: string) => {
-        router.push(`/procurement/purchase-requests/${id}?mode=view`);
+        router.push(`/procurement/purchase-requests/${id}`);
     };
 
     const handleEditPR = (id: string) => {
-        router.push(`/procurement/purchase-requests/${id}?mode=edit`);
+        router.push(`/procurement/purchase-requests/${id}/${FormAction.EDIT}`)
     };
 
     const handleSelectPR = (id: string) => {

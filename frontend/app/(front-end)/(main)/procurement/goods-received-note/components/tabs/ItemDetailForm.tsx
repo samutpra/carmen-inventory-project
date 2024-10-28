@@ -1,19 +1,17 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GoodsReceiveNoteItem } from "@/lib/types";
+import { FormAction, GoodsReceiveNoteItem } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import React from "react";
 import { DialogClose, DialogHeader, DialogTitle } from "@/components/ui-custom/dialog";
-import { GoodsReceiveNoteType } from "../../../type/procurementType";
-
 
 interface ItemDetailFormProps {
   item: GoodsReceiveNoteItem | null;
-  mode: GoodsReceiveNoteType | GoodsReceiveNoteType.CREATE;
+  mode: FormAction | FormAction.CREATE;
   handleItemChange?: (
     id: string,
     field: keyof GoodsReceiveNoteItem,
@@ -30,7 +28,7 @@ export default function ItemDetailForm({
   onClose,
   onSave,
 }: ItemDetailFormProps) {
-  const [mode, setMode] = useState<GoodsReceiveNoteType>(initialMode);
+  const [mode, setMode] = useState<FormAction>(initialMode);
   const [item, setItem] = useState<GoodsReceiveNoteItem>(
     initialItem || {
       id: Date.now().toString(),
@@ -87,23 +85,23 @@ export default function ItemDetailForm({
   );
 
   const handleEdit = () => {
-    setMode(GoodsReceiveNoteType.EDIT);
+    setMode(FormAction.EDIT);
   };
 
   const handleCancel = () => {
-    if (mode === GoodsReceiveNoteType.CREATE) {
+    if (mode === FormAction.CREATE) {
       onClose();
     } else {
-      setMode(GoodsReceiveNoteType.VIEW);
+      setMode(FormAction.VIEW);
     }
   };
 
   const handleSave = () => {
     onSave(item);
-    if (mode === GoodsReceiveNoteType.CREATE) {
+    if (mode === FormAction.CREATE) {
       onClose();
     } else {
-      setMode(GoodsReceiveNoteType.VIEW);
+      setMode(FormAction.VIEW);
     }
   };
 
@@ -125,18 +123,18 @@ export default function ItemDetailForm({
             <DialogTitle>
               {mode === "edit"
                 ? "Edit Item"
-                : mode === GoodsReceiveNoteType.VIEW
+                : mode === FormAction.VIEW
                   ? "View Item"
                   : "Add New Item"}
             </DialogTitle>
 
             <div>
-              {mode === GoodsReceiveNoteType.VIEW && (
+              {mode === FormAction.VIEW && (
                 <Button size="sm" onClick={handleEdit}>
                   Edit
                 </Button>
               )}
-              {(mode === "edit" || mode === GoodsReceiveNoteType.CREATE) && (
+              {(mode === "edit" || mode === FormAction.CREATE) && (
                 <div className="flex justify-end space-x-2">
                   <Button variant="outline" size="sm" onClick={handleCancel}>
                     Cancel
@@ -170,7 +168,7 @@ export default function ItemDetailForm({
                     id={`location-${item.id}`}
                     value={item.location}
                     onChange={(e) => handleChange("location", e.target.value)}
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                 </div>
@@ -180,7 +178,7 @@ export default function ItemDetailForm({
                     id={`name-${item.id}`}
                     value={item.notes}
                     onChange={(e) => handleChange("name", e.target.value)}
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                 </div>
@@ -192,7 +190,7 @@ export default function ItemDetailForm({
                     onChange={(e) =>
                       handleChange("description", e.target.value)
                     }
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                 </div>
@@ -205,7 +203,7 @@ export default function ItemDetailForm({
                     id={`poReference-${item.id}`}
                     value={item.purchaseOrderRef}
                     onChange={(e) => handleChange("purchaseOrderRef", e.target.value)}
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                 </div>
@@ -218,7 +216,7 @@ export default function ItemDetailForm({
                     id={`jobCode-${item.id}`}
                     value={item.jobCode}
                     onChange={(e) => handleChange("jobCode", e.target.value)}
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                 </div>
@@ -249,7 +247,7 @@ export default function ItemDetailForm({
                     id={`baseUnit-${item.id}`}
                     value={item.baseUnit}
                     onChange={(e) => handleChange("baseUnit", e.target.value)}
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                   <div className="text-sm text-gray-500 mt-1">
@@ -270,7 +268,7 @@ export default function ItemDetailForm({
                         parseFloat(e.target.value)
                       )
                     }
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                   <div className="text-xs text-gray-500 mt-1">
@@ -292,7 +290,7 @@ export default function ItemDetailForm({
                         parseFloat(e.target.value)
                       )
                     }
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                   <div className="text-xs text-gray-500 mt-1">
@@ -310,7 +308,7 @@ export default function ItemDetailForm({
                       onChange={(e) =>
                         handleChange("isFreeOfCharge", e.target.checked)
                       }
-                      readOnly={mode === GoodsReceiveNoteType.VIEW}
+                      readOnly={mode === FormAction.VIEW}
                       className="w-4 h-4"
                     />
                   </div>
@@ -321,7 +319,7 @@ export default function ItemDetailForm({
                     id={`lotNumber-${item.id}`}
                     value={item.lotNumber}
                     onChange={(e) => handleChange("lotNumber", e.target.value)}
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                 </div>
@@ -335,7 +333,7 @@ export default function ItemDetailForm({
                     onChange={(e) =>
                       handleChange("deliveryPoint", e.target.value)
                     }
-                    readOnly={mode === GoodsReceiveNoteType.VIEW}
+                    readOnly={mode === FormAction.VIEW}
                     className="h-8 text-sm"
                   />
                 </div>
@@ -370,7 +368,7 @@ export default function ItemDetailForm({
                       id={`currency-${item.id}`}
                       value={item.currency || "USD"}
                       onChange={(e) => handleChange("currency", e.target.value)}
-                      readOnly={mode === GoodsReceiveNoteType.VIEW}
+                      readOnly={mode === FormAction.VIEW}
                       className="h-8 text-sm"
                     />
                   </div>
@@ -385,7 +383,7 @@ export default function ItemDetailForm({
                       onChange={(e) =>
                         handleChange("exchangeRate", parseFloat(e.target.value))
                       }
-                      readOnly={mode === GoodsReceiveNoteType.VIEW}
+                      readOnly={mode === FormAction.VIEW}
                       className="h-8 text-sm text-right"
                     />
                   </div>
@@ -401,7 +399,7 @@ export default function ItemDetailForm({
                           parseFloat(e.target.value)
                         )
                       }
-                      readOnly={mode === GoodsReceiveNoteType.VIEW}
+                      readOnly={mode === FormAction.VIEW}
                       className="h-8 text-sm text-right"
                     />
                   </div>
@@ -414,7 +412,7 @@ export default function ItemDetailForm({
                         onCheckedChange={(checked) =>
                           handleChange("taxIncluded", checked as boolean)
                         }
-                        disabled={mode === GoodsReceiveNoteType.VIEW}
+                        disabled={mode === FormAction.VIEW}
                       />
                     </div>
                   </div>
@@ -431,7 +429,7 @@ export default function ItemDetailForm({
                         onCheckedChange={(checked) =>
                           handleChange("adjustments", checked)
                         }
-                        disabled={mode === GoodsReceiveNoteType.VIEW}
+                        disabled={mode === FormAction.VIEW}
                       />
                       <Input
                         id={`discountRate-${item.id}`}
@@ -443,7 +441,7 @@ export default function ItemDetailForm({
                             parseFloat(e.target.value)
                           )
                         }
-                        readOnly={mode === GoodsReceiveNoteType.VIEW}
+                        readOnly={mode === FormAction.VIEW}
                         className="h-8 text-sm text-right"
                       />
                     </div>
@@ -463,7 +461,7 @@ export default function ItemDetailForm({
                           parseFloat(e.target.value)
                         )
                       }
-                      readOnly={mode === GoodsReceiveNoteType.VIEW}
+                      readOnly={mode === FormAction.VIEW}
                       className="h-8 text-sm text-right"
                     />
                   </div>
@@ -480,7 +478,7 @@ export default function ItemDetailForm({
                         onCheckedChange={(checked) =>
                           handleChange("adjustments", checked)
                         }
-                        disabled={mode === GoodsReceiveNoteType.VIEW}
+                        disabled={mode === FormAction.VIEW}
                       />
                       <Input
                         id={`taxRate-${item.id}`}
@@ -489,7 +487,7 @@ export default function ItemDetailForm({
                         onChange={(e) =>
                           handleChange("taxRate", parseFloat(e.target.value))
                         }
-                        readOnly={mode === GoodsReceiveNoteType.VIEW}
+                        readOnly={mode === FormAction.VIEW}
                         className="h-8 text-sm text-right"
                       />
                     </div>
@@ -506,7 +504,7 @@ export default function ItemDetailForm({
                       onChange={(e) =>
                         handleChange("taxAmount", parseFloat(e.target.value))
                       }
-                      readOnly={mode === GoodsReceiveNoteType.VIEW}
+                      readOnly={mode === FormAction.VIEW}
                       className="h-8 text-sm text-right"
                     />
                   </div>

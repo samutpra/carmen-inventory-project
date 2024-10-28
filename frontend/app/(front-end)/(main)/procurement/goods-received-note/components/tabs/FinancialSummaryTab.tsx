@@ -1,13 +1,11 @@
 import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table'
-import { FinancialSummary } from '@/lib/types'
+import { FinancialSummary, FormAction } from '@/lib/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { GoodsReceiveNoteType } from '../../../type/procurementType'
 
 interface FinancialSummaryTabProps {
-  mode: GoodsReceiveNoteType
+  mode: FormAction
   summary: FinancialSummary | null,
   currency: string,
   baseCurrency: string,

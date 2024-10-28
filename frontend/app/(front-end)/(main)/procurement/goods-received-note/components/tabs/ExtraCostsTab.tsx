@@ -20,13 +20,13 @@ import {
   ExtraCost,
   CostType,
   CostDistributionMethod,
+  FormAction,
 } from "@/lib/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { GoodsReceiveNoteType } from "../../../type/procurementType";
 
 interface ExtraCostsTabProps {
-  mode: GoodsReceiveNoteType;
+  mode: FormAction;
   initialCosts: ExtraCost[];
   onCostsChange: (
     costs: ExtraCost[],
@@ -92,7 +92,7 @@ export function ExtraCostsTab({
               <TableCell>{cost.type}</TableCell>
               <TableCell>{cost.amount.toFixed(2)}</TableCell>
               <TableCell>
-                {mode !== GoodsReceiveNoteType.VIEW && (
+                {mode !== FormAction.VIEW && (
                   <Button
                     variant="destructive"
                     size="sm"
@@ -104,7 +104,7 @@ export function ExtraCostsTab({
               </TableCell>
             </TableRow>
           ))}
-          {mode !== GoodsReceiveNoteType.VIEW && (
+          {mode !== FormAction.VIEW && (
             <TableRow>
               <TableCell>
                 <Select

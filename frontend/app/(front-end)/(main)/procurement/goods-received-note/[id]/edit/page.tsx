@@ -1,8 +1,8 @@
 "use client";
 
 import React from 'react';
-import { GoodsReceiveNoteType } from '../../../type/procurementType';
 import GoodsReceiveNoteComponent from '../../components/GoodsReceiveNoteComponent';
+import { FormAction } from '@/lib/types';
 
 interface Props {
     params: {
@@ -13,7 +13,7 @@ interface Props {
 const GoodsReceiveNoteEditPage: React.FC<Props> = ({ params }) => {
     const { id } = params;
     return (
-        <GoodsReceiveNoteComponent id={id} grnMode={GoodsReceiveNoteType.EDIT} />
+        <GoodsReceiveNoteComponent id={id} grnMode={FormAction.EDIT} />
     );
 }
 

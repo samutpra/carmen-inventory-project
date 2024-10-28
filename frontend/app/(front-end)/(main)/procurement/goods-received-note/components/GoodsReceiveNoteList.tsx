@@ -121,7 +121,7 @@ const GoodReceivedNoteList = () => {
     }
 
     const handleEditGoodsReceiveNote = (id: string) => {
-        router.push(`/procurement/goods-received-note/${id}/edit`)
+        router.push(`/procurement/goods-received-note/${id}/${FormAction.EDIT}`)
     }
 
     const handleViewGoodsReceiveNote = (id: string) => {

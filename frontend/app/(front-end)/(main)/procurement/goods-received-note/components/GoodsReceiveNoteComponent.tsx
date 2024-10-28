@@ -14,13 +14,12 @@ import ConfirmDialog from '@/components/ui-custom/ConfirmDialog';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui-custom/dialog';
 import { BulkActions } from './tabs/BulkActions';
-import { GoodsReceiveNote, GoodsReceiveNoteItem } from '@/lib/types';
+import { FormAction, GoodsReceiveNote, GoodsReceiveNoteItem } from '@/lib/types';
 import { ExtraCostsTab } from './tabs/ExtraCostsTab';
 import { StockMovementTab } from './tabs/StockMovementTab';
 import { TaxTab } from './tabs/TaxTab';
 import { FinancialSummaryTab } from './tabs/FinancialSummaryTab';
 import SummaryTotal from './SummaryTotal';
-import { GoodsReceiveNoteType } from '../../type/procurementType';
 import { formSchema, FormValues } from '../../type/type';
 import { submitForm } from '../../lib/action';
 import ItemDetailForm from './tabs/ItemDetailForm';
@@ -105,10 +104,10 @@ const emptyGoodsReceiveNote: GoodsReceiveNote = {
 };
 interface Props {
     id?: string;
-    grnMode?: GoodsReceiveNoteType;
+    grnMode?: FormAction;
 }
 
-const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceiveNoteType.VIEW }) => {
+const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = FormAction.VIEW }) => {
     const router = useRouter();
     const [isSidebarVisible, setIsSidebarVisible] = useState(true);
     const [mode, setMode] = useState(grnMode);
@@ -128,7 +127,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
         },
     });
 
-    const isEditable = mode !== GoodsReceiveNoteType.VIEW;
+    const isEditable = mode !== FormAction.VIEW;
 
     const onBack = () => {
         if (form.formState.isDirty && isEditable) {
@@ -182,14 +181,14 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
 
     const handleEdit = () => {
         if (id) {
-            setMode(GoodsReceiveNoteType.EDIT);
+            setMode(FormAction.EDIT);
             router.push(`/procurement/goods-received-note/${id}/edit`);
         }
     };
 
     const resetForm = () => {
         form.reset();
-        setMode(GoodsReceiveNoteType.VIEW);
+        setMode(FormAction.VIEW);
         setError(null);
         router.push("/procurement/goods-received-note");
     };
@@ -387,7 +386,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = GoodsReceive
                                                     </DialogTrigger>
                                                     <DialogContent className="max-w-5xl">
                                                         <ItemDetailForm
-                                                            mode={GoodsReceiveNoteType.CREATE}
+                                                            mode={FormAction.CREATE}
                                                             item={null}
                                                             onSave={handleAddItem}
                                                             onClose={() => setIsAddDialogOpen(false)}
