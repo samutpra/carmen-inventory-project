@@ -1,9 +1,10 @@
 import React from 'react'
+import ManageVendors from './components/ManageVendors'
 
 
 const ManageVendorsPage = () => {
     return (
-        <div>page</div>
+        <ManageVendors />
     )
 }
 
