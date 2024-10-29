@@ -1,0 +1,489 @@
+CREATE SCHEMA "CARMEN_SYSTEM";
+
+CREATE SCHEMA "TENANT_DUMMY";
+
+CREATE TABLE "CARMEN_SYSTEM"."Company" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "code" varchar(30) UNIQUE NOT NULL,
+  "name" text,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."Password" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "userId" uuid NOT NULL,
+  "hash" text NOT NULL,
+  "expiredOn" date NOT NULL
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."User" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "username" varchar(30) UNIQUE NOT NULL,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."UserProfile" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "userId" uuid,
+  "firstname" varchar(100),
+  "middlename" varchar(100),
+  "lastname" varchar(100),
+  "email" varchar(255) NOT NULL,
+  "bio" json,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."Tenant" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "companyId" uuid NOT NULL,
+  "code" varchar(30) NOT NULL,
+  "name" text NOT NULL,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."UserTenant" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "userId" uuid,
+  "tenantId" uuid,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."Role" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."Permission" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."UserRole" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "userId" uuid NOT NULL,
+  "roleId" uuid NOT NULL,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "CARMEN_SYSTEM"."RolePermission" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "roleId" uuid NOT NULL,
+  "permissionId" uuid NOT NULL,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."Currency" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "code" varchar(3) UNIQUE NOT NULL,
+  "name" varchar(100) NOT NULL,
+  "symbol" varchar(5),
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "rate" float DEFAULT 1,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."DeliveryPoint" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE,
+  "address" varchar,
+  "city" varchar,
+  "postalCode" varchar,
+  "country" varchar,
+  "latitude" Float,
+  "longitude" Float,
+  "phone" varchar,
+  "email" varchar,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."Department" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."ExchangeRate" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "currencyId" uuid,
+  "dateAt" timestamp DEFAULT (now()),
+  "rate" float DEFAULT 1,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."Product" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "code" varchar UNIQUE NOT NULL,
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."ProductInfo" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "productId" uuid NOT NULL,
+  "price" Float,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."ProductCategory" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."ProductSubCategory" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "productCategoryId" uuid,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."ProductItemGroup" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "productSubCategoryId" uuid,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."PRType" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."PurchaseRequest" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "prTypeId" uuid,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."PurchaseRequestItem" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "purchaseRequestId" uuid,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."PurchaseOrder" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."PurchaseOrderItem" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "purchaseOrderId" uuid,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."Location" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."Unit" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."UnitConversion" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "productId" uuid,
+  "fromUnitId" uuid,
+  "toUnitId" uuid,
+  "rate" float DEFAULT 1,
+  "description" varchar,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."Vendor" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" varchar UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."ContactType" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" uuid UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."VendorContact" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "vendorId" uuid,
+  "contactTypeId" uuid NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."AddressType" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "name" uuid UNIQUE NOT NULL,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."VendorAddress" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "vendorId" uuid,
+  "addressTypeId" uuid NOT NULL,
+  "address" json,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE TABLE "TENANT_DUMMY"."ProductVendor" (
+  "id" uuid PRIMARY KEY DEFAULT (gen_random_uuid()),
+  "vendorId" uuid,
+  "productId" uuid,
+  "description" text,
+  "isActive" bool DEFAULT true,
+  "createdAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "createById" uuid,
+  "updateAt" timestamp DEFAULT (CURRENT_TIMESTAMP),
+  "updateById" uuid
+);
+
+CREATE INDEX ON "CARMEN_SYSTEM"."Company" ("code");
+
+CREATE INDEX ON "CARMEN_SYSTEM"."Company" ("name");
+
+CREATE INDEX ON "CARMEN_SYSTEM"."Password" ("userId");
+
+CREATE INDEX ON "CARMEN_SYSTEM"."User" ("username");
+
+CREATE INDEX ON "CARMEN_SYSTEM"."UserProfile" ("userId");
+
+CREATE INDEX ON "CARMEN_SYSTEM"."UserProfile" ("email");
+
+CREATE INDEX ON "CARMEN_SYSTEM"."UserProfile" ("firstname", "lastname");
+
+CREATE INDEX ON "CARMEN_SYSTEM"."Tenant" ("companyId");
+
+CREATE INDEX ON "CARMEN_SYSTEM"."Tenant" ("code");
+
+CREATE UNIQUE INDEX ON "CARMEN_SYSTEM"."Tenant" ("companyId", "code");
+
+CREATE UNIQUE INDEX ON "CARMEN_SYSTEM"."UserTenant" ("userId", "tenantId");
+
+CREATE UNIQUE INDEX ON "CARMEN_SYSTEM"."UserRole" ("userId", "roleId");
+
+CREATE UNIQUE INDEX ON "CARMEN_SYSTEM"."RolePermission" ("roleId", "permissionId");
+
+ALTER TABLE "CARMEN_SYSTEM"."Company" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Company" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Password" ADD FOREIGN KEY ("userId") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."User" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."User" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserProfile" ADD FOREIGN KEY ("userId") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserProfile" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserProfile" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Tenant" ADD FOREIGN KEY ("companyId") REFERENCES "CARMEN_SYSTEM"."Company" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Tenant" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Tenant" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserTenant" ADD FOREIGN KEY ("userId") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserTenant" ADD FOREIGN KEY ("tenantId") REFERENCES "CARMEN_SYSTEM"."Tenant" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserTenant" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserTenant" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Role" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Role" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Permission" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."Permission" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserRole" ADD FOREIGN KEY ("userId") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserRole" ADD FOREIGN KEY ("roleId") REFERENCES "CARMEN_SYSTEM"."Role" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserRole" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."UserRole" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."RolePermission" ADD FOREIGN KEY ("roleId") REFERENCES "CARMEN_SYSTEM"."Role" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."RolePermission" ADD FOREIGN KEY ("permissionId") REFERENCES "CARMEN_SYSTEM"."Permission" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."RolePermission" ADD FOREIGN KEY ("createById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "CARMEN_SYSTEM"."RolePermission" ADD FOREIGN KEY ("updateById") REFERENCES "CARMEN_SYSTEM"."User" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."ExchangeRate" ADD FOREIGN KEY ("currencyId") REFERENCES "TENANT_DUMMY"."Currency" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."ProductInfo" ADD FOREIGN KEY ("productId") REFERENCES "TENANT_DUMMY"."Product" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."ProductSubCategory" ADD FOREIGN KEY ("productCategoryId") REFERENCES "TENANT_DUMMY"."ProductCategory" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."ProductItemGroup" ADD FOREIGN KEY ("productSubCategoryId") REFERENCES "TENANT_DUMMY"."ProductSubCategory" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."PurchaseRequest" ADD FOREIGN KEY ("prTypeId") REFERENCES "TENANT_DUMMY"."PRType" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."PurchaseRequestItem" ADD FOREIGN KEY ("purchaseRequestId") REFERENCES "TENANT_DUMMY"."PurchaseRequest" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."PurchaseOrderItem" ADD FOREIGN KEY ("purchaseOrderId") REFERENCES "TENANT_DUMMY"."PurchaseOrder" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."UnitConversion" ADD FOREIGN KEY ("productId") REFERENCES "TENANT_DUMMY"."Product" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."UnitConversion" ADD FOREIGN KEY ("fromUnitId") REFERENCES "TENANT_DUMMY"."Unit" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."UnitConversion" ADD FOREIGN KEY ("toUnitId") REFERENCES "TENANT_DUMMY"."Unit" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."VendorContact" ADD FOREIGN KEY ("vendorId") REFERENCES "TENANT_DUMMY"."Vendor" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."VendorContact" ADD FOREIGN KEY ("contactTypeId") REFERENCES "TENANT_DUMMY"."ContactType" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."VendorAddress" ADD FOREIGN KEY ("vendorId") REFERENCES "TENANT_DUMMY"."Vendor" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."VendorAddress" ADD FOREIGN KEY ("addressTypeId") REFERENCES "TENANT_DUMMY"."AddressType" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."ProductVendor" ADD FOREIGN KEY ("vendorId") REFERENCES "TENANT_DUMMY"."Vendor" ("id");
+
+ALTER TABLE "TENANT_DUMMY"."ProductVendor" ADD FOREIGN KEY ("productId") REFERENCES "TENANT_DUMMY"."Product" ("id");
