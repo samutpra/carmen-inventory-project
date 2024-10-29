@@ -3,21 +3,26 @@ import { Prisma, PrismaClient as dbSystem } from '@prisma-carmen-client/system';
 const prisma = new dbSystem();
 
 async function main() {
-  const business1Obj: Prisma.BusinessCreateInput = {
-    name: 'Test Business',
+  await prisma.userTenant.deleteMany({});
+  await prisma.user.deleteMany({});
+  await prisma.tenant.deleteMany({});
+  await prisma.company.deleteMany({});
+
+  const company1Obj: Prisma.CompanyCreateInput = {
+    code: 'test_company',
+    name: 'Test Company',
   };
 
-  const business1 = await prisma.business.upsert({
+  const company1 = await prisma.company.upsert({
     where: {
-      name: business1Obj.name,
+      code: company1Obj.code,
     },
     update: {},
-    create: business1Obj,
+    create: company1Obj,
   });
 
   const user1Obj: Prisma.UserCreateInput = {
     username: 'user1',
-    email: 'user1@xxx.xxx',
   };
 
   const user1 = await prisma.user.upsert({
@@ -28,7 +33,6 @@ async function main() {
 
   const user2Obj: Prisma.UserCreateInput = {
     username: 'user2',
-    email: 'user2@xxx.xxx',
   };
 
   const user2 = await prisma.user.upsert({
@@ -38,30 +42,44 @@ async function main() {
   });
 
   const tenant1Obj: Prisma.TenantCreateInput = {
+    code: 'tenant_1',
     name: 'tenant 1',
+    Company: {
+      //create: company1Obj,
+
+      connectOrCreate: {
+        where: {
+          code: company1Obj.code,
+        },
+        create: company1Obj,
+      },
+      connect: company1,
+    },
   };
 
-  const tenant1 = await prisma.tenant.upsert({
-    where: { name: tenant1Obj.name },
-    update: {},
-    create: tenant1Obj,
+  const tenant1 = await prisma.tenant.create({
+    data: tenant1Obj,
   });
 
   const tenant2Obj: Prisma.TenantCreateInput = {
+    code: 'tenant_2',
     name: 'tenant 2',
+    Company: {
+      connect: company1,
+    },
   };
 
-  const tenant2 = await prisma.tenant.upsert({
-    where: { name: tenant2Obj.name },
-    update: {},
-    create: tenant2Obj,
+  const tenant2 = await prisma.tenant.create({
+    data: tenant2Obj,
   });
 
-  await prisma.userTenant.deleteMany({});
-
   const userTenant1Obj: Prisma.UserTenantCreateInput = {
-    userId: user1.id,
-    tenantId: tenant1.id,
+    Tenant: {
+      connect: tenant1,
+    },
+    User: {
+      connect: user1,
+    },
   };
 
   const userTenant1 = await prisma.userTenant.create({
@@ -69,8 +87,12 @@ async function main() {
   });
 
   const userTenant2Obj: Prisma.UserTenantCreateInput = {
-    userId: user2.id,
-    tenantId: tenant1.id,
+    Tenant: {
+      connect: tenant1,
+    },
+    User: {
+      connect: user2,
+    },
   };
 
   const userTenant2 = await prisma.userTenant.create({
