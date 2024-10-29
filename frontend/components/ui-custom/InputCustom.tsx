@@ -16,6 +16,7 @@ const InputCustom = React.forwardRef<HTMLInputElement, InputCustomProps>(
             <div className="relative">
                 <Input
                     className={cn(
+                        "text-xs",
                         iconPosition === 'end' ? "pr-10" : "pl-10",
                         error && "border-red-500 focus-visible:ring-red-500",
                         className

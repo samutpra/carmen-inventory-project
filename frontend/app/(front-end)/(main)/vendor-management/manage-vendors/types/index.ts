@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const VendorSchema = z.object({
     id: z.string(),
     companyName: z.string().min(1, "Company name is required"),
-    businessRegistrationNumber: z.string().optional(),
-    taxId: z.string().optional(),
+    businessRegistrationNumber: z.string().min(1, "Business registration number is required"),
+    taxId: z.string().min(1, "Tax ID is required"),
     establishmentDate: z.string().optional(),
     businessType: z.object({
         id: z.string().min(1, "Business type ID is required"),

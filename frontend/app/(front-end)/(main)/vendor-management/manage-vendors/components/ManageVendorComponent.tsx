@@ -29,6 +29,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useRouter } from "@/lib/i18n";
 import { InputCustom } from "@/components/ui-custom/InputCustom";
+import Rating from "@/components/Rating";
 
 interface Props {
     id?: string;
@@ -134,7 +135,6 @@ const ManageVendorComponent: React.FC<Props> = ({ id, mvMode }) => {
                                     <FormItem>
                                         <FormLabel>Company Name</FormLabel>
                                         <FormControl>
-                                            {/* <Input placeholder="Enter company name" {...field} /> */}
                                             <InputCustom
                                                 placeholder="Enter company name"
                                                 error={!!form.formState.errors.companyName}
@@ -153,10 +153,15 @@ const ManageVendorComponent: React.FC<Props> = ({ id, mvMode }) => {
                                     <FormItem>
                                         <FormLabel>Business Registration Number</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter registration number" {...field} />
+                                            <InputCustom
+                                                placeholder="Enter registration number"
+                                                error={!!form.formState.errors.businessRegistrationNumber}
+                                                {...field}
+                                            />
                                         </FormControl>
                                     </FormItem>
                                 )}
+                                required
                             />
 
                             <FormField
@@ -166,10 +171,15 @@ const ManageVendorComponent: React.FC<Props> = ({ id, mvMode }) => {
                                     <FormItem>
                                         <FormLabel>Tax ID</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter tax ID" {...field} />
+                                            <InputCustom
+                                                placeholder="Enter tax ID"
+                                                error={!!form.formState.errors.taxId}
+                                                {...field}
+                                            />
                                         </FormControl>
                                     </FormItem>
                                 )}
+                                required
                             />
 
                             <FormField
@@ -179,10 +189,15 @@ const ManageVendorComponent: React.FC<Props> = ({ id, mvMode }) => {
                                     <FormItem>
                                         <FormLabel>Business Type</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Enter business type" {...field} />
+                                            <InputCustom
+                                                placeholder="Enter business type"
+                                                error={!!form.formState.errors.businessType?.name}
+                                                {...field}
+                                            />
                                         </FormControl>
                                     </FormItem>
                                 )}
+                                required
                             />
 
                             <FormField
@@ -192,10 +207,16 @@ const ManageVendorComponent: React.FC<Props> = ({ id, mvMode }) => {
                                     <FormItem>
                                         <FormLabel>Establishment Date</FormLabel>
                                         <FormControl>
-                                            <Input type="date" {...field} />
+                                            <InputCustom
+                                                type="date"
+                                                placeholder="Enter Establishment Date"
+                                                error={!!form.formState.errors.establishmentDate}
+                                                {...field}
+                                            />
                                         </FormControl>
                                     </FormItem>
                                 )}
+                                required
                             />
 
                             <FormField
@@ -205,16 +226,14 @@ const ManageVendorComponent: React.FC<Props> = ({ id, mvMode }) => {
                                     <FormItem>
                                         <FormLabel>Rating</FormLabel>
                                         <FormControl>
-                                            <Input
-                                                type="number"
-                                                step="0.1"
-                                                min="0"
-                                                max="5"
-                                                {...field}
+                                            <Rating
+                                                initialRating={field.value}
+                                                onRatingChange={(newRating) => field.onChange(newRating)}
                                             />
                                         </FormControl>
                                     </FormItem>
                                 )}
+                                required
                             />
 
                             <FormField

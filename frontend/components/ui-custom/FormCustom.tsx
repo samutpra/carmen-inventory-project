@@ -61,7 +61,7 @@ const useFormField = () => {
         formItemId: `${id}-form-item`,
         formDescriptionId: `${id}-form-item-description`,
         formMessageId: `${id}-form-item-message`,
-        required: fieldContext.required, // Include `required` here
+        required: fieldContext.required,
         ...fieldState,
     };
 };
@@ -145,6 +145,7 @@ const FormDescription = React.forwardRef<
         />
     )
 })
+
 FormDescription.displayName = "FormDescription"
 
 const FormMessage = React.forwardRef<

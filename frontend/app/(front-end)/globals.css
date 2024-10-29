@@ -101,3 +101,7 @@ a {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.half-star {
+  clip-path: inset(0 50% 0 0);
+}
