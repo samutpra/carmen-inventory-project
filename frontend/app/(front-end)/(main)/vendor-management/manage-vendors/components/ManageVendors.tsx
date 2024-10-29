@@ -5,7 +5,7 @@ import { Vendor } from '../types';
 import { VendorDataList } from '../vendorsData';
 import { FormAction } from '@/lib/types';
 import { CustomButton } from '@/components/ui-custom/CustomButton';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui-custom/TableCustom"
 import ListPageTemplate from '@/components/templates/ListPageTemplate';
 import EmptyData from '@/components/EmptyData';
 
@@ -66,7 +66,7 @@ const ManageVendors = () => {
                     </TableHeader>
                     <TableBody>
                         {vendors.map((vendor) => (
-                            <TableRow key={vendor.id}>
+                            <TableRow key={vendor.id} className='hover:bg-zinc-50'>
                                 <TableCell>{vendor.companyName}</TableCell>
                                 <TableCell>{vendor.businessType?.name}</TableCell>
                                 <TableCell>
@@ -78,9 +78,7 @@ const ManageVendors = () => {
                                     {vendor.contacts.find(c => c.isPrimary)?.phone || ''}
                                 </TableCell>
                                 <TableCell>
-                                    <Link href={`/vendor-management/manage-vendors/${vendor.id}`}>
-                                        <CustomButton variant="outline" size="sm">View</CustomButton>
-                                    </Link>
+                                    <CustomButton size="sm" className='text-xs'>View</CustomButton>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -91,8 +89,6 @@ const ManageVendors = () => {
             )}
         </>
     );
-
-
 
     return (
         <ListPageTemplate
