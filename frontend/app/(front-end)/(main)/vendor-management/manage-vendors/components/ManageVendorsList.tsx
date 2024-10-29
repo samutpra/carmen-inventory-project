@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { useRouter } from '@/lib/i18n';
-import { Vendor } from '../types';
+import { VendorType } from '../types';
 import { VendorDataList } from '../vendorsData';
 import { FormAction } from '@/lib/types';
 import { CustomButton } from '@/components/ui-custom/CustomButton';
@@ -12,7 +12,7 @@ import EmptyData from '@/components/EmptyData';
 
 const ManageVendorsList = () => {
     const router = useRouter();
-    const [vendors, setVendors] = useState<Vendor[]>([]);
+    const [vendors, setVendors] = useState<VendorType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -86,7 +86,15 @@ const ManageVendorsList = () => {
                                     {vendor.contacts.find(c => c.isPrimary)?.phone || ''}
                                 </TableCell>
                                 <TableCell>
-                                    <CustomButton size="sm" className='text-xs'>View</CustomButton>
+                                    <div className='flex items-center space-x-4'>
+                                        <CustomButton size="sm" className='text-xs'
+                                            onClick={() => handleViewVendor(vendor.id)}
+                                        >View</CustomButton>
+                                        <CustomButton size="sm" className='text-xs'
+                                            onClick={() => handleEditVendor(vendor.id)}
+                                        >Edit</CustomButton>
+                                    </div>
+
                                 </TableCell>
                             </TableRow>
                         ))}
