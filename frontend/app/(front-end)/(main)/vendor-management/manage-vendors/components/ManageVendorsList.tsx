@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { Link, useRouter } from '@/lib/i18n';
+import { useRouter } from '@/lib/i18n';
 import { Vendor } from '../types';
 import { VendorDataList } from '../vendorsData';
 import { FormAction } from '@/lib/types';
@@ -10,8 +10,7 @@ import ListPageTemplate from '@/components/templates/ListPageTemplate';
 import EmptyData from '@/components/EmptyData';
 
 
-const ManageVendors = () => {
-
+const ManageVendorsList = () => {
     const router = useRouter();
     const [vendors, setVendors] = useState<Vendor[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +41,15 @@ const ManageVendors = () => {
     const handleAddVendor = () => {
         router.push(`/vendor-management/manage-vendors/${FormAction.CREATE}`);
     };
+
+    const handleEditVendor = (id: string) => {
+        router.push(`/vendor-management/manage-vendors/${id}/${FormAction.EDIT}`);
+    };
+
+    const handleViewVendor = (id: string) => {
+        router.push(`/vendor-management/manage-vendors/${id}`);
+    };
+
 
     const actionButtons = (
         <CustomButton onClick={handleAddVendor}>
@@ -99,4 +107,4 @@ const ManageVendors = () => {
     )
 }
 
-export default ManageVendors
+export default ManageVendorsList
