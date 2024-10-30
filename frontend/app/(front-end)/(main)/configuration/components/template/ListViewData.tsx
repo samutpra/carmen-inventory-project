@@ -226,7 +226,7 @@ const ListViewData = <T extends { id?: string },>({
 
             <div className="flex gap-4 justify-between items-center">
                 <SearchInput
-                    placeholder="Search Good Recieved Note Requests..."
+                    placeholder="Search Store Locations..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     Icon={Search}
