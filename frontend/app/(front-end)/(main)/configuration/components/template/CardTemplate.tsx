@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react';
 import { Switch } from '@radix-ui/react-switch';
-import { FieldType } from './ListViewData';
 import { SquarePen, Trash } from 'lucide-react';
+import { FieldType } from '../../type';
 
 interface Props<T> {
     item: T;
@@ -38,6 +38,7 @@ const CardTemplate = <T,>({
                 return String(value);
         }
     };
+
 
     return (
         <Card className="mb-4 hover:shadow-lg transition-shadow duration-200">
@@ -79,9 +80,9 @@ const CardTemplate = <T,>({
                             <span className="w-1/3 text-xs text-gray-600 font-medium">
                                 {field.display}
                             </span>
-                            <span className="text-xs">
+                            <div className="text-xs">
                                 {renderFieldValue(field, item[field.key])}
-                            </span>
+                            </div>
                         </div>
                     ))}
                 </div>

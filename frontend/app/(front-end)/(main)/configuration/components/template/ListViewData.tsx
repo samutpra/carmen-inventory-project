@@ -11,20 +11,7 @@ import { Card } from '@/components/ui/card';
 import SearchInput from '@/components/ui-custom/SearchInput';
 import { PlusCircle, Search } from 'lucide-react';
 import { CustomButton } from '@/components/ui-custom/CustomButton';
-
-export type FieldType = 'string' | 'boolean' | 'number';
-
-interface Field<T> {
-    key: keyof T;
-    display: string;
-    type: FieldType;
-    options?: T[keyof T][];
-    required?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    validate?: (value: any) => string | undefined;
-}
-
-
+import { Field } from '../../type';
 interface Props<T> {
     data: T[];
     title: string;

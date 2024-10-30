@@ -1,8 +1,9 @@
 import React from 'react'
+import DeliveryPointList from '../components/DeliveryPointList'
 
 const DeliveryPointPage = () => {
     return (
-        <div>DeliveryPointPage</div>
+        <DeliveryPointList />
     )
 }
 

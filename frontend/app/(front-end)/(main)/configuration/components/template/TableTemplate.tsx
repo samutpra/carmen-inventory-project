@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpDown, ChevronLeft, ChevronRight, SquarePen, Trash } from 'lucide-react';
 import React, { useState } from 'react';
-import { FieldType } from './ListViewData';
 import { Switch } from '@/components/ui/switch';
 import EmptyData from '@/components/EmptyData';
 import { Input } from '@/components/ui/input';
+import { FieldType } from '../../type';
 
 interface Props<T> {
     data: T[];

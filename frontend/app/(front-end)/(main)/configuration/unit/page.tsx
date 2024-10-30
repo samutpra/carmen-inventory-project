@@ -1,8 +1,9 @@
 import React from 'react'
+import UnitList from '../components/UnitList'
 
 const UnitPage = () => {
     return (
-        <div>UnitPage</div>
+        <UnitList />
     )
 }
 
