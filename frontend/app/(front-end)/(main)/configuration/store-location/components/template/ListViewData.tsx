@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import TableTemplate from './TableTemplate';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Card } from '@/components/ui/card';
 
 export type FieldType = 'string' | 'boolean' | 'number';
 
@@ -26,13 +27,11 @@ interface Props<T> {
     title: string;
     titleField: keyof T;
     fields: Field<T>[];
-    onEdit?: (item: T) => Promise<void>;
-    onDelete?: (item: T) => Promise<void>;
-    onAdd?: (item: T) => Promise<void>;
-    onBulkDelete?: (items: T[]) => Promise<void>;
+    onEdit?: (item: T) => void;
+    onDelete?: (item: T) => void;
+    onAdd?: (item: T) => void;
+    onBulkDelete?: (items: T[]) => void;
     pageSize?: number;
-    onLoadMore?: () => Promise<void>;
-    hasMore?: boolean;
 }
 
 const ListViewData = <T extends { id?: string },>({
@@ -43,10 +42,7 @@ const ListViewData = <T extends { id?: string },>({
     onEdit,
     onDelete,
     onAdd,
-    onBulkDelete,
     pageSize = 10,
-    onLoadMore,
-    hasMore = false,
 }: Props<T>) => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isDialogOpen, setDialogOpen] = useState(false);
@@ -55,9 +51,9 @@ const ListViewData = <T extends { id?: string },>({
     const [error, setError] = useState<string | null>(null);
     const [sortField, setSortField] = useState<keyof T | null>(null);
     const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-    const [selectedItems, setSelectedItems] = useState<T[]>([]);
-    const [selectMode, setSelectMode] = useState(false);
+
     const [validationErrors, setValidationErrors] = useState<Record<keyof T, string>>({} as Record<keyof T, string>);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [currentPage, setCurrentPage] = useState(1);
 
 
@@ -84,6 +80,7 @@ const ListViewData = <T extends { id?: string },>({
         const end = currentPage * pageSize;
         return filteredAndSortedData().slice(start, end);
     }, [filteredAndSortedData, currentPage, pageSize]);
+
 
     const validateForm = (): boolean => {
         const errors: Record<keyof T, string> = {} as Record<keyof T, string>;
@@ -130,34 +127,7 @@ const ListViewData = <T extends { id?: string },>({
         }
     };
 
-    const handleLoadMore = async () => {
-        if (isLoading || !hasMore) return;
 
-        try {
-            setIsLoading(true);
-            await onLoadMore?.();
-            setCurrentPage(prev => prev + 1);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to load more items');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleBulkDelete = async () => {
-        if (!selectedItems.length || !onBulkDelete) return;
-
-        try {
-            setIsLoading(true);
-            await onBulkDelete(selectedItems);
-            setSelectedItems([]);
-            setSelectMode(false);
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to delete items');
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleSort = (field: keyof T) => {
         if (sortField === field) {
@@ -166,16 +136,6 @@ const ListViewData = <T extends { id?: string },>({
             setSortField(field);
             setSortDirection('asc');
         }
-    };
-
-    const handleSelectItem = (item: T) => {
-        setSelectedItems(prev => {
-            const isSelected = prev.some(i => i.id === item.id);
-            if (isSelected) {
-                return prev.filter(i => i.id !== item.id);
-            }
-            return [...prev, item];
-        });
     };
 
     const openAddDialog = () => {
@@ -240,29 +200,6 @@ const ListViewData = <T extends { id?: string },>({
                     </div>
                 );
 
-            // case 'select':
-            //     return (
-            //         <div className="space-y-1" key={String(field.key)}>
-            //             <Label htmlFor={String(field.key)}>{field.display}</Label>
-            //             <Select
-            //                 value={String(value)}
-            //                 onValueChange={(newValue) => handleFieldChange(field.key, newValue)}
-            //             >
-            //                 <SelectTrigger {...commonProps}>
-            //                     <SelectValue placeholder={`Select ${field.display}`} />
-            //                 </SelectTrigger>
-            //                 <SelectContent>
-            //                     {field.options?.map((option) => (
-            //                         <SelectItem key={String(option)} value={String(option)}>
-            //                             {String(option)}
-            //                         </SelectItem>
-            //                     ))}
-            //                 </SelectContent>
-            //             </Select>
-            //             {error && <span className="text-red-500 text-sm" id={`${String(field.key)}-error`}>{error}</span>}
-            //         </div>
-            //     );
-
             default:
                 return (
                     <div className="space-y-1" key={String(field.key)}>
@@ -279,26 +216,9 @@ const ListViewData = <T extends { id?: string },>({
     };
 
     return (
-        <div className="space-y-4">
+        <Card className="space-y-4 p-6 m-4">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">{title}</h1>
-                <div className="space-x-2">
-                    {selectedItems.length > 0 && (
-                        <Button
-                            variant="destructive"
-                            onClick={handleBulkDelete}
-                            disabled={isLoading}
-                        >
-                            Delete Selected ({selectedItems.length})
-                        </Button>
-                    )}
-                    <Button
-                        variant="outline"
-                        onClick={() => setSelectMode(!selectMode)}
-                    >
-                        {selectMode ? 'Cancel Selection' : 'Select Items'}
-                    </Button>
-                </div>
             </div>
 
             <div className="flex gap-4">
@@ -364,16 +284,13 @@ const ListViewData = <T extends { id?: string },>({
                         fields={fields}
                         onEdit={() => openEditDialog(item)}
                         onDelete={onDelete}
-                        selected={selectedItems.some(i => i.id === item.id)}
-                        onSelect={() => handleSelectItem(item)}
-                        selectMode={selectMode}
                     />
                 ))}
             </div>
 
             <div className="hidden lg:block">
                 <TableTemplate
-                    data={paginatedData()}
+                    data={data}
                     fields={fields}
                     titleField={titleField}
                     onEdit={openEditDialog}
@@ -381,24 +298,9 @@ const ListViewData = <T extends { id?: string },>({
                     sortField={sortField}
                     sortDirection={sortDirection}
                     onSort={handleSort}
-                    selectedItems={selectedItems}
-                    onSelectItem={handleSelectItem}
-                    selectMode={selectMode}
                 />
             </div>
-
-            {hasMore && (
-                <div className="flex justify-center mt-4">
-                    <Button
-                        variant="outline"
-                        onClick={handleLoadMore}
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Loading...' : 'Load More'}
-                    </Button>
-                </div>
-            )}
-        </div>
+        </Card>
     );
 };
 

@@ -85,8 +85,6 @@ const CardTemplate = <T,>({
                         </div>
                     ))}
                 </div>
-
-
             </CardContent>
         </Card>
     );

@@ -2,11 +2,12 @@
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '@/components/ui-custom/TableCustom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpDown, SquarePen, Trash } from 'lucide-react';
-import React from 'react';
+import { ArrowUpDown, ChevronLeft, ChevronRight, SquarePen, Trash } from 'lucide-react';
+import React, { useState } from 'react';
 import { FieldType } from './ListViewData';
 import { Switch } from '@/components/ui/switch';
 import EmptyData from '@/components/EmptyData';
+import { Input } from '@/components/ui/input';
 
 interface Props<T> {
     data: T[];
@@ -31,8 +32,12 @@ const TableTemplate = <T,>({
     onDelete,
     onSort,
     sortField,
-    sortDirection = 'asc'
+    sortDirection = 'asc',
 }: Props<T>) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(data.length / 10);
+    const paginatedData = data.slice((currentPage - 1) * 10, currentPage * 10);
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCellValue = (field: Props<T>['fields'][0], value: any) => {
         switch (field.type) {
@@ -65,27 +70,26 @@ const TableTemplate = <T,>({
         </div>
     );
 
+    const handlePreviousPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+    const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+
     return (
         <div className="w-full overflow-x-auto rounded-lg border">
             <Table>
                 <TableHeader>
                     <TableRow>
                         {fields.map((field) => (
-                            <TableCell
-                                key={String(field.key)}
-                            >
+                            <TableCell key={String(field.key)}>
                                 {renderSortableHeader(field)}
                             </TableCell>
                         ))}
                         {(onEdit || onDelete) && (
-                            <TableCell>
-                                Actions
-                            </TableCell>
+                            <TableCell>Actions</TableCell>
                         )}
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data.length === 0 ? (
+                    {paginatedData.length === 0 ? (
                         <TableRow>
                             <TableCell
                                 colSpan={fields.length + (onEdit || onDelete ? 1 : 0)}
@@ -95,15 +99,10 @@ const TableTemplate = <T,>({
                             </TableCell>
                         </TableRow>
                     ) : (
-                        data.map((item, index) => (
-                            <TableRow
-                                key={index}
-                            >
+                        paginatedData.map((item, index) => (
+                            <TableRow key={index}>
                                 {fields.map((field) => (
-                                    <TableCell
-                                        key={String(field.key)}
-                                        className="whitespace-nowrap bg-white"
-                                    >
+                                    <TableCell key={String(field.key)} className="whitespace-nowrap bg-white">
                                         {renderCellValue(field, item[field.key])}
                                     </TableCell>
                                 ))}
@@ -138,6 +137,66 @@ const TableTemplate = <T,>({
                     )}
                 </TableBody>
             </Table>
+
+            {totalPages > 1 && (
+                <div className="flex justify-end items-center p-4 gap-4">
+                    <Button
+                        variant="default"
+                        className={`w-4 h-6 ${currentPage === 1 ? 'cursor-not-allowed' : ''}`}
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                    >
+                        <ChevronLeft />
+                    </Button>
+
+
+                    {[...Array(totalPages)].map((_, index) => {
+                        const page = index + 1;
+                        return (
+                            <Button
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`w-6 h-6 flex justify-center items-center hover:text-white 
+                                    ${currentPage === page ? 'bg-zinc-800 text-white' :
+                                        'bg-transparent text-gray-700 border'
+                                    }`}
+                            >
+                                {page}
+                            </Button>
+                        );
+                    })}
+
+                    <Button
+                        className={`w-4 h-6 ${currentPage === totalPages ? 'cursor-not-allowed' : ''}`}
+                        variant="default"
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                    >
+                        <ChevronRight />
+                    </Button>
+                    <Input
+                        type="number"
+                        // value={currentPage}
+                        onChange={(e) => {
+                            const value = Number(e.target.value);
+                            if (!isNaN(value) && value > 0 && value <= totalPages) {
+                                setCurrentPage(value);
+                            }
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                const value = Number(e.currentTarget.value);
+                                if (!isNaN(value) && value > 0 && value <= totalPages) {
+                                    setCurrentPage(value);
+                                }
+                            }
+                        }}
+                        className="w-12 h-6 text-center"
+                        min={1}
+                        max={totalPages}
+                    />
+                </div>
+            )}
         </div>
     );
 };
