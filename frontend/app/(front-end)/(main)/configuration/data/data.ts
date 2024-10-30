@@ -1,4 +1,4 @@
-import { storeLocationType } from "../type";
+import { currencyType, storeLocationType } from "../type";
 
 
 export const storeLocationData: storeLocationType[] = [
@@ -27,4 +27,20 @@ export const storeLocationData: storeLocationType[] = [
     { id: "23", storeCode: "404", storeName: "BEVERAGE STORE", departmentName: "Main", type: "Main", status: "System", isActive: true },
     { id: "24", storeCode: "405", storeName: "GENERAL STORE", departmentName: "Main", type: "Main", status: "System", isActive: true },
     { id: "25", storeCode: "412", storeName: "BEVERAGE STORE (WINE)", departmentName: "Main", type: "Main", status: "System", isActive: true },
+];
+
+
+export const currencyData: currencyType[] = [
+    { id: '1', code: 'AUD', description: 'Australia Dollar', isActive: true },
+    { id: '2', code: 'EURO', description: 'Euro', isActive: true },
+    { id: '3', code: 'GBP', description: 'British Pound', isActive: true },
+    { id: '4', code: 'HKD', description: 'Hong Kong Dollar', isActive: true },
+    { id: '5', code: 'INR', description: 'Indian Rupee', isActive: true },
+    { id: '6', code: 'JPY', description: 'Japan Yen', isActive: true },
+    { id: '7', code: 'MVR', description: 'Maldivian Rufiyaa', isActive: true },
+    { id: '8', code: 'RMB', description: 'Chinese Yuan', isActive: true },
+    { id: '9', code: 'SGD', description: 'Singapore Dollar', isActive: true },
+    { id: '10', code: 'THB', description: 'Thai Baht', isActive: true },
+    { id: '11', code: 'USD', description: 'US Dollar', isActive: true },
+    { id: '12', code: 'VND', description: 'Vietnam Dong', isActive: true },
 ];

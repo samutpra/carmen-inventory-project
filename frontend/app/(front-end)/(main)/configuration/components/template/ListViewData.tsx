@@ -47,6 +47,7 @@ const ListViewData = <T extends { id?: string },>({
     onAdd,
     pageSize = 10,
 }: Props<T>) => {
+
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<Partial<T> | null>(null);
@@ -226,7 +227,7 @@ const ListViewData = <T extends { id?: string },>({
 
             <div className="flex gap-4 justify-between items-center">
                 <SearchInput
-                    placeholder="Search Store Locations..."
+                    placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     Icon={Search}

@@ -1,20 +1,23 @@
 "use client"
 import React, { useEffect, useMemo, useState } from 'react'
 import { storeLocationData } from '../../data/data';
-import { storeLocationSchema, storeLocationType } from '../../type';
+import { StoreLocationLabel, storeLocationSchema, storeLocationType } from '../../type';
 import DialogDelete from '@/components/ui-custom/DialogDelete';
 import ListViewData from '../../components/template/ListViewData';
-
-interface FieldConfig {
-    key: keyof storeLocationType;
-    display: string;
-    type: "string" | "boolean";
-}
 
 const StoreLocationList = () => {
     const [storeLocations, setStoreLocations] = useState<storeLocationType[]>([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [idToDelete, setIdToDelete] = useState<string | null>(null);
+
+    const [searchCriteria, setSearchCriteria] = useState<{
+        [key: string]: string
+    }>({
+        storeCode: '',
+        storeName: '',
+        departmentName: '',
+    });
+
 
     useEffect(() => {
         const fetchStoreLocations = async () => {
@@ -25,6 +28,53 @@ const StoreLocationList = () => {
         }
         fetchStoreLocations();
     }, [])
+
+    const handleSearch = (key: string, value: string) => {
+        console.log('Search Criteria:', { key, value });
+
+        const newSearchCriteria = {
+            ...searchCriteria,
+            [key]: value
+        };
+
+        setSearchCriteria(newSearchCriteria);
+
+        // Filter logic
+        const filtered = storeLocations.filter(item => {
+            return Object.entries(newSearchCriteria).every(([field, searchValue]) => {
+                if (!searchValue) return true;
+                return String(item[field as keyof storeLocationType])
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase());
+            });
+        });
+
+        console.log('Current search criteria:', newSearchCriteria);
+        console.log('Filtered results:', filtered);
+    };
+
+    const SearchFields = () => {
+        return (
+            <div className="mb-4 grid grid-cols-3 gap-4">
+                {fieldConfigs
+                    .filter(field => field.type === 'string')
+                    .map(field => (
+                        <div key={field.key} className="flex flex-col">
+                            <label className="text-sm font-medium mb-1">
+                                {field.display}
+                            </label>
+                            <input
+                                className="p-2 border rounded"
+                                type="text"
+                                value={searchCriteria[field.key]}
+                                onChange={(e) => handleSearch(field.key, e.target.value)}
+                                placeholder={`Search ${field.display}`}
+                            />
+                        </div>
+                    ))}
+            </div>
+        );
+    };
 
     const handleAdd = async (item: storeLocationType) => {
         setStoreLocations((prev) => [...prev, item]);
@@ -46,7 +96,7 @@ const StoreLocationList = () => {
         setIdToDelete(null);
     };
 
-    const fieldConfigs: FieldConfig[] = useMemo(() => [
+    const fieldConfigs: StoreLocationLabel[] = useMemo(() => [
         { key: 'storeCode', display: 'Store Code', type: 'string' },
         { key: 'storeName', display: 'Store Name', type: 'string' },
         { key: 'departmentName', display: 'Department', type: 'string' },
@@ -57,6 +107,7 @@ const StoreLocationList = () => {
 
     return (
         <>
+            <SearchFields />
             <ListViewData
                 data={storeLocations}
                 title="Store Locations"

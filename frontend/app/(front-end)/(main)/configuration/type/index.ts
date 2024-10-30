@@ -14,5 +14,27 @@ export const storeLocationSchema = z.object({
     isActive: z.boolean(),
 });
 
-
 export type storeLocationType = z.infer<typeof storeLocationSchema>;
+
+export interface StoreLocationLabel {
+    key: keyof storeLocationType;
+    display: string;
+    type: "string" | "boolean";
+}
+
+
+export const currencySchema = z.object({
+    id: z.string(),
+    code: z.string(),
+    description: z.string(),
+    isActive: z.boolean(),
+});
+
+export type currencyType = z.infer<typeof currencySchema>;
+export interface CurrencyLabel {
+    key: keyof currencyType;
+    display: string;
+    type: "string" | "boolean";
+}
+
+
