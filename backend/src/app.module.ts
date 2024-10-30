@@ -1,19 +1,19 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './_lib/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { CurrenciesModule } from './currencies/currencies.module';
-import { DepartmentsModule } from './departments/departments.module';
-import { ExchangerateModule } from './exchangerate/exchangerate.module';
-import { ExtractReqModule } from './auth/extract-req/extract-req.module';
+import { CurrenciesModule } from './_application/currencies/currencies.module';
+import { DepartmentsModule } from './_application/departments/departments.module';
+import { ExchangerateModule } from './_application/exchangerate/exchangerate.module';
+import { ExtractReqModule } from './_lib/auth/extract-req/extract-req.module';
 import { Module } from '@nestjs/common';
-import { PrismaClientManagerModule } from './prisma-client-manager/prisma-client-manager.module';
-import { ProductsModule } from './products/products.module';
-import { StoreLocationsModule } from './storelocations/storelocations.module';
-import { TenantsModule } from './tenants/tenants.module';
-import { UnitsModule } from './units/units.module';
-import { UserModule } from './users/users.module';
-import { UserTenantModule } from './user-tenant/user-tenant.module';
+import { PrismaClientManagerModule } from './_lib/prisma-client-manager/prisma-client-manager.module';
+import { ProductsModule } from './_application/products/products.module';
+import { StoreLocationsModule } from './_application/storelocations/storelocations.module';
+import { TenantsModule } from './_system/tenants/tenants.module';
+import { UnitsModule } from './_application/units/units.module';
+import { UserModule } from './_system/users/users.module';
+import { UserTenantModule } from './_system/user-tenant/user-tenant.module';
 
 @Module({
   imports: [
