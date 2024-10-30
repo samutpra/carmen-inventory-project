@@ -8,6 +8,9 @@ import { Label } from "@/components/ui/label";
 import TableTemplate from './TableTemplate';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
+import SearchInput from '@/components/ui-custom/SearchInput';
+import { PlusCircle, Search } from 'lucide-react';
+import { CustomButton } from '@/components/ui-custom/CustomButton';
 
 export type FieldType = 'string' | 'boolean' | 'number';
 
@@ -221,20 +224,22 @@ const ListViewData = <T extends { id?: string },>({
                 <h1 className="text-2xl font-bold">{title}</h1>
             </div>
 
-            <div className="flex gap-4">
-                <Input
-                    type="text"
-                    placeholder="Search..."
+            <div className="flex gap-4 justify-between items-center">
+                <SearchInput
+                    placeholder="Search Good Recieved Note Requests..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="flex-1"
+                    Icon={Search}
+                    variant="suffix"
+                    className='flex-1'
                 />
 
                 <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button variant="default" onClick={openAddDialog}>
-                            Add New {title}
-                        </Button>
+                        <CustomButton variant="default" onClick={openAddDialog}>
+                            <PlusCircle />
+                            Add
+                        </CustomButton>
                     </DialogTrigger>
 
                     <DialogContent>
