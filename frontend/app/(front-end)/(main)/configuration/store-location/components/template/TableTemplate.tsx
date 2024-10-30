@@ -2,15 +2,18 @@
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '@/components/ui-custom/TableCustom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, SquarePen, Trash } from 'lucide-react';
 import React from 'react';
+import { FieldType } from './ListViewData';
+import { Switch } from '@/components/ui/switch';
+import EmptyData from '@/components/EmptyData';
 
 interface Props<T> {
     data: T[];
     fields: Array<{
         key: keyof T;
         display: string;
-        type?: 'text' | 'boolean' | 'select';
+        type?: FieldType;
     }>;
     titleField?: keyof T;
     onEdit?: (item: T) => void;
@@ -30,21 +33,15 @@ const TableTemplate = <T,>({
     sortField,
     sortDirection = 'asc'
 }: Props<T>) => {
-    // ฟังก์ชันสำหรับแสดงค่าตามประเภทของข้อมูล
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const renderCellValue = (field: Props<T>['fields'][0], value: any) => {
         switch (field.type) {
             case 'boolean':
                 return (
-                    <Badge variant={value ? "default" : "secondary"}>
-                        {value ? 'Yes' : 'No'}
-                    </Badge>
-                );
-            case 'select':
-                return (
-                    <Badge variant="outline">
-                        {String(value)}
-                    </Badge>
+                    <Switch
+                        checked={value}
+                        aria-label={field.display}
+                    />
                 );
             default:
                 return String(value);
@@ -72,18 +69,17 @@ const TableTemplate = <T,>({
         <div className="w-full overflow-x-auto rounded-lg border">
             <Table>
                 <TableHeader>
-                    <TableRow className="bg-gray-50">
+                    <TableRow>
                         {fields.map((field) => (
                             <TableCell
                                 key={String(field.key)}
-                                className="font-medium text-gray-600"
                             >
                                 {renderSortableHeader(field)}
                             </TableCell>
                         ))}
                         {(onEdit || onDelete) && (
-                            <TableCell className="font-medium text-gray-600">
-                                การจัดการ
+                            <TableCell>
+                                Actions
                             </TableCell>
                         )}
                     </TableRow>
@@ -95,19 +91,18 @@ const TableTemplate = <T,>({
                                 colSpan={fields.length + (onEdit || onDelete ? 1 : 0)}
                                 className="text-center text-gray-500 py-8"
                             >
-                                ไม่พบข้อมูล
+                                <EmptyData />
                             </TableCell>
                         </TableRow>
                     ) : (
                         data.map((item, index) => (
                             <TableRow
                                 key={index}
-                                className="hover:bg-gray-50 transition-colors"
                             >
                                 {fields.map((field) => (
                                     <TableCell
                                         key={String(field.key)}
-                                        className="whitespace-nowrap"
+                                        className="whitespace-nowrap bg-white"
                                     >
                                         {renderCellValue(field, item[field.key])}
                                     </TableCell>
@@ -122,7 +117,7 @@ const TableTemplate = <T,>({
                                                     onClick={() => onEdit(item)}
                                                     className="hover:bg-blue-50"
                                                 >
-                                                    แก้ไข
+                                                    <SquarePen />
                                                 </Button>
                                             )}
                                             {onDelete && (
@@ -132,7 +127,7 @@ const TableTemplate = <T,>({
                                                     onClick={() => onDelete(item)}
                                                     className="hover:bg-red-600"
                                                 >
-                                                    ลบ
+                                                    <Trash />
                                                 </Button>
                                             )}
                                         </div>

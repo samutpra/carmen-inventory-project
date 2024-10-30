@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { storeLocationData } from '../../data/data';
 import { storeLocationSchema, storeLocationType } from '../../type';
 import ListViewData from './template/ListViewData';
@@ -7,6 +7,7 @@ import ListViewData from './template/ListViewData';
 interface FieldConfig {
     key: keyof storeLocationType;
     display: string;
+    type: string;
 }
 
 const StoreLocationList = () => {
@@ -36,14 +37,14 @@ const StoreLocationList = () => {
         }
     };
 
-    const fieldConfigs: FieldConfig[] = [
-        { key: 'storeCode', display: 'Store Code' },
-        { key: 'storeName', display: 'Store Name' },
-        { key: 'departmentName', display: 'Department' },
-        { key: 'type', display: 'Type' },
-        { key: 'status', display: 'Status' },
-        { key: 'isActive', display: 'Active Status' }
-    ];
+    const fieldConfigs: FieldConfig[] = useMemo(() => [
+        { key: 'storeCode', display: 'Store Code', type: 'string' },
+        { key: 'storeName', display: 'Store Name', type: 'string' },
+        { key: 'departmentName', display: 'Department', type: 'string' },
+        { key: 'type', display: 'Type', type: 'string' },
+        { key: 'status', display: 'Status', type: 'string' },
+        { key: 'isActive', display: 'Active Status', type: 'boolean' }
+    ], []);
 
     return (
         <ListViewData

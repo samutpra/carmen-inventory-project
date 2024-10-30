@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import TableTemplate from './TableTemplate';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-type FieldType = 'text' | 'boolean' | 'select';
+export type FieldType = 'string' | 'boolean' | 'number';
 
 interface Field<T> {
     key: keyof T;
@@ -241,28 +240,28 @@ const ListViewData = <T extends { id?: string },>({
                     </div>
                 );
 
-            case 'select':
-                return (
-                    <div className="space-y-1" key={String(field.key)}>
-                        <Label htmlFor={String(field.key)}>{field.display}</Label>
-                        <Select
-                            value={String(value)}
-                            onValueChange={(newValue) => handleFieldChange(field.key, newValue)}
-                        >
-                            <SelectTrigger {...commonProps}>
-                                <SelectValue placeholder={`Select ${field.display}`} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {field.options?.map((option) => (
-                                    <SelectItem key={String(option)} value={String(option)}>
-                                        {String(option)}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        {error && <span className="text-red-500 text-sm" id={`${String(field.key)}-error`}>{error}</span>}
-                    </div>
-                );
+            // case 'select':
+            //     return (
+            //         <div className="space-y-1" key={String(field.key)}>
+            //             <Label htmlFor={String(field.key)}>{field.display}</Label>
+            //             <Select
+            //                 value={String(value)}
+            //                 onValueChange={(newValue) => handleFieldChange(field.key, newValue)}
+            //             >
+            //                 <SelectTrigger {...commonProps}>
+            //                     <SelectValue placeholder={`Select ${field.display}`} />
+            //                 </SelectTrigger>
+            //                 <SelectContent>
+            //                     {field.options?.map((option) => (
+            //                         <SelectItem key={String(option)} value={String(option)}>
+            //                             {String(option)}
+            //                         </SelectItem>
+            //                     ))}
+            //                 </SelectContent>
+            //             </Select>
+            //             {error && <span className="text-red-500 text-sm" id={`${String(field.key)}-error`}>{error}</span>}
+            //         </div>
+            //     );
 
             default:
                 return (
