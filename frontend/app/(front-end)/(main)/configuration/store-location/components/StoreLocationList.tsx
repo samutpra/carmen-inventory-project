@@ -2,8 +2,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { storeLocationData } from '../../data/data';
 import { storeLocationSchema, storeLocationType } from '../../type';
-import ListViewData from './template/ListViewData';
 import DialogDelete from '@/components/ui-custom/DialogDelete';
+import ListViewData from '../../components/template/ListViewData';
 
 interface FieldConfig {
     key: keyof storeLocationType;
