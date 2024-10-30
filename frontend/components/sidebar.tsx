@@ -118,6 +118,45 @@ const menuItems = [
         ],
     },
     {
+        title: "Configuration",
+        path: "/configuration",
+        icon: "MonitorCog",
+        visible: true,
+        enabled: true,
+        subItems: [
+            {
+                name: "Currency",
+                path: "/configuration/currency",
+                visible: true,
+                enabled: true,
+            },
+            {
+                name: "	Delivery Point",
+                path: "/configuration/delivery-point",
+                visible: true,
+                enabled: true,
+            },
+            {
+                name: "Unit",
+                path: "/configuration/unit",
+                visible: true,
+                enabled: true,
+            },
+            {
+                name: "Category",
+                path: "/configuration/category",
+                visible: true,
+                enabled: true,
+            },
+            {
+                name: "Store/Location",
+                path: "/configuration/store-location",
+                visible: true,
+                enabled: true,
+            },
+        ],
+    },
+    {
         title: "Store Operations",
         path: "/store-operations",
         icon: "Store",
