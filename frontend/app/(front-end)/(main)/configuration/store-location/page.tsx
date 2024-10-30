@@ -1,8 +1,9 @@
 import React from 'react'
+import StoreLocationList from './components/StoreLocationList'
 
 const StoreLocationPage = () => {
     return (
-        <div>StoreLocationPage</div>
+        <StoreLocationList />
     )
 }
 
