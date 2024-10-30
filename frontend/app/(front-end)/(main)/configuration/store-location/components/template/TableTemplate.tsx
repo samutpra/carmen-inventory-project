@@ -1,18 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '@/components/ui-custom/TableCustom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpDown } from 'lucide-react';
 import React from 'react';
-import { Switch } from '@/components/ui/switch';
 
 interface Props<T> {
     data: T[];
     fields: Array<{
         key: keyof T;
         display: string;
-        type?: 'text' | 'boolean' | 'select' | 'switch';
+        type?: 'text' | 'boolean' | 'select';
     }>;
     titleField?: keyof T;
     onEdit?: (item: T) => void;
@@ -20,7 +18,6 @@ interface Props<T> {
     onSort?: (field: keyof T) => void;
     sortField?: keyof T | null;
     sortDirection?: 'asc' | 'desc';
-    onToggleSwitch?: (item: T, value: boolean) => void;
 }
 
 const TableTemplate = <T,>({
@@ -31,11 +28,11 @@ const TableTemplate = <T,>({
     onDelete,
     onSort,
     sortField,
-    sortDirection = 'asc',
-    onToggleSwitch
+    sortDirection = 'asc'
 }: Props<T>) => {
     // ฟังก์ชันสำหรับแสดงค่าตามประเภทของข้อมูล
-    const renderCellValue = (field: Props<T>['fields'][0], value: any, item: T) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const renderCellValue = (field: Props<T>['fields'][0], value: any) => {
         switch (field.type) {
             case 'boolean':
                 return (
@@ -49,17 +46,11 @@ const TableTemplate = <T,>({
                         {String(value)}
                     </Badge>
                 );
-            case 'switch':
-                return (
-                    <Switch
-                        checked={value}
-                        onCheckedChange={(checked) => onToggleSwitch?.(item, checked)} // Call the toggle function
-                    />
-                );
             default:
                 return String(value);
         }
     };
+
     const renderSortableHeader = (field: Props<T>['fields'][0]) => (
         <div
             className={`flex items-center gap-1 cursor-pointer select-none
@@ -118,7 +109,7 @@ const TableTemplate = <T,>({
                                         key={String(field.key)}
                                         className="whitespace-nowrap"
                                     >
-                                        {renderCellValue(field, item[field.key], item)}
+                                        {renderCellValue(field, item[field.key])}
                                     </TableCell>
                                 ))}
                                 {(onEdit || onDelete) && (
