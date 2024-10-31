@@ -88,6 +88,12 @@ const menuItems = [
                 visible: true,
                 enabled: true,
             },
+            {
+                name: "Unit",
+                path: "/product-management/unit",
+                visible: true,
+                enabled: true,
+            },
         ],
     },
     {
