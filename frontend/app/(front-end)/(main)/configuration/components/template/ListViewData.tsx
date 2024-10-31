@@ -267,8 +267,8 @@ const ListViewData = <T extends { id?: string },>({
                     <AlertDescription>{error}</AlertDescription>
                 </Alert>
             )}
-
-            {/* <div className="block lg:hidden">
+            {/* 
+            <div className="block lg:hidden">
                 {paginatedData().map((item, index) => (
                     <CardTemplate
                         key={item.id ?? index}

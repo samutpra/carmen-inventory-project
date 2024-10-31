@@ -1,5 +1,7 @@
 // File: types/inventory.ts
 
+import { z } from "zod";
+
 // Common Types and Enums
 
 // export const DocumentStatus = () => {
@@ -982,4 +984,19 @@ export interface PaginationType {
   page: number;
   perPage: number;
   pages: number;
+}
+
+
+// Unit
+export const UnitSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  isActive: z.boolean(),
+});
+
+export type UnitType = z.infer<typeof UnitSchema>;
+export interface UnitLabel {
+  key: keyof UnitType;
+  label: string;
 }
