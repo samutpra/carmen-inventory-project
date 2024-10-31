@@ -1,0 +1,27 @@
+meta {
+  name: POST unit
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}/api/v1/units
+  body: json
+  auth: bearer
+}
+
+headers {
+  x-tenant-id: {{tenantId}}
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+body:json {
+  {
+    "name": "test1",
+    "description": "des 1",
+    "isActive": true
+  }
+}

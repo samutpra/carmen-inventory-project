@@ -1,0 +1,19 @@
+meta {
+  name: GET unit list
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/api/v1/units
+  body: none
+  auth: bearer
+}
+
+headers {
+  x-tenant-id: {{tenantId}}
+}
+
+auth:bearer {
+  token: {{access_token}}
+}

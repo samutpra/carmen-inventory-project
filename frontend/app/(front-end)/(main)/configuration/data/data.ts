@@ -3,7 +3,7 @@ import { CategoryType, currencyType, deliveryPointType, storeLocationType, unitT
 
 export const storeLocationData: storeLocationType[] = [
     { id: "1", storeCode: "101", storeName: "Admin office", departmentName: "Main", type: "Main", status: "Default", isActive: true },
-    { id: "2", storeCode: "102", storeName: "Finance/Accounting", departmentName: "Main", type: "Main", status: "Default", isActive: true },
+    { id: "2", storeCode: "102", storeName: "Finance/Accounting", departmentName: "Main", type: "Main", status: "Default", isActive: false },
     { id: "3", storeCode: "104", storeName: "Engineering", departmentName: "Main", type: "Main", status: "Default", isActive: true },
     { id: "4", storeCode: "105", storeName: "Food and Beverage", departmentName: "Main", type: "Main", status: "Default", isActive: true },
     { id: "5", storeCode: "1051", storeName: "The Ficus Kitchen", departmentName: "Main", type: "Main", status: "Default", isActive: true },
@@ -144,16 +144,21 @@ export const categoryData: CategoryType = [
         subCategories: [
             {
                 id: "subcat1",
+                categoryId: "cat1",
                 subCategory: "COMPUTER",
                 itemGroups: [
                     {
                         id: "item1",
+                        subCategoryId: "subCat1",
                         name: "COMPUTER"
                     }
                 ]
             }
         ]
     },
+
+
+
     {
         id: "cat2",
         category: "MENU",
