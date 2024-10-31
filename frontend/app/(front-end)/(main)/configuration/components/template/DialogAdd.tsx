@@ -18,14 +18,13 @@ const DialogAdd = ({ open, onOpenChange, onSubmit }: DialogAddProps) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const newUnit: unitType = {
-            id: Date.now().toString(), // You might want to handle ID generation differently
+            id: Date.now().toString(),
             name,
             description,
             isActive: true
         };
         onSubmit(newUnit);
         onOpenChange(false);
-        // Reset form
         setName('');
         setDescription('');
     };

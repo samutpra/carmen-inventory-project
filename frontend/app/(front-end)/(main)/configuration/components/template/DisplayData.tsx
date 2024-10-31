@@ -1,10 +1,3 @@
-interface PaginationInfo {
-    total: number;
-    page: number;
-    perPage: number;
-    pages: number;
-}
-
 import React from 'react';
 import {
     Table,
@@ -12,16 +5,17 @@ import {
     TableBody,
     TableCell,
     TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui-custom/TableCustom";
 import {
     Card,
     CardContent,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, CirclePlus, X } from 'lucide-react';
+import { CustomButton } from '@/components/ui-custom/CustomButton';
+import { PaginationType } from '@/lib/types';
 
 interface DisplayDataProps<T> {
     data: T[];
@@ -32,16 +26,16 @@ interface DisplayDataProps<T> {
     isActive?: (item: T) => boolean;
     actions?: (item: T) => React.ReactNode;
     title?: string;
-    pagination?: PaginationInfo;
+    pagination?: PaginationType;
     onPageChange?: (page: number) => void;
     onAdd?: () => void;
     addButtonLabel?: string;
 }
 
 const StatusBadge = ({ isActive }: { isActive: boolean }) => (
-    <Badge variant={isActive ? "default" : "secondary"}>
-        {isActive ? 'Active' : 'Inactive'}
-    </Badge>
+    <div>
+        {isActive ? <Check className='text-green-600' /> : <X className='text-gray-600' />}
+    </div>
 );
 
 export function DisplayData<T extends { id: string | number }>({
@@ -53,9 +47,8 @@ export function DisplayData<T extends { id: string | number }>({
     pagination,
     onPageChange,
     onAdd,
-    addButtonLabel = 'Add New'
+    addButtonLabel = 'Add'
 }: DisplayDataProps<T>) {
-
     const renderPagination = () => {
         if (!pagination || pagination.pages <= 1) return null;
         const currentPage = pagination.page;
@@ -77,7 +70,6 @@ export function DisplayData<T extends { id: string | number }>({
                 }
                 pages.push(totalPages);
             }
-
             return pages;
         };
 
@@ -91,7 +83,6 @@ export function DisplayData<T extends { id: string | number }>({
                 >
                     <ChevronLeft />
                 </Button>
-
                 {getPageNumbers().map((pageNum, index) => (
                     pageNum === -1 ? (
                         <Button
@@ -131,26 +122,26 @@ export function DisplayData<T extends { id: string | number }>({
             <div className="flex justify-between items-center">
                 <h1 className='text-2xl'>{title}</h1>
                 {onAdd && (
-                    <Button
+                    <CustomButton
                         onClick={onAdd}
                         className="mb-4"
                     >
+                        <CirclePlus />
                         {addButtonLabel}
-                    </Button>
+                    </CustomButton>
                 )}
             </div>
-
             <div className="hidden md:block">
                 <Table>
                     <TableHeader>
-                        <TableRow className="bg-gray-100">
+                        <TableRow>
                             {columns.map((column) => (
-                                <TableCell key={String(column.key)} className="font-semibold">
+                                <TableCell key={String(column.key)}>
                                     {column.header}
                                 </TableCell>
                             ))}
-                            {(isActive || actions) && <TableCell className="font-semibold">Status</TableCell>}
-                            {actions && <TableCell className="font-semibold">Actions</TableCell>}
+                            {(isActive || actions) && <TableCell>Status</TableCell>}
+                            {actions && <TableCell>Actions</TableCell>}
                         </TableRow>
                     </TableHeader>
                     <TableBody>

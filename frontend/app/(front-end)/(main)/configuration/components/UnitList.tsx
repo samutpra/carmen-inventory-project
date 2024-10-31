@@ -4,18 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { unitType } from '../type';
 import DialogDelete from '@/components/ui-custom/DialogDelete';
 import { Button } from '@/components/ui/button';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Pen, Trash } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { mockToken } from '@/lib/util/api';
 import { DisplayData } from './template/DisplayData';
 import DialogAdd from './template/DialogAdd';
-
-interface PaginationInfo {
-    total: number;
-    page: number;
-    perPage: number;
-    pages: number;
-}
+import { PaginationType } from '@/lib/types';
 
 const UnitList = () => {
     const [units, setUnits] = useState<unitType[]>([]);
@@ -23,7 +17,7 @@ const UnitList = () => {
     const [idToDelete, setIdToDelete] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [paginationInfo, setPaginationInfo] = useState<PaginationInfo | undefined>(undefined);
+    const [pagination, setPagination] = useState<PaginationType | undefined>(undefined);
     const [currentPage, setCurrentPage] = useState(1);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
@@ -47,7 +41,7 @@ const UnitList = () => {
             }
             const result = await response.json();
             setUnits(result.data);
-            setPaginationInfo({
+            setPagination({
                 total: result.total,
                 page: result.page,
                 perPage: result.perPage,
@@ -101,14 +95,14 @@ const UnitList = () => {
                 size="sm"
                 onClick={() => handleEdit(unit)}
             >
-                Edit
+                <Pen />
             </Button>
             <Button
                 variant="destructive"
                 size="sm"
                 onClick={() => handleDelete(unit)}
             >
-                Delete
+                <Trash />
             </Button>
         </div>
     );
@@ -140,7 +134,7 @@ const UnitList = () => {
                 columns={columns}
                 isActive={(unit) => unit.isActive}
                 actions={handleActions}
-                pagination={paginationInfo}
+                pagination={pagination}
                 onPageChange={handlePageChange}
                 onAdd={openAddDialog}
                 addButtonLabel="Add Unit"

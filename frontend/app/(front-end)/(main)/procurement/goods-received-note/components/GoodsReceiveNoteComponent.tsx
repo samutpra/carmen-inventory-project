@@ -455,7 +455,7 @@ const GoodsReceiveNoteComponent: React.FC<Props> = ({ id, grnMode = FormAction.V
 
                         <Card>
                             <CardHeader>
-                                <CardTitle>Summary Total</CardTitle>
+                                <CardTitle>Transaction Summary</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <SummaryTotal poData={formData} />

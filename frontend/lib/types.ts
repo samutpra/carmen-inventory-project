@@ -976,3 +976,10 @@ export enum FormAction {
   VIEW = "",
   EDIT = "edit"
 }
+
+export interface PaginationType {
+  total: number;
+  page: number;
+  perPage: number;
+  pages: number;
+}
