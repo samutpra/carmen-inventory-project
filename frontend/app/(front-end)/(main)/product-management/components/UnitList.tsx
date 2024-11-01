@@ -308,7 +308,6 @@ const UnitList = () => {
                 {isLoading ? (
                     <SkeletonTableLoading />
                 ) : (
-
                     <DataTable
                         data={units}
                         columns={columns}
@@ -399,6 +398,7 @@ const UnitList = () => {
                                     variant="secondary"
                                     onClick={handleCloseDialog}
                                     disabled={isLoading}
+                                    className=''
                                 >
                                     Cancel
                                 </Button>
@@ -409,6 +409,7 @@ const UnitList = () => {
                                 >
                                     {isLoading ? 'Saving...' : (editingItem ? 'Save Changes' : 'Add')}
                                 </LoaderButton>
+
                             </DialogFooter>
                         </form>
                     </Form>
