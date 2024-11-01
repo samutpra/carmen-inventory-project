@@ -26,18 +26,12 @@ import { FilterBuilder } from '@/components/ui-custom/FilterBuilder';
 import SkeletonTableLoading from '@/components/ui-custom/Loading/SkeltonTableLoading';
 import SkeltonCardLoading from '@/components/ui-custom/Loading/SkeltonCardLoading';
 import { nanoid } from 'nanoid'
+import { unitData } from '../../configuration/data/data';
 
 const statusOptions = [
     { value: "all", label: "All Statuses" },
     { value: "true", label: "Active" },
     { value: "false", label: "Not Active" }
-];
-
-const unitData: UnitType[] = [
-    { id: '1', name: 'AS', description: 'AS', isActive: true },
-    { id: '2', name: 'BAG', description: 'BAG', isActive: true },
-    { id: '3', name: 'BALL', description: 'BALL', isActive: false },
-    { id: '4', name: 'BASIN', description: 'basin', isActive: true },
 ];
 
 const UnitList = () => {
@@ -61,7 +55,6 @@ const UnitList = () => {
         }
     });
 
-    const title = 'Unit';
 
     useEffect(() => {
         setIsLoading(true)
@@ -178,6 +171,8 @@ const UnitList = () => {
         setDialogForm(false);
         setEditingItem(null);
     };
+
+    const title = 'Unit';
 
     const columns: UnitLabel[] = [
         { key: 'name', label: 'Name' },

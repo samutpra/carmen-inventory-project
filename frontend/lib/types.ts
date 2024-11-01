@@ -1017,3 +1017,16 @@ export interface StoreLocationLabel {
   key: keyof StoreLocationType;
   label: string;
 }
+
+export const CurrencySchema = z.object({
+  id: z.string().optional(),
+  code: z.string(),
+  description: z.string(),
+  isActive: z.boolean(),
+});
+
+export type CurrencyType = z.infer<typeof CurrencySchema>;
+export interface CurrencyLabel {
+  key: keyof CurrencyType;
+  label: string;
+}

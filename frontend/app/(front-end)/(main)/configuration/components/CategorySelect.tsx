@@ -9,9 +9,6 @@ interface Props {
 }
 
 const CategorySelect: React.FC<Props> = ({ categories, selectedIds, onSelect }) => {
-
-    console.log('categories', categories);
-
     return (
         <div>
             {categories.map(category => (

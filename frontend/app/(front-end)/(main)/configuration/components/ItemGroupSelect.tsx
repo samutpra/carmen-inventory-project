@@ -2,7 +2,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import React from 'react';
 
 interface Props {
-    itemsGroup: { id: string; itemGroup: string }[]; // Updated to use itemGroup as name
+    itemsGroup: { id: string; itemGroup: string }[];
     selectedIds: string[];
     onSelect: (id: string) => void;
 }
@@ -18,7 +18,7 @@ const ItemGroupSelect: React.FC<Props> = ({ itemsGroup, selectedIds, onSelect })
                             checked={selectedIds.includes(item.id)}
                             onCheckedChange={() => onSelect(item.id)}
                         />
-                        <span className="ml-2">{item.itemGroup}</span> {/* Changed from itemName */}
+                        <span className="ml-2">{item.itemGroup}</span>
                     </div>
                 ))}
             </div>
