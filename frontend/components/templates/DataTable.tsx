@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../ui-custom/TableCustom';
 import { EyeIcon, Pen, Trash } from 'lucide-react';
 import { CustomButton } from '../ui-custom/CustomButton';
-import IsActiveIcon from '../ui-custom/Icon/isActiveIcon';
+import IsActiveIcon from '../ui-custom/Icon/IsActiveIcon';
 
 interface ColumnProps<T> {
     key: Extract<keyof T, string>;
@@ -24,6 +24,7 @@ const DataTable = <T extends Record<string, any>>({ data, columns, onEdit, onDel
         <Table>
             <TableHeader>
                 <TableRow>
+                    <TableCell>#</TableCell>
                     {columns.map((column) => (
                         <TableCell key={column.key} className="font-medium">
                             {column.label}
@@ -35,6 +36,7 @@ const DataTable = <T extends Record<string, any>>({ data, columns, onEdit, onDel
             <TableBody>
                 {data.map((item, index) => (
                     <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
                         {columns.map((column) => (
                             <TableCell key={column.key} className="whitespace-nowrap bg-white">
                                 {typeof item[column.key] === 'boolean' ? (

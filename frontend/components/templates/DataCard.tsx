@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { EyeIcon, Pen, Trash } from 'lucide-react';
+import IsActiveIcon from '../ui-custom/Icon/IsActiveIcon';
 
 interface Column {
     key: string;
@@ -16,7 +17,8 @@ interface Props<T> {
     onView?: (item: T) => void;
 }
 
-const DataCard = <T extends Record<string, unknown>>({ data, columns, onEdit, onDelete, onView }: Props<T>) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const DataCard = <T extends Record<string, any>>({ data, columns, onEdit, onDelete, onView }: Props<T>) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {data.map((item, index) => (
@@ -28,9 +30,13 @@ const DataCard = <T extends Record<string, unknown>>({ data, columns, onEdit, on
                                     <span className="w-2/5 text-sm font-medium text-gray-500">
                                         {column.label}
                                     </span>
-                                    <span className="text-sm">
-                                        {String(item[column.key] ?? '')}
-                                    </span>
+                                    {typeof item[column.key] === 'boolean' ? (
+                                        <IsActiveIcon isChecked={item[column.key]} />
+                                    ) : (
+                                        <span className="text-sm">
+                                            {String(item[column.key] ?? '')}
+                                        </span>
+                                    )}
                                 </div>
                             ))}
                             {(onEdit || onDelete || onView) && (

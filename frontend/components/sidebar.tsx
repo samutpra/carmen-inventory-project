@@ -143,12 +143,6 @@ const menuItems = [
                 enabled: true,
             },
             {
-                name: "Unit",
-                path: "/configuration/unit",
-                visible: true,
-                enabled: true,
-            },
-            {
                 name: "Category",
                 path: "/configuration/category",
                 visible: true,
