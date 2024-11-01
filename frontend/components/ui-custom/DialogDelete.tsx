@@ -6,7 +6,7 @@ interface Props {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onConfirm: () => void;
-    idDelete: string | null
+    idDelete: string | null | undefined
 }
 
 const DialogDelete: React.FC<Props> = ({ open, onOpenChange, onConfirm, idDelete }) => {

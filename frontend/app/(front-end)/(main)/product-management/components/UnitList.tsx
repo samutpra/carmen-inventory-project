@@ -17,7 +17,6 @@ import DialogDelete from '@/components/ui-custom/DialogDelete';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui-custom/FormCustom";
-import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch';
@@ -26,14 +25,7 @@ import { InputCustom } from '@/components/ui-custom/InputCustom';
 import { FilterBuilder } from '@/components/ui-custom/FilterBuilder';
 import SkeletonTableLoading from '@/components/ui-custom/Loading/SkeltonTableLoading';
 import SkeltonCardLoading from '@/components/ui-custom/Loading/SkeltonCardLoading';
-
-const UnitFormSchema = z.object({
-    name: z.string().min(1, "Name is required").max(50, "Name must be less than 50 characters"),
-    description: z.string().min(1, "Description is required").max(100, "Description must be less than 100 characters"),
-    isActive: z.boolean().default(true)
-});
-
-type UnitFormValues = z.infer<typeof UnitFormSchema>;
+import { nanoid } from 'nanoid'
 
 const statusOptions = [
     { value: "all", label: "All Statuses" },
@@ -53,15 +45,15 @@ const UnitList = () => {
     const [statusOpen, setStatusOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
-    const [idToDelete, setIdToDelete] = useState<string | null>(null);
+    const [idToDelete, setIdToDelete] = useState<string | null | undefined>(null);
     const [dialogDelete, setDialogDelete] = useState(false);
     const [dialogForm, setDialogForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [editingItem, setEditingItem] = useState<UnitType | null>(null);
     const [formError, setFormError] = useState<string | null>(null);
 
-    const form = useForm<UnitFormValues>({
-        resolver: zodResolver(UnitFormSchema),
+    const form = useForm<UnitType>({
+        resolver: zodResolver(UnitSchema),
         defaultValues: {
             name: "",
             description: "",
@@ -128,14 +120,16 @@ const UnitList = () => {
         console.log('Viewing unit:', item);
     };
 
-    const handleSave = async (data: UnitFormValues) => {
+    const handleSave = async (data: UnitType) => {
+        console.log(data);
+
         try {
             setIsLoading(true);
             setFormError(null);
 
             const newUnit = {
-                id: editingItem?.id || String(units.length + 1),
                 ...data,
+                id: editingItem ? editingItem.id : nanoid(),
             };
 
             if (editingItem) {
@@ -293,8 +287,8 @@ const UnitList = () => {
         <>
             <div className="block lg:hidden">
                 {isLoading ? (
-                    <SkeltonCardLoading />
-                ) : (
+                    <SkeltonCardLoading />) : (
+
                     <DataCard
                         data={units}
                         columns={columns}
@@ -306,6 +300,8 @@ const UnitList = () => {
             </div>
 
             <div className="hidden lg:block">
+
+
                 {isLoading ? (
                     <SkeletonTableLoading />
                 ) : (
