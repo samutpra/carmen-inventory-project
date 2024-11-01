@@ -1,7 +1,8 @@
-import { CategoryType, currencyType, deliveryPointType, storeLocationType, unitType } from "../type";
+import { StoreLocationType } from "@/lib/types";
+import { CategoryType, currencyType, deliveryPointType, unitType } from "../type";
 
 
-export const storeLocationData: storeLocationType[] = [
+export const storeLocationData: StoreLocationType[] = [
     { id: "1", storeCode: "101", storeName: "Admin office", departmentName: "Main", type: "Main", status: "Default", isActive: true },
     { id: "2", storeCode: "102", storeName: "Finance/Accounting", departmentName: "Main", type: "Main", status: "Default", isActive: false },
     { id: "3", storeCode: "104", storeName: "Engineering", departmentName: "Main", type: "Main", status: "Default", isActive: true },
