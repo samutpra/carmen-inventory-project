@@ -3,7 +3,6 @@ import React, { useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import STLComponent from '../../components/template/STLComponent';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { categoryData, itemCategory, itemGroup, subCategoryData } from '../../data/store';
@@ -12,23 +11,23 @@ const StoreLocationDetailPage = () => {
     const params = useParams();
     const id = params.id as string;
 
-    const [selectedCategoryId, setSelectedCategoryId] = useState<string>("all");
-    const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<string>("all");
-    const [selectedItemGroupId, setSelectedItemGroupId] = useState<string>("all");
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+    const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<string>("");
+    const [selectedItemGroupId, setSelectedItemGroupId] = useState<string>("");
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
     const filteredData = useMemo(() => {
-        const subCategories = selectedCategoryId !== "all"
+        const subCategories = selectedCategoryId !== ""
             ? subCategoryData.filter(sub => sub.categoryId === selectedCategoryId)
             : subCategoryData;
 
-        const relevantItemGroups = selectedSubCategoryId !== "all"
+        const relevantItemGroups = selectedSubCategoryId !== ""
             ? itemGroup.filter(item => item.subCategoryId === selectedSubCategoryId)
             : itemGroup.filter(item =>
                 subCategories.some(sub => sub.id === item.subCategoryId)
             );
 
-        const items = selectedItemGroupId !== "all"
+        const items = selectedItemGroupId !== ""
             ? itemCategory.filter(item => item.itemGroupId === selectedItemGroupId)
             : itemCategory.filter(item =>
                 relevantItemGroups.some(group => group.id === item.itemGroupId)
@@ -44,37 +43,43 @@ const StoreLocationDetailPage = () => {
 
     const handleCategoryChange = (value: string) => {
         setSelectedCategoryId(value);
-        setSelectedSubCategoryId("all");
-        setSelectedItemGroupId("all");
+        setSelectedSubCategoryId("");
+        setSelectedItemGroupId("");
         setSelectedItems([]);
+        console.log("Category changed:", value);
     };
 
     const handleSubCategoryChange = (value: string) => {
         setSelectedSubCategoryId(value);
-        setSelectedItemGroupId("all");
+        setSelectedItemGroupId("");
         setSelectedItems([]);
+        console.log("SubCategory changed:", value);
     };
 
     const handleItemGroupChange = (value: string) => {
         setSelectedItemGroupId(value);
         setSelectedItems([]);
+        console.log("Item Group changed:", value);
     };
 
     const handleItemSelect = (itemId: string) => {
         setSelectedItems(prev => {
-            if (prev.includes(itemId)) {
-                return prev.filter(id => id !== itemId);
-            } else {
-                return [...prev, itemId];
-            }
+            const updatedItems = prev.includes(itemId)
+                ? prev.filter(id => id !== itemId)
+                : [...prev, itemId];
+            console.log("Item selected:", itemId, "Selected items:", updatedItems);
+            return updatedItems;
         });
     };
 
     const handleSelectAll = () => {
         if (selectedItems.length === filteredData.items.length) {
             setSelectedItems([]);
+            console.log(" items unselected");
         } else {
-            setSelectedItems(filteredData.items.map(item => item.id));
+            const allItemIds = filteredData.items.map(item => item.id);
+            setSelectedItems(allItemIds);
+            console.log(" items selected:", allItemIds);
         }
     };
 
@@ -103,63 +108,54 @@ const StoreLocationDetailPage = () => {
                 <CardHeader>
                     <CardTitle>Product Categories</CardTitle>
                     <div className="space-y-4 mt-4">
+                        {/* Category Selection */}
                         <div>
                             <label className="text-sm font-medium mb-1 block">Category</label>
-                            <Select value={selectedCategoryId} onValueChange={handleCategoryChange}>
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="All Categories" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All Categories</SelectItem>
-                                    {categoryData.map(category => (
-                                        <SelectItem key={category.id} value={category.id}>
-                                            {category.categoryName}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <div className="space-y-2">
+                                {categoryData.map(category => (
+                                    <div key={category.id} className="flex items-center">
+                                        <Checkbox
+                                            checked={selectedCategoryId === category.id}
+                                            onCheckedChange={() => handleCategoryChange(category.id)}
+                                        />
+                                        <span className="ml-2">{category.categoryName}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
+                        {/* SubCategory Selection */}
                         <div>
                             <label className="text-sm font-medium mb-1 block">SubCategory</label>
-                            <Select
-                                value={selectedSubCategoryId}
-                                onValueChange={handleSubCategoryChange}
-                                disabled={selectedCategoryId === "all"}
-                            >
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="All SubCategories" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All SubCategories</SelectItem>
-                                    {filteredData.subCategories.map(sub => (
-                                        <SelectItem key={sub.id} value={sub.id}>
-                                            {sub.subCategoryName}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <div className="space-y-2">
+                                {filteredData.subCategories.map(sub => (
+                                    <div key={sub.id} className="flex items-center">
+                                        <Checkbox
+                                            checked={selectedSubCategoryId === sub.id}
+                                            onCheckedChange={() => handleSubCategoryChange(sub.id)}
+                                            disabled={selectedCategoryId === ""}
+                                        />
+                                        <span className="ml-2">{sub.subCategoryName}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
 
+                        {/* Item Group Selection */}
                         <div>
                             <label className="text-sm font-medium mb-1 block">Item Group</label>
-                            <Select
-                                value={selectedItemGroupId}
-                                onValueChange={handleItemGroupChange}
-                                disabled={selectedSubCategoryId === "all"}
-                            >
-                                <SelectTrigger className="w-[180px]">
-                                    <SelectValue placeholder="All Item Groups" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="all">All Item Groups</SelectItem>
-                                    {filteredData.itemGroups.map(group => (
-                                        <SelectItem key={group.id} value={group.id}>
-                                            {group.itemGroup}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
+                            <div className="space-y-2">
+                                {filteredData.itemGroups.map(group => (
+                                    <div key={group.id} className="flex items-center">
+                                        <Checkbox
+                                            checked={selectedItemGroupId === group.id}
+                                            onCheckedChange={() => handleItemGroupChange(group.id)}
+                                            disabled={selectedSubCategoryId === ""}
+                                        />
+                                        <span className="ml-2">{group.itemGroup}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </CardHeader>
@@ -175,8 +171,8 @@ const StoreLocationDetailPage = () => {
                                     onClick={handleSelectAll}
                                 >
                                     {selectedItems.length === filteredData.items.length
-                                        ? 'Unselect All'
-                                        : 'Select All'}
+                                        ? 'Unselect '
+                                        : 'Select '}
                                 </Button>
                             </div>
                             <table className="w-full">
@@ -194,6 +190,7 @@ const StoreLocationDetailPage = () => {
                                                 <Checkbox
                                                     checked={selectedItems.includes(item.id)}
                                                     onCheckedChange={() => handleItemSelect(item.id)}
+
                                                 />
                                             </td>
                                             <td className="p-2">{item.itemName}</td>
@@ -206,6 +203,7 @@ const StoreLocationDetailPage = () => {
                     </div>
                 </CardContent>
             </Card>
+
         </>
     );
 
