@@ -140,8 +140,11 @@ const UnitList = () => {
                 setUnits((prev) => [...prev, newUnit]);
             }
 
-            const response = await fetch('/api/product-management/unit', {
-                method: 'POST',
+            const method = editingItem ? 'PATCH' : 'POST';
+            const API_URL = '/api/product-management/unit';
+
+            const response = await fetch(API_URL, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
