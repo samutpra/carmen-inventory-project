@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from 'react'
 import DataDisplayTemplate from '@/components/templates/DataDisplayTemplate'
 import { CustomButton } from '@/components/ui-custom/CustomButton'
-import { ArrowUpDown, Check, ChevronsUpDown, Command, Filter, Plus } from 'lucide-react'
+import { ArrowUpDown, Filter, Plus, Printer, Sheet } from 'lucide-react'
 import { UnitLabel, UnitSchema, UnitType } from '@/lib/types'
 import { Input } from '@/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
-import { CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { FilterBuilder } from '../../procurement/goods-received-note/components/FilterBuilder'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import DataTable from '@/components/templates/DataTable'
 import DataCard from '@/components/templates/DataCard'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 
 const statusOptions = [
     {
@@ -21,33 +21,28 @@ const statusOptions = [
         label: "All Statuses",
     },
     {
-        value: "draft",
-        label: "Draft",
+        value: "true",
+        label: "Active",
     },
     {
-        value: "submitted",
-        label: "Submitted",
-    },
-    {
-        value: "approved",
-        label: "Approved",
-    },
-    {
-        value: "rejected",
-        label: "Rejected",
-    },
+        value: "false",
+        label: "Not Active",
+    }
 ]
 
 const unitData: UnitType[] = [
     { id: '1', name: 'AS', description: 'AS', isActive: true },
     { id: '2', name: 'BAG', description: 'BAG', isActive: true },
-    { id: '3', name: 'BALL', description: 'BALL', isActive: true },
+    { id: '3', name: 'BALL', description: 'BALL', isActive: false },
     { id: '4', name: 'BASIN', description: 'basin', isActive: true },
 ]
 
 
 const UnitList = () => {
     const [units, setUnits] = useState<UnitType[]>([]);
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState("")
+
     const title = 'Unit'
 
     useEffect(() => {
@@ -62,12 +57,12 @@ const UnitList = () => {
 
     const actionButtons = (
         <div className="flex flex-col gap-2 lg:flex-row">
-            <CustomButton className="w-full sm:w-auto">
-                <Plus className="h-4 w-4" /> Add
+            <CustomButton prefixIcon={<Plus />}>
+                Add
             </CustomButton>
             <div className="flex gap-2 w-full lg:w-auto">
-                <CustomButton variant="outline" className="w-full sm:w-auto">Export</CustomButton>
-                <CustomButton variant="outline" className="w-full sm:w-auto">Print</CustomButton>
+                <CustomButton variant="outline" prefixIcon={<Sheet />}>Export</CustomButton>
+                <CustomButton variant="outline" prefixIcon={<Printer />}>Print</CustomButton>
             </div>
         </div>
     )
@@ -80,28 +75,35 @@ const UnitList = () => {
                 />
             </div>
             <div className='flex items-center space-x-4'>
-                <Popover >
+                <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                         <Button
                             variant="outline"
                             role="combobox"
+                            aria-expanded={open}
+                            className="w-[200px] justify-between"
                         >
-                            Filter
+                            {value
+                                ? statusOptions.find((status) => status.value === value)?.label
+                                : "Select status..."}
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[200px] p-0">
                         <Command>
-                            <CommandInput placeholder="Search status..." />
+                            <CommandInput placeholder="Search status..." className="h-9" />
                             <CommandList>
                                 <CommandEmpty>No status found.</CommandEmpty>
                                 <CommandGroup>
-                                    {statusOptions.map((option) => (
+                                    {statusOptions.map((status) => (
                                         <CommandItem
-                                            key={option.value}
-                                            value={option.value}
+                                            key={status.value}
+                                            onSelect={() => {
+                                                const currentValue = status.value;
+                                                setValue(currentValue === value ? "" : currentValue);
+                                                setOpen(false);
+                                            }}
                                         >
-                                            <Check />
-                                            {option.label}
+                                            {status.label}
                                         </CommandItem>
                                     ))}
                                 </CommandGroup>

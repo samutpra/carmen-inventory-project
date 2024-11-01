@@ -1,16 +1,17 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../ui-custom/TableCustom';
-import { Button } from '../ui/button';
 import { EyeIcon, Pen, Trash } from 'lucide-react';
+import { CustomButton } from '../ui-custom/CustomButton';
+import IsActiveIcon from '../ui-custom/Icon/isActiveIcon';
 
-interface Column {
-    key: string;
+interface ColumnProps<T> {
+    key: Extract<keyof T, string>;
     label: string;
 }
 
 interface Props<T> {
     data: T[];
-    columns: Column[];
+    columns: ColumnProps<T>[];
     onEdit?: (item: T) => void;
     onDelete?: (item: T) => void;
     onView?: (item: T) => void;
@@ -18,8 +19,6 @@ interface Props<T> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const DataTable = <T extends Record<string, any>>({ data, columns, onEdit, onDelete, onView }: Props<T>) => {
-
-    console.log(data);
 
     return (
         <Table>
@@ -38,40 +37,44 @@ const DataTable = <T extends Record<string, any>>({ data, columns, onEdit, onDel
                     <TableRow key={index}>
                         {columns.map((column) => (
                             <TableCell key={column.key} className="whitespace-nowrap bg-white">
-                                {String(item[column.key] ?? '')}
+                                {typeof item[column.key] === 'boolean' ? (
+                                    <IsActiveIcon isChecked={item[column.key]} />
+                                ) : (
+                                    String(item[column.key] ?? '')
+                                )}
                             </TableCell>
                         ))}
                         {(onEdit || onDelete || onView) && (
                             <TableCell className="bg-white">
                                 <div className="flex gap-2">
                                     {onView && (
-                                        <Button
+                                        <CustomButton
                                             variant="outline"
                                             size="sm"
                                             onClick={() => onView(item)}
                                             className="hover:bg-blue-50"
                                         >
                                             <EyeIcon />
-                                        </Button>
+                                        </CustomButton>
                                     )}
                                     {onEdit && (
-                                        <Button
+                                        <CustomButton
                                             variant="outline"
                                             size="sm"
                                             onClick={() => onEdit(item)}
                                             className="hover:bg-blue-50"
                                         >
                                             <Pen />
-                                        </Button>
+                                        </CustomButton>
                                     )}
                                     {onDelete && (
-                                        <Button
+                                        <CustomButton
                                             variant="destructive"
                                             size="sm"
                                             onClick={() => onDelete(item)}
                                         >
                                             <Trash />
-                                        </Button>
+                                        </CustomButton>
                                     )}
                                 </div>
                             </TableCell>
