@@ -7,7 +7,7 @@ import { ArrowUpDown, Filter, PlusCircle, Printer, Sheet } from 'lucide-react';
 import { UnitLabel, UnitSchema, UnitType } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui-custom/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import DataTable from '@/components/templates/DataTable';
 import DataCard from '@/components/templates/DataCard';
@@ -250,7 +250,7 @@ const UnitList = () => {
                             More Filters
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:w-[70vw] max-w-[60vw] bg-white">
+                    <DialogContent className="sm:w-[70vw] max-w-[60vw]">
                         <FilterBuilder
                             fields={[
                                 { value: 'name', label: 'Name' },

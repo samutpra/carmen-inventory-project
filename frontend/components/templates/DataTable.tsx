@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHeader, TableRow } from '../ui-custom/TableCustom';
+import { Table, TableBody, TableCell, TableHeader, TableRow } from '../ui/table';
 import { EyeIcon, Pen, Trash } from 'lucide-react';
 import { CustomButton } from '../ui-custom/CustomButton';
 import IsActiveIcon from '../ui-custom/Icon/IsActiveIcon';
@@ -38,7 +38,7 @@ const DataTable = <T extends Record<string, any>>({ data, columns, onEdit, onDel
                     <TableRow key={index}>
                         <TableCell>{index + 1}</TableCell>
                         {columns.map((column) => (
-                            <TableCell key={column.key} className="whitespace-nowrap bg-white">
+                            <TableCell key={column.key} className="whitespace-nowrap">
                                 {typeof item[column.key] === 'boolean' ? (
                                     <IsActiveIcon isChecked={item[column.key]} />
                                 ) : (
@@ -47,7 +47,7 @@ const DataTable = <T extends Record<string, any>>({ data, columns, onEdit, onDel
                             </TableCell>
                         ))}
                         {(onEdit || onDelete || onView) && (
-                            <TableCell className="bg-white">
+                            <TableCell className="">
                                 <div className="flex gap-2">
                                     {onView && (
                                         <CustomButton
