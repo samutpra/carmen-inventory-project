@@ -579,7 +579,7 @@ export interface FinancialSummary {
   jvReference: string;
   jvDetail?: JournalEntryDetail[];
   jvTotal: JournalEntryTotal;
-  sourceOfTransaction: string
+  sourceOfTransaction?: string
 }
 
 export interface JournalEntryDetail {
