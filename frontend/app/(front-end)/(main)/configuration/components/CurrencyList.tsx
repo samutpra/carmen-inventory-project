@@ -200,7 +200,7 @@ const CurrencyList = () => {
                             More Filters
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:w-[70vw] max-w-[60vw] bg-white">
+                    <DialogContent className="sm:w-[70vw] max-w-[60vw]">
                         <FilterBuilder
                             fields={[
                                 { value: 'name', label: 'Name' },

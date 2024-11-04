@@ -8,8 +8,8 @@ interface Props {
 
 const STLComponent: React.FC<Props> = ({ detail, content }) => {
     return (
-        <div className="flex flex-col p-4 justify-center bg-white">
-            <div className="bg-white shadow p-4 sticky top-0 z-10 rounded-lg">
+        <div className="flex flex-col p-4 justify-center">
+            <div className="shadow p-4 sticky top-0 z-10 rounded-lg">
                 <div className="md:flex justify-between items-center mb-4">
                     {detail}
                 </div>

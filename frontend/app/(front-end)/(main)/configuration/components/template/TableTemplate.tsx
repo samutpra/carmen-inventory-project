@@ -98,7 +98,7 @@ const TableTemplate = <T,>({
                         paginatedData.map((item, index) => (
                             <TableRow key={index}>
                                 {fields.map((field) => (
-                                    <TableCell key={String(field.key)} className="whitespace-nowrap bg-white">
+                                    <TableCell key={String(field.key)} className="whitespace-nowrap">
                                         {renderCellValue(field, item[field.key])}
                                     </TableCell>
                                 ))}
