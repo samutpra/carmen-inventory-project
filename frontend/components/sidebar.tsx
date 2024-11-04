@@ -556,7 +556,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <div className="z-50 flex-col gap-4 relative">
                 {isOpen && !isLargeScreen && (
                     <div
-                        className="fixed md:sticky inset-0 bg-black/40 z-40"
+                        className="fixed md:sticky inset-0 z-40"
                         onClick={onClose}
                     />
                 )}
@@ -579,11 +579,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         >
                             <div className="bg-blue-900 h-8 w-8 rounded-full flex items-center justify-center">
                                 {isExpanded && (
-                                    <span className="text-xl font-bold text-white">C</span>
+                                    <span className="text-xl font-bold"></span>
                                 )}
                             </div>
                             {isExpanded && (
-                                <span className="ml-2 text-2xl font-bold text-blue-900">Carmen</span>
+                                <span className="ml-2 text-2xl font-bold">Carmen</span>
                             )}
                         </Link>
                         {isExpanded && (
@@ -591,7 +591,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                 variant="ghost"
                                 size="icon"
                                 onClick={togglePin}
-                                className="text-gray-500 hover:text-gray-700"
                             >
                                 <LucideIcons.Pin className={cn("h-5 w-5", isPinned && "text-blue-500")} />
                             </Button>
@@ -609,7 +608,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                         <Button
                                             variant="ghost"
                                             className={cn(
-                                                "w-full flex justify-between font-bold text-base text-blue-950  dark:text-gray-200",
+                                                "w-full flex justify-between font-bold text-base",
                                             )}
                                             onClick={() => toggleExpand(item.title, item.path)}
                                         >
@@ -636,11 +635,12 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                                                             variant="ghost"
                                                             asChild
                                                             className={cn(
-                                                                "w-full justify-start text-blue-950 font-thin",
+                                                                "w-full justify-start font-thin",
                                                                 pathname === subItem.path
-                                                                    ? "bg-blue-950  *: hover:bg-blue-950 text-white hover:text-white"
-                                                                    : "hover:bg-transparent hover:underline"
+                                                                    ? "bg-primary text-white "
+                                                                    : ""
                                                             )}
+                                                            // className={cn("w-full justify-start font-thin")}
                                                             onClick={() => !isLargeScreen && onClose()}
                                                         >
                                                             <Link href={subItem.path} className="text-blue-950 dark:text-gray-200 no-underline text-xs">

@@ -156,11 +156,6 @@ body {
   }
 }
 
-a {
-  color: #0000FF;
-  text-decoration: underline;
-}
-
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
