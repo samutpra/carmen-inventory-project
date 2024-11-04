@@ -1,13 +1,12 @@
 "use client"
 import DataCard from '@/components/templates/DataCard';
 import DataDisplayTemplate from '@/components/templates/DataDisplayTemplate';
-import DataTable from '@/components/templates/DataTable';
+import DataTable, { ColumnProps } from '@/components/templates/DataTable';
 import { CustomButton } from '@/components/ui-custom/CustomButton';
 import DialogDelete from '@/components/ui-custom/DialogDelete';
 import SkeltonCardLoading from '@/components/ui-custom/Loading/SkeltonCardLoading';
 import SkeletonTableLoading from '@/components/ui-custom/Loading/SkeltonTableLoading';
 import SearchInput from '@/components/ui-custom/SearchInput';
-import { formatDate } from '@/lib/formatDate';
 import { mockGoodsReceiveNotes } from '@/lib/mock/mock_goodsReceiveNotes';
 import { GoodsReceiveNote } from '@/lib/types';
 import { PlusCircle, Printer, Search, Sheet } from 'lucide-react';
@@ -62,11 +61,13 @@ const GoodsReceiveNoteList = () => {
         }
     };
 
-
+    const fn = (): string => {
+        return process.env.NEXT_PUBLIC_SHORT_DATE_FORMAT || ''
+    }
 
     const title = 'Goods Receive Note';
 
-    const columns = [
+    const columns: ColumnProps<GoodsReceiveNote>[] = [
         { key: 'date', label: 'Date' },
         { key: 'ref', label: 'Code' },
         { key: 'description', label: 'Description' },
@@ -102,7 +103,9 @@ const GoodsReceiveNoteList = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     Icon={Search}
                 />
+                {/* <div>{format(new Date(2014, 1, 11), fn())}</div> */}
                 <div>asdasd {process.env.NEXT_PUBLIC_SHORT_DATE_FORMAT || 'pipe'}</div>
+                <div>{locale}</div>
             </div>
 
         </div>
