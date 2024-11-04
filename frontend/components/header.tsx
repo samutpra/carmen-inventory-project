@@ -20,6 +20,7 @@ import React from 'react';
 import { TenantList } from '@/components/tenantList';
 import { useRouter } from '@/lib/i18n';
 import { useState } from 'react';
+import { SwitchTheme } from './SwitchTheme';
 
 export interface HeaderProps {
 	onSidebarToggle: () => void;
@@ -48,6 +49,7 @@ export default function Header({ onSidebarToggle, isSidebarOpen }: HeaderProps) 
 							<Bell size={20} />
 						</Button>
 						<LanguageSwitcher />
+						<SwitchTheme />
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button variant='ghost' className='relative h-8 w-8 rounded-full text-blue-950'>

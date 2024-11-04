@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { FilterBuilder } from '@/components/ui-custom/FilterBuilder';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui-custom/FormCustom";
-import { ArrowUpDown, Filter, PlusCircle, Printer, Sheet } from 'lucide-react';
+import { ArrowUpDown, Filter, PlusCircle, Printer, Search, Sheet } from 'lucide-react';
 import SkeletonTableLoading from '@/components/ui-custom/Loading/SkeltonTableLoading';
 import SkeltonCardLoading from '@/components/ui-custom/Loading/SkeltonCardLoading';
 import DataCard from '@/components/templates/DataCard';
@@ -24,6 +24,7 @@ import { Switch } from '@/components/ui/switch';
 import { LoaderButton } from '@/components/ui-custom/button/LoaderButton';
 import DataDisplayTemplate from '@/components/templates/DataDisplayTemplate';
 import { CustomButton } from '@/components/ui-custom/CustomButton';
+import SearchInput from '@/components/ui-custom/SearchInput';
 
 const statusOptions = [
     { value: "all", label: "All Statuses" },
@@ -142,17 +143,17 @@ const CurrencyList = () => {
                 <CustomButton className='w-full md:w-20' variant="outline" prefixIcon={<Sheet />}>Export</CustomButton>
                 <CustomButton className='w-full md:w-20' variant="outline" prefixIcon={<Printer />}>Print</CustomButton>
             </div>
-
         </div>
     );
 
     const filter = (
         <div className="flex flex-col justify-start sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mb-4">
             <div className="w-full sm:w-auto flex-grow">
-                <Input
-                    placeholder="Search Units..."
+                <SearchInput
+                    placeholder="Search Currency..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    Icon={Search}
                 />
             </div>
             <div className="flex items-center space-x-4">
@@ -278,7 +279,7 @@ const CurrencyList = () => {
                         <form onSubmit={form.handleSubmit(handleSave)} className="space-y-4">
                             <FormField
                                 control={form.control}
-                                code="code"
+                                name="code"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Code</FormLabel>
